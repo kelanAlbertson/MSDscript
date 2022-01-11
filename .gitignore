@@ -33,6 +33,7 @@
 
 # Other
 .DS_Store
+.idea/
 
 # Generic JetBrains gitignore copied from https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 
