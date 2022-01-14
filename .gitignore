@@ -34,6 +34,8 @@
 # Other
 .DS_Store
 .idea/
+msdscript
+
 
 # Generic JetBrains gitignore copied from https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 
