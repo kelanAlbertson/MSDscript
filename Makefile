@@ -1,8 +1,8 @@
 INCS = cmdline.h
 OBJS = main.o cmdline.o
 
-msdscript : main.o cmdline.o expr.o num.o add.o mult.o
-	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o expr.o num.o add.o mult.o
+msdscript : main.o cmdline.o expr.o num.o add.o mult.o var.o
+	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o
 
 main.o : main.cpp cmdline.h
 	c++ --std=c++14 -O2 -c main.cpp
@@ -21,3 +21,6 @@ add.o : add.cpp add.h catch.h num.h
 
 mult.o : mult.cpp mult.h add.h catch.h num.h
 	c++ --std=c++14 -O2 -c mult.cpp
+
+var.o : var.cpp var.h catch.h num.h
+	c++ --std=c++14 -O2 -c var.cpp

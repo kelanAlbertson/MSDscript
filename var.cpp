@@ -6,6 +6,7 @@
 
 #include "catch.h"
 #include "var.h"
+#include "num.h"
 
 Var::Var(std::string name, int value) {
     this->name_ = name;
@@ -23,5 +24,8 @@ bool Var::equals(Expr *other) {
 }
 
 TEST_CASE("Var Tests") {
-
+    CHECK((new Var("one", 1))->equals(new Var("one", 1)) == true);
+    CHECK((new Var("one", 1))->equals(new Var("ONE", 1)) == false);
+    CHECK((new Var("one", 1))->equals(new Var("two", 2)) == false);
+    CHECK((new Var("one", 1))->equals(new Num(1)) == false);
 }
