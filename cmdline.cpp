@@ -2,8 +2,12 @@
 // Created by Kelan Albertson on 1/11/22.
 //
 
+#define CATCH_CONFIG_RUNNER
+#include "catch.h"
+
 #include <string>
 #include <iostream>
+
 #include "cmdline.h"
 
 int use_arguments (int argc, char *argv[]) {
@@ -12,7 +16,7 @@ int use_arguments (int argc, char *argv[]) {
         for (int i = 1; i < argc; ++i) {
             std::string arg = argv[i];
             if (arg == "--help") {
-                std::cout << "Enter '--help' for help and '--test' to test" << std::endl;
+                std::cout << "Possible arguments:" << std::endl << "  '--help' for help" << std::endl << "  '--test' to test" << std::endl;
                 exit(0);
             }
             else if (arg == "--test") {
@@ -21,7 +25,9 @@ int use_arguments (int argc, char *argv[]) {
                     exit(1);
                 }
                 else {
-                    std::cout << "Tests passed" << std::endl;
+                    if (Catch::Session().run(1, argv) != 0) {
+                        exit(1);
+                    }
                     alreadyTested = true;
                 }
             }
