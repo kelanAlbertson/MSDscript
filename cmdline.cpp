@@ -2,8 +2,12 @@
 // Created by Kelan Albertson on 1/11/22.
 //
 
+#define CATCH_CONFIG_RUNNER
+#include "catch.h"
+
 #include <string>
 #include <iostream>
+
 #include "cmdline.h"
 
 int use_arguments (int argc, char *argv[]) {
@@ -21,6 +25,8 @@ int use_arguments (int argc, char *argv[]) {
                     exit(1);
                 }
                 else {
+                    //TODO TESTS
+                    Catch::Session().run(1, argv);
                     std::cout << "Tests passed" << std::endl;
                     alreadyTested = true;
                 }
