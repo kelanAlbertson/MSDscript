@@ -10,9 +10,8 @@
 class Var : public Expr {
 public:
     std::string name_;
-    int value_;
 
-    Var(std::string name, int value);
+    Var(std::string name);
     virtual bool equals(Expr* other);
 };
 

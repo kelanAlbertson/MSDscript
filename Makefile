@@ -24,3 +24,6 @@ mult.o : mult.cpp mult.h add.h catch.h num.h
 
 var.o : var.cpp var.h catch.h num.h
 	c++ --std=c++14 -O2 -c var.cpp
+
+clean :
+	rm msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o

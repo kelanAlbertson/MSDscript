@@ -16,7 +16,8 @@ int use_arguments (int argc, char *argv[]) {
         for (int i = 1; i < argc; ++i) {
             std::string arg = argv[i];
             if (arg == "--help") {
-                std::cout << "Possible arguments:" << std::endl << "  '--help' for help" << std::endl << "  '--test' to test" << std::endl;
+                std::cout << "Possible arguments:" << std::endl << "  '--help' displays all possible arguments" <<
+                std::endl << "  '--test' displays the test results" << std::endl;
                 exit(0);
             }
             else if (arg == "--test") {

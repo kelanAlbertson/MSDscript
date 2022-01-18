@@ -8,9 +8,8 @@
 #include "var.h"
 #include "num.h"
 
-Var::Var(std::string name, int value) {
+Var::Var(std::string name) {
     this->name_ = name;
-    this->value_ = value;
 }
 
 bool Var::equals(Expr *other) {
@@ -19,13 +18,13 @@ bool Var::equals(Expr *other) {
         return false;
     }
     else {
-        return (this->name_ == v->name_ && this->value_ == v->value_);
+        return (this->name_ == v->name_);
     }
 }
 
-TEST_CASE("Var Tests") {
-    CHECK((new Var("one", 1))->equals(new Var("one", 1)) == true);
-    CHECK((new Var("one", 1))->equals(new Var("ONE", 1)) == false);
-    CHECK((new Var("one", 1))->equals(new Var("two", 2)) == false);
-    CHECK((new Var("one", 1))->equals(new Num(1)) == false);
+TEST_CASE("Var Equals Tests") {
+    CHECK((new Var("one"))->equals(new Var("one")) == true);
+    CHECK((new Var("one"))->equals(new Var("ONE")) == false);
+    CHECK((new Var("one"))->equals(new Var("two")) == false);
+    CHECK((new Var("one"))->equals(new Num(1)) == false);
 }

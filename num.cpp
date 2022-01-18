@@ -19,7 +19,7 @@ bool Num :: equals(Expr* other) {
     }
 }
 
-TEST_CASE("Num Tests") {
+TEST_CASE("Num Equals Tests") {
     CHECK((new Num(0))->equals(new Num(0)) == true);
     CHECK((new Num(8))->equals(new Num(8)) == true);
     CHECK((new Num(8))->equals(new Num(-1)) == false);

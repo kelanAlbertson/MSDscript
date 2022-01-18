@@ -22,7 +22,7 @@ bool Mult::equals(Expr *other) {
     }
 }
 
-TEST_CASE("Mult Tests") {
+TEST_CASE("Mult Equals Tests") {
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(-1), new Num(0))) == true);
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(0), new Num(-1))) == false);
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(100), new Num(0))) == false);

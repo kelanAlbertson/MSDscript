@@ -21,7 +21,7 @@ bool Add::equals(Expr* other) {
     }
 }
 
-TEST_CASE("Add Tests") {
+TEST_CASE("Add Equals Tests") {
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(0), new Num(1))) == true);
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(1), new Num(0))) == false);
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(-20), new Num(9))) == false);
