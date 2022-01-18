@@ -5,11 +5,11 @@
 #include "num.h"
 #include "catch.h"
 
-Num :: Num(int value) {
+Num::Num(int value) {
     this->value_ = value;
 }
 
-bool Num :: equals(Expr* other) {
+bool Num::equals(Expr* other) {
     Num* n = dynamic_cast<Num*>(other);
     if (n == nullptr) {
         return false;
@@ -19,8 +19,18 @@ bool Num :: equals(Expr* other) {
     }
 }
 
-TEST_CASE("Num Equals Tests") {
+int Num::interp() {
+    return value_;
+}
+
+TEST_CASE("Num equals() tests") {
     CHECK((new Num(0))->equals(new Num(0)) == true);
     CHECK((new Num(8))->equals(new Num(8)) == true);
     CHECK((new Num(8))->equals(new Num(-1)) == false);
+}
+TEST_CASE("Num interp() tests") {
+    CHECK((new Num(0))->interp() == 0);
+    CHECK((new Num(1))->interp() == 1);
+    CHECK((new Num(99))->interp() == 99);
+    CHECK((new Num(-1))->interp() == -1);
 }

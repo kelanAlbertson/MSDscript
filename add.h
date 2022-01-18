@@ -12,5 +12,8 @@ public:
     Expr* rhs_;
 
     Add (Expr* lhs, Expr* rhs);
+    //returns whether this Expr has all the same fields as the other Expr
     virtual bool equals (Expr* other);
+    //returns an integer interpretation of the Add
+    virtual int interp();
 };

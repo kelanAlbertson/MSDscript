@@ -7,6 +7,7 @@
 #include "catch.h"
 #include "var.h"
 #include "num.h"
+#include "stdexcept"
 
 Var::Var(std::string name) {
     this->name_ = name;
@@ -22,9 +23,16 @@ bool Var::equals(Expr *other) {
     }
 }
 
-TEST_CASE("Var Equals Tests") {
+int Var::interp() {
+    throw std::runtime_error("Error: Var cannot be interpreted");
+}
+
+TEST_CASE("Var equals() tests") {
     CHECK((new Var("one"))->equals(new Var("one")) == true);
     CHECK((new Var("one"))->equals(new Var("ONE")) == false);
     CHECK((new Var("one"))->equals(new Var("two")) == false);
     CHECK((new Var("one"))->equals(new Num(1)) == false);
+}
+TEST_CASE("Var interp() tests") {
+    CHECK_THROWS_WITH( (new Var("x"))->interp(), "Error: Var cannot be interpreted");
 }

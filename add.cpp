@@ -21,9 +21,19 @@ bool Add::equals(Expr* other) {
     }
 }
 
-TEST_CASE("Add Equals Tests") {
+int Add::interp() {
+    return (lhs_->interp() + rhs_->interp());
+}
+
+TEST_CASE("Add equals() tests") {
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(0), new Num(1))) == true);
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(1), new Num(0))) == false);
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(-20), new Num(9))) == false);
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Num(1)) == false);
+}
+TEST_CASE("Add interp() tests") {
+    CHECK((new Add(new Num(0), new Num(0)))->interp() == 0);
+    CHECK((new Add(new Num(0), new Num(1)))->interp() == 1);
+    CHECK((new Add(new Num(1), new Num(0)))->interp() == 1);
+    CHECK((new Add(new Num(-5), new Num(18)))->interp() == 13);
 }

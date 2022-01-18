@@ -22,9 +22,19 @@ bool Mult::equals(Expr *other) {
     }
 }
 
-TEST_CASE("Mult Equals Tests") {
+int Mult::interp() {
+    return (lhs_->interp() * rhs_->interp());
+}
+
+TEST_CASE("Mult equals() tests") {
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(-1), new Num(0))) == true);
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(0), new Num(-1))) == false);
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(100), new Num(0))) == false);
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Add(new Num(-1), new Num(0))) == false);
+}
+TEST_CASE("Mult interp() tests") {
+    CHECK((new Mult(new Num(0), new Num(0)))->interp() == 0);
+    CHECK((new Mult(new Num(0), new Num(1)))->interp() == 0);
+    CHECK((new Mult(new Num(-1), new Num(10)))->interp() == -10);
+    CHECK((new Mult(new Num(-5), new Num(-5)))->interp() == 25);
 }
