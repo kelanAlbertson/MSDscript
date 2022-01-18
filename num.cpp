@@ -11,7 +11,7 @@ Num :: Num(int value) {
 
 bool Num :: equals(Expr* other) {
     Num* n = dynamic_cast<Num*>(other);
-    if (n == NULL) {
+    if (n == nullptr) {
         return false;
     }
     else {
@@ -19,6 +19,8 @@ bool Num :: equals(Expr* other) {
     }
 }
 
-TEST_CASE("Num") {
+TEST_CASE("Num Tests") {
+    CHECK((new Num(0))->equals(new Num(0)) == true);
     CHECK((new Num(8))->equals(new Num(8)) == true);
+    CHECK((new Num(8))->equals(new Num(-1)) == false);
 }

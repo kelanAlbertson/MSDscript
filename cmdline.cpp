@@ -25,8 +25,9 @@ int use_arguments (int argc, char *argv[]) {
                     exit(1);
                 }
                 else {
-                    //TODO TESTS
-                    Catch::Session().run(1, argv);
+                    if (Catch::Session().run(1, argv) != 0) {
+                        exit(1);
+                    }
                     std::cout << "Tests passed" << std::endl;
                     alreadyTested = true;
                 }

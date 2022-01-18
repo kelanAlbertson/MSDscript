@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "expr.h"
+
 class Num : public Expr {
 public:
     int value_;

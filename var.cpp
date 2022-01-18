@@ -2,6 +2,9 @@
 // Created by Kelan Albertson on 1/17/22.
 //
 
+#include <string>
+
+#include "catch.h"
 #include "var.h"
 
 Var::Var(std::string name, int value) {
@@ -11,10 +14,14 @@ Var::Var(std::string name, int value) {
 
 bool Var::equals(Expr *other) {
     Var* v = dynamic_cast<Var*>(other);
-    if (v == NULL) {
+    if (v == nullptr) {
         return false;
     }
     else {
-        return (this->name_->equals(v->name_) && this->value_->equals(v->value_));
+        return (this->name_ == v->name_ && this->value_ == v->value_);
     }
+}
+
+TEST_CASE("Var Tests") {
+
 }

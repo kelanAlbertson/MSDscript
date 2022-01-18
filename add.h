@@ -4,11 +4,13 @@
 
 #pragma once
 
+#include "expr.h"
+
 class Add : public Expr {
 public:
     Expr* lhs_;
     Expr* rhs_;
 
     Add (Expr* lhs, Expr* rhs);
-    virtual equals (Expr* other);
+    virtual bool equals (Expr* other);
 };

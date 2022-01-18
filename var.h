@@ -4,6 +4,9 @@
 
 #pragma once
 
+#include <string>
+#include "expr.h"
+
 class Var : public Expr {
 public:
     std::string name_;
