@@ -16,4 +16,6 @@ public:
     virtual bool equals (Expr* other);
     //returns an integer interpretation of the Mult
     virtual int interp();
+    //returns whether this Mult contains a variable
+    virtual bool has_variable();
 };

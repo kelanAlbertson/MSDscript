@@ -10,4 +10,6 @@ public:
     virtual bool equals(Expr* other) = 0;
     //returns an integer interpretation of the Expr (if possible)
     virtual int interp() = 0;
+    //returns whether this Expr is or contains a variable
+    virtual bool has_variable() = 0;
 };

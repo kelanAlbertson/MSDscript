@@ -16,5 +16,7 @@ public:
     virtual bool equals(Expr* other);
     //returns an integer interpretation of the Var
     virtual int interp();
+    //returns whether this Var is a variable (this will always be true)
+    virtual bool has_variable();
 };
 

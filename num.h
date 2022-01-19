@@ -15,4 +15,6 @@ public:
     virtual bool equals (Expr* other);
     //returns an integer interpretation of the Num
     virtual int interp();
+    //returns whether this Num contains a variable (this will always be false)
+    virtual bool has_variable();
 };
