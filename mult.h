@@ -18,4 +18,7 @@ public:
     virtual int interp();
     //returns whether this Mult contains a variable
     virtual bool has_variable();
+    //replaces every instance of a Var matching the provided name in this Mult with a replacement Expr
+    //if there is no matching Var then nothing is replaced and a new Expr equal to this Mult is returned
+    virtual Expr* subst(std::string variableName, Expr* replacement);
 };

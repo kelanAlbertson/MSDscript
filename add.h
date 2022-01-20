@@ -18,4 +18,7 @@ public:
     virtual int interp();
     //returns whether this Add contains a variable
     virtual bool has_variable();
+    //replaces every instance of a Var matching the provided name in this Add with a replacement Expr
+    //if there is no matching Var then nothing is replaced and a new Expr equal to this Add is returned
+    virtual Expr* subst(std::string variableName, Expr* replacement);
 };

@@ -6,6 +6,7 @@
 #include "catch.h"
 #include "num.h"
 #include "var.h"
+#include "mult.h"
 
 Add::Add(Expr* lhs, Expr* rhs) {
     this->lhs_ = lhs;
@@ -30,6 +31,11 @@ bool Add::has_variable() {
     return (this->lhs_->has_variable() || this->rhs_->has_variable());
 }
 
+Expr* Add::subst(std::string variableName, Expr *replacement) {
+    return new Add(this->lhs_->subst(variableName, replacement),
+                   this->rhs_->subst(variableName, replacement));
+}
+
 TEST_CASE("Add equals() tests") {
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(0), new Num(1))) == true);
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(1), new Num(0))) == false);
@@ -48,4 +54,14 @@ TEST_CASE("Add has_variable() tests") {
     CHECK((new Add(new Num(0), new Num(1)))->has_variable() == false);
     CHECK((new Add(new Var("test"), new Num(1)))->has_variable() == true);
     CHECK((new Add(new Var("test"), new Var("test")))->has_variable() == true);
+}
+
+TEST_CASE("Add subst() tests") {
+    CHECK((new Add(new Var("x"), new Num(7)))->subst("x", new Var("y"))
+            ->equals(new Add(new Var("y"), new Num(7))));
+    CHECK((new Add(new Var("a"), new Num(7)))->subst("x", new Var("y"))
+            ->equals(new Add(new Var("a"), new Num(7))));
+
+    CHECK((new Add(new Var("x"), new Add(new Mult(new Num(-1), new Var("x")), new Var("a"))))->subst("x", new Var("y"))
+            -> equals(new Add(new Var("y"), new Add(new Mult(new Num(-1), new Var("y")), new Var("a")))));
 }

@@ -4,6 +4,7 @@
 
 #include "num.h"
 #include "catch.h"
+#include "var.h"
 
 Num::Num(int value) {
     this->value_ = value;
@@ -27,6 +28,10 @@ bool Num::has_variable() {
     return false;
 }
 
+Expr* Num::subst(std::string variableName, Expr *replacement) {
+    return new Num(this->value_);
+}
+
 TEST_CASE("Num equals() tests") {
     CHECK((new Num(0))->equals(new Num(0)) == true);
     CHECK((new Num(8))->equals(new Num(8)) == true);
@@ -43,4 +48,8 @@ TEST_CASE("Num interp() tests") {
 TEST_CASE("Num has_variable() tests") {
     CHECK((new Num(0))->has_variable() == false);
     CHECK((new Num(-11))->has_variable() == false);
+}
+
+TEST_CASE("Num subst() tests") {
+    CHECK((new Num(1))->subst("x", new Var("y"))->equals(new Num(1)));
 }

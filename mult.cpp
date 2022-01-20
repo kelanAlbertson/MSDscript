@@ -31,6 +31,11 @@ bool Mult::has_variable() {
     return (this->lhs_->has_variable() || this->rhs_->has_variable());
 }
 
+Expr* Mult::subst(std::string variableName, Expr *replacement) {
+    return new Mult(this->lhs_->subst(variableName, replacement),
+            this->rhs_->subst(variableName, replacement));
+}
+
 TEST_CASE("Mult equals() tests") {
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(-1), new Num(0))) == true);
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(0), new Num(-1))) == false);
@@ -49,4 +54,11 @@ TEST_CASE("Mult has_variable() tests") {
     CHECK((new Mult(new Num(0), new Num(1)))->has_variable() == false);
     CHECK((new Mult(new Var("test"), new Num(1)))->has_variable() == true);
     CHECK((new Mult(new Var("test"), new Var("test")))->has_variable() == true);
+}
+
+TEST_CASE("Mult subst() tests") {
+    CHECK((new Mult(new Var("x"), new Var("x")))->subst("x", new Var("y"))
+            ->equals(new Mult(new Var("y"), new Var("y"))));
+    CHECK((new Mult(new Var("a"), new Var("x")))->subst("x", new Var("y"))
+            ->equals(new Mult(new Var("a"), new Var("y"))));
 }

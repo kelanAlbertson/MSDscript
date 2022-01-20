@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <string>
 #include "expr.h"
 
 class Var : public Expr {
@@ -18,5 +17,8 @@ public:
     virtual int interp();
     //returns whether this Var is a variable (this will always be true)
     virtual bool has_variable();
+    //if the variable name matches the name of this Var, then replaces this Var with the provided replacement Expr
+    //if the variable does not match the name of this Var, then a new Var equal to this Var is returned
+    virtual Expr* subst(std::string variableName, Expr* replacement);
 };
 
