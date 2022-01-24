@@ -36,6 +36,14 @@ Expr* Mult::subst(std::string variableName, Expr *replacement) {
             this->rhs_->subst(variableName, replacement));
 }
 
+void Mult::print(std::ostream &out) {
+    out << "(";
+    this->lhs_->print(out);
+    out << "*";
+    this->rhs_->print(out);
+    out << ")";
+}
+
 TEST_CASE("Mult equals() tests") {
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(-1), new Num(0))) == true);
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(0), new Num(-1))) == false);
@@ -61,4 +69,9 @@ TEST_CASE("Mult subst() tests") {
             ->equals(new Mult(new Var("y"), new Var("y"))));
     CHECK((new Mult(new Var("a"), new Var("x")))->subst("x", new Var("y"))
             ->equals(new Mult(new Var("a"), new Var("y"))));
+}
+
+TEST_CASE("Mult print() tests") {
+    CHECK((new Mult(new Num(1), new Num(2)))->to_string() == "(1*2)");
+    CHECK((new Mult(new Add(new Var("test"), new Num(0)), new Num(1)))->to_string() == "((test+0)*1)");
 }

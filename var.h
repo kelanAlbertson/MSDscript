@@ -20,5 +20,7 @@ public:
     //if the variable name matches the name of this Var, then replaces this Var with the provided replacement Expr
     //if the variable does not match the name of this Var, then a new Var equal to this Var is returned
     virtual Expr* subst(std::string variableName, Expr* replacement);
+    //prints the Var
+    virtual void print(std::ostream &out);
 };
 

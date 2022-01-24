@@ -38,6 +38,10 @@ Expr* Var::subst(std::string variableName, Expr* replacement) {
     }
 }
 
+void Var::print(std::ostream &out) {
+    out << this->name_;
+}
+
 TEST_CASE("Var equals() tests") {
     CHECK((new Var("one"))->equals(new Var("one")) == true);
     CHECK((new Var("one"))->equals(new Var("ONE")) == false);
@@ -55,4 +59,8 @@ TEST_CASE("Var has_variable() tests") {
 
 TEST_CASE("Var subst() tests") {
     CHECK((new Var("x"))->subst("x", new Var("y"))->equals(new Var("y")));
+}
+
+TEST_CASE("Var print()/to_string() tests") {
+    CHECK((new Var("x"))->to_string() == "x");
 }

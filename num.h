@@ -20,4 +20,6 @@ public:
     //replaces every instance of a Var matching the provided name in this Expr with a replacement Expr
     //but since there cannot be a Var within a Num, this will always return a new Num equal to this Num
     virtual Expr* subst(std::string variableName, Expr* replacement);
+    //prints the Num
+    virtual void print(std::ostream &out);
 };

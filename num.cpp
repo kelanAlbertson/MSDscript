@@ -2,6 +2,7 @@
 // Created by Kelan Albertson on 1/16/22.
 //
 
+#include <sstream>
 #include "num.h"
 #include "catch.h"
 #include "var.h"
@@ -32,6 +33,10 @@ Expr* Num::subst(std::string variableName, Expr *replacement) {
     return new Num(this->value_);
 }
 
+void Num::print(std::ostream &out) {
+    out << this->value_;
+}
+
 TEST_CASE("Num equals() tests") {
     CHECK((new Num(0))->equals(new Num(0)) == true);
     CHECK((new Num(8))->equals(new Num(8)) == true);
@@ -52,4 +57,8 @@ TEST_CASE("Num has_variable() tests") {
 
 TEST_CASE("Num subst() tests") {
     CHECK((new Num(1))->subst("x", new Var("y"))->equals(new Num(1)));
+}
+
+TEST_CASE("Num print()/to_string() tests") {
+    CHECK((new Num(1))->to_string() == "1");
 }

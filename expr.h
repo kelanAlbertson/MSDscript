@@ -16,4 +16,8 @@ public:
     virtual bool has_variable() = 0;
     //replaces every instance in the Expr of a Var matching the provided name with a replacement Expr
     virtual Expr* subst(std::string variableName, Expr* replacement) = 0;
+    //prints the expression
+    virtual void print(std::ostream &out) = 0;
+    //returns the string representation of the Expr using the print() function
+    std::string to_string();
 };
