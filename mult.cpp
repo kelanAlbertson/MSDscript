@@ -2,11 +2,12 @@
 // Created by Kelan Albertson on 1/16/22.
 //
 
-#include "add.h"
-#include "catch.h"
 #include "mult.h"
+#include "add.h"
 #include "num.h"
 #include "var.h"
+#include "catch.h"
+#include <sstream>
 
 Mult::Mult(Expr *lhs, Expr *rhs) {
     this->lhs_ = lhs;
@@ -44,6 +45,24 @@ void Mult::print(std::ostream &out) {
     out << ")";
 }
 
+void Mult::pretty_print_at(std::ostream &out, Expr::precedence_t prec) {
+    if (prec == prec_mult) {
+        out << "(";
+    }
+
+    this->lhs_->pretty_print_at(out, prec_mult);
+    out << " * ";
+    this->rhs_->pretty_print_at(out, prec_add);
+
+    if (prec == prec_mult) {
+        out << ")";
+    }
+}
+
+/**
+ *************************   TESTS   **************************
+ **/
+
 TEST_CASE("Mult equals() tests") {
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(-1), new Num(0))) == true);
     CHECK((new Mult(new Num(-1), new Num(0)))->equals(new Mult(new Num(0), new Num(-1))) == false);
@@ -74,4 +93,20 @@ TEST_CASE("Mult subst() tests") {
 TEST_CASE("Mult print() tests") {
     CHECK((new Mult(new Num(1), new Num(2)))->to_string() == "(1*2)");
     CHECK((new Mult(new Add(new Var("test"), new Num(0)), new Num(1)))->to_string() == "((test+0)*1)");
+}
+
+TEST_CASE("Mult pretty_print() tests") {
+    std::stringstream out("");
+    (new Mult(new Num(1), new Num(2)))->pretty_print(out);
+    CHECK(out.str() == "1 * 2");
+    out.str(std::string());
+    (new Mult(new Mult(new Num(2), new Num(3)), new Num(4)))->pretty_print(out);
+    CHECK(out.str() == "(2 * 3) * 4");
+    out.str(std::string());
+    (new Mult(new Num(2), new Mult(new Num(3), new Num(4))))->pretty_print(out);
+    CHECK(out.str() == "2 * 3 * 4");
+    out.str(std::string());
+    (new Mult(new Add(new Num(1), new Num(2)), new Add(new Num(3), new Num(4))))
+            ->pretty_print(out);
+    CHECK(out.str() == "(1 + 2) * (3 + 4)");
 }

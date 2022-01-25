@@ -2,10 +2,10 @@
 // Created by Kelan Albertson on 1/16/22.
 //
 
-#include <sstream>
 #include "num.h"
-#include "catch.h"
 #include "var.h"
+#include "catch.h"
+#include <sstream>
 
 Num::Num(int value) {
     this->value_ = value;
@@ -37,6 +37,14 @@ void Num::print(std::ostream &out) {
     out << this->value_;
 }
 
+void Num::pretty_print_at(std::ostream &out, Expr::precedence_t prec) {
+    out << this->value_;
+}
+
+/**
+ *************************   TESTS   **************************
+ **/
+
 TEST_CASE("Num equals() tests") {
     CHECK((new Num(0))->equals(new Num(0)) == true);
     CHECK((new Num(8))->equals(new Num(8)) == true);
@@ -61,4 +69,10 @@ TEST_CASE("Num subst() tests") {
 
 TEST_CASE("Num print()/to_string() tests") {
     CHECK((new Num(1))->to_string() == "1");
+}
+
+TEST_CASE("Num pretty_print() tests") {
+    std::stringstream out("");
+    (new Num(4))->pretty_print(out);
+    CHECK(out.str() == "4");
 }
