@@ -16,4 +16,17 @@ public:
     virtual bool has_variable() = 0;
     //replaces every instance in the Expr of a Var matching the provided name with a replacement Expr
     virtual Expr* subst(std::string variableName, Expr* replacement) = 0;
+    //prints the expression
+    virtual void print(std::ostream &out) = 0;
+    //returns the string representation of the Expr using the print() function
+    std::string to_string();
+    //prints the expression with spaces around operators and without unnecessary parentheses
+    virtual void pretty_print(std::ostream &out);
+    typedef enum {
+        prec_none,      // = 0
+        prec_add,       // = 1
+        prec_mult       // = 2
+    } precedence_t;
+    //pretty_print using an accumulator prec to determine which Expr need parentheses around them
+    virtual void pretty_print_at(std::ostream &out, precedence_t prec) = 0;
 };

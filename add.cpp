@@ -3,10 +3,11 @@
 //
 
 #include "add.h"
-#include "catch.h"
+#include "mult.h"
 #include "num.h"
 #include "var.h"
-#include "mult.h"
+#include "catch.h"
+#include <sstream>
 
 Add::Add(Expr* lhs, Expr* rhs) {
     this->lhs_ = lhs;
@@ -36,6 +37,32 @@ Expr* Add::subst(std::string variableName, Expr *replacement) {
                    this->rhs_->subst(variableName, replacement));
 }
 
+void Add::print(std::ostream &out) {
+    out << "(";
+    this->lhs_->print(out);
+    out << "+";
+    this->rhs_->print(out);
+    out << ")";
+}
+
+void Add::pretty_print_at(std::ostream &out, Expr::precedence_t prec) {
+    if (prec >= prec_add) {
+        out << "(";
+    }
+
+    this->lhs_->pretty_print_at(out, prec_add);
+    out << " + ";
+    this->rhs_->pretty_print_at(out, prec_none);
+
+    if (prec >= prec_add) {
+        out << ")";
+    }
+}
+
+/**
+ *************************   TESTS   **************************
+ **/
+
 TEST_CASE("Add equals() tests") {
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(0), new Num(1))) == true);
     CHECK((new Add(new Num(0), new Num(1)))->equals(new Add(new Num(1), new Num(0))) == false);
@@ -64,4 +91,22 @@ TEST_CASE("Add subst() tests") {
 
     CHECK((new Add(new Var("x"), new Add(new Mult(new Num(-1), new Var("x")), new Var("a"))))->subst("x", new Var("y"))
             -> equals(new Add(new Var("y"), new Add(new Mult(new Num(-1), new Var("y")), new Var("a")))));
+}
+
+TEST_CASE("Add print()/to_string() tests") {
+    CHECK((new Add(new Num(1), new Num(2)))->to_string() == "(1+2)");
+    CHECK((new Add(new Num(1), new Add(new Num(2), new Num(3))))->to_string() == "(1+(2+3))");
+    CHECK((new Add(new Add(new Num(1), new Num(2)), new Num(3)))->to_string() == "((1+2)+3)");
+}
+
+TEST_CASE("Add pretty_print() tests") {
+    std::stringstream out("");
+    (new Add(new Num(1), new Num(2)))->pretty_print(out);
+    CHECK(out.str() == "1 + 2");
+    out.str(std::string());
+    (new Add(new Add(new Num(1), new Num(2)), new Num(3)))->pretty_print(out);
+    CHECK(out.str() == "(1 + 2) + 3");
+    out.str(std::string());
+    (new Add(new Num(1), new Mult(new Num(2), new Num(3))))->pretty_print(out);
+    CHECK(out.str() == "1 + 2 * 3");
 }
