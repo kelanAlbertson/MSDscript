@@ -49,6 +49,7 @@ TEST_CASE("Num equals() tests") {
     CHECK((new Num(0))->equals(new Num(0)) == true);
     CHECK((new Num(8))->equals(new Num(8)) == true);
     CHECK((new Num(8))->equals(new Num(-1)) == false);
+    CHECK((new Num(8))->equals(new Var("8")) == false);
 }
 
 TEST_CASE("Num interp() tests") {
