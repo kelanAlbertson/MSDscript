@@ -30,7 +30,7 @@ bool Num::has_variable() {
 }
 
 Expr* Num::subst(std::string variableName, Expr *replacement) {
-    return new Num(this->value_);
+    return this;
 }
 
 void Num::print(std::ostream &out) {

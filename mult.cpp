@@ -34,7 +34,7 @@ bool Mult::has_variable() {
 
 Expr* Mult::subst(std::string variableName, Expr *replacement) {
     return new Mult(this->lhs_->subst(variableName, replacement),
-            this->rhs_->subst(variableName, replacement));
+                    this->rhs_->subst(variableName, replacement));
 }
 
 void Mult::print(std::ostream &out) {

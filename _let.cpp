@@ -37,12 +37,28 @@ bool _let::has_variable() {
 }
 
 Expr *_let::subst(std::string variableName, Expr *replacement) {
-    return nullptr;
-    //TODO
+    // rules from lecture videos:
+    // if bind same variable then do not substitute in body
+    // if bind different variable then do substitute in body
+    // always substitute in rhs
+    if (this->lhs_->name_ == variableName) {
+        return new _let(this->lhs_,this->rhs_->subst(variableName, replacement), this->body_);
+    }
+    else {
+        return new _let(this->lhs_,
+                        this->rhs_->subst(variableName, replacement),
+                        this->body_->subst(variableName, replacement));
+    }
 }
 
 void _let::print(std::ostream &out) {
-    //TODO
+    out << "(_let ";
+    this->lhs_->print(out);
+    out << "=";
+    this->rhs_->print(out);
+    out << " _in ";
+    this->body_->print(out);
+    out << ")";
 }
 
 void _let::pretty_print_at(std::ostream &out, Expr::precedence_t prec) {
@@ -78,21 +94,20 @@ TEST_CASE("_let has_variable() tests") {
 }
 
 TEST_CASE("_let subst() tests") {
-
-//    CHECK((new Add(new Var("x"), new Num(7)))->subst("x", new Var("y"))
-//                  ->equals(new Add(new Var("y"), new Num(7))));
-//    CHECK((new Add(new Var("a"), new Num(7)))->subst("x", new Var("y"))
-//                  ->equals(new Add(new Var("a"), new Num(7))));
-//
-//    CHECK((new Add(new Var("x"), new Add(new Mult(new Num(-1), new Var("x")), new Var("a"))))->subst("x", new Var("y"))
-//                  ->equals(new Add(new Var("y"), new Add(new Mult(new Num(-1), new Var("y")), new Var("a")))));
+    CHECK((new _let(new Var("x"), new Num(6), new Add(new Var("x"), new Num(1))))->subst("x", new Num(5))
+                ->equals(new _let(new Var("x"), new Num(6), new Add(new Var("x"), new Num(1)))));
+    CHECK((new _let(new Var("y"), new Num(6), new Add(new Var("x"), new Num(1))))->subst("x", new Num(5))
+                  ->equals(new _let(new Var("y"), new Num(6), new Add(new Num(5), new Num(1)))));
+    CHECK((new _let(new Var("x"), new Add(new Var("x"), new Num(2)), new Add(new Var("x"), new Num(1))))->subst("x", new Num(5))
+                  ->equals(new _let(new Var("x"), new Add(new Num(5), new Num(2)), new Add(new Var("x"), new Num(1)))));
 }
 
 TEST_CASE("_let print()/to_string() tests") {
-
-//    CHECK((new Add(new Num(1), new Num(2)))->to_string() == "(1+2)");
-//    CHECK((new Add(new Num(1), new Add(new Num(2), new Num(3))))->to_string() == "(1+(2+3))");
-//    CHECK((new Add(new Add(new Num(1), new Num(2)), new Num(3)))->to_string() == "((1+2)+3)");
+    CHECK((new _let(new Var("y"), new Num(3), new Add(new Var("y"), new Num(2))))->to_string() == "(_let y=3 _in (y+2))");
+    CHECK((new _let(new Var("x"), new Num(5), new _let(new Var("y"), new Num(3), new Add(new Var("y"), new Num(2)))))
+            ->to_string() == "(_let x=5 _in (_let y=3 _in (y+2)))");
+    CHECK((new _let(new Var("x"), new Num(5), new Add(new _let(new Var("y"), new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))
+            ->to_string() == "(_let x=5 _in ((_let y=3 _in (y+2))+x))");
 }
 
 TEST_CASE("_let pretty_print() tests") {

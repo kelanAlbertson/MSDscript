@@ -37,7 +37,7 @@ Expr* Var::subst(std::string variableName, Expr* replacement) {
         return replacement;
     }
     else {
-        return new Var(this->name_);
+        return this;
     }
 }
 
