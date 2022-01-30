@@ -12,7 +12,7 @@ public:
     Expr* rhs_;
 
     Mult(Expr* lhs, Expr* rhs);
-    //returns whether this Expr has all the same fields as the other Expr
+    //returns whether the other Expr is an Mult and has all the same fields as this Mult
     virtual bool equals (Expr* other);
     //returns an integer interpretation of the Mult
     virtual int interp();

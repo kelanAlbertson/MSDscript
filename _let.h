@@ -1,22 +1,24 @@
 //
-// Created by Kelan Albertson on 1/16/22.
+// Created by Kelan Albertson on 1/28/22.
 //
 
 #pragma once
 
 #include "expr.h"
+#include "var.h"
 
-class Add : public Expr {
+class _let : public Expr {
 public:
-    Expr* lhs_;
+    Var* lhs_;
     Expr* rhs_;
+    Expr* body_;
 
-    Add (Expr* lhs, Expr* rhs);
-    //returns whether the other Expr is an Add and has all the same fields as this Add
+    _let (Var* lhs, Expr* rhs, Expr* body);
+    //returns whether the other Expr is a _let and has all the same fields as this _let
     virtual bool equals (Expr* other);
-    //returns an integer interpretation of the Add
+    //returns an interpretation of the _let
     virtual int interp();
-    //returns whether this Add contains a variable
+    //returns whether this _let contains a variable
     virtual bool has_variable();
     //replaces every instance of a Var matching the provided name in this Add with a replacement Expr
     //if there is no matching Var then nothing is replaced and a new Expr equal to this Add is returned
@@ -26,4 +28,5 @@ public:
     //prints the expression with spaces around operators and without unnecessary parentheses
     //using an accumulator prec to determine which Expr need parentheses around them
     virtual void pretty_print_at(std::ostream &out, precedence_t prec);
+
 };

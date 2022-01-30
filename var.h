@@ -11,7 +11,7 @@ public:
     std::string name_;
 
     Var(std::string name);
-    //returns whether this Expr has all the same fields as the other Expr
+    //returns whether the other Expr is a Var and has the same name as this Var
     virtual bool equals(Expr* other);
     //returns an integer interpretation of the Var
     virtual int interp();

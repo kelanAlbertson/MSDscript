@@ -11,7 +11,7 @@ public:
     int value_;
 
     Num (int value);
-    //returns whether this Num is the same type and has the same value as the other Expr
+    //returns whether the other Expr is a Num and has the same value as this Num
     virtual bool equals (Expr* other);
     //returns an integer interpretation of the Num
     virtual int interp();
