@@ -28,5 +28,5 @@ public:
         prec_mult       // = 2
     } precedence_t;
     //pretty_print using an accumulator prec to determine which Expr need parentheses around them
-    virtual void pretty_print_at(std::ostream &out, precedence_t prec) = 0;
+    virtual void pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) = 0;
 };

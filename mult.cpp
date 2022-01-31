@@ -45,14 +45,14 @@ void Mult::print(std::ostream &out) {
     out << ")";
 }
 
-void Mult::pretty_print_at(std::ostream &out, Expr::precedence_t prec) {
+void Mult::pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
     if (prec == prec_mult) {
         out << "(";
     }
-
-    this->lhs_->pretty_print_at(out, prec_mult);
+    //FIXME
+    this->lhs_->pretty_print_at(out, prec_mult, true, last_new_line_pos);
     out << " * ";
-    this->rhs_->pretty_print_at(out, prec_add);
+    this->rhs_->pretty_print_at(out, prec_add, true, last_new_line_pos);
 
     if (prec == prec_mult) {
         out << ")";

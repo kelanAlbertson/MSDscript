@@ -28,8 +28,12 @@ bool _let::equals(Expr* other) {
 }
 
 int _let::interp() {
-    return 0;
-    //TODO
+    if (!this->rhs_->has_variable()) {
+        int n = this->rhs_->interp();
+        this->rhs_ = new Num(n);
+    }
+    return this->body_->subst(this->lhs_->name_, this->rhs_)->interp();
+    //FIXME break into steps (fully subst before doing interp on just body)
 }
 
 bool _let::has_variable() {
@@ -61,8 +65,32 @@ void _let::print(std::ostream &out) {
     out << ")";
 }
 
-void _let::pretty_print_at(std::ostream &out, Expr::precedence_t prec) {
-    //TODO
+void _let::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
+    if (let_parentheses) {
+        out << "(";
+    }
+
+    int let_indent = out.tellp() - last_new_line_pos;
+    out << "_let " + this->lhs_->name_ + " = ";
+    this->rhs_->pretty_print_at(out, prec_none, false, last_new_line_pos);
+    out << "\n";
+    last_new_line_pos = out.tellp();
+
+    for (int i = 0; i < let_indent; ++i) {
+        out << " ";
+    }
+
+    int in_pos = out.tellp();
+    out << "_in  ";
+    this->body_->pretty_print_at(out, prec_none, false, last_new_line_pos);
+
+    if (let_parentheses) {
+        out << ")";
+    }
+
+//    out << "\nnew line last_new_line_pos: " << last_new_line_pos;
+//    out << "\nlet indent: " << let_indent;
+//    out << "\nin last_new_line_pos: " << in_pos << "\n";
 }
 
 /**
@@ -80,11 +108,10 @@ TEST_CASE("_let equals() tests") {
 }
 
 TEST_CASE("_let interp() tests") {
+    CHECK((new _let(new Var("x"), new Num(5), new Add(new Var("x"), new Num(1))))->interp() == 6);
+    CHECK((new _let(new Var("x"), new Add(new Num(5), new Num(2)), new Add(new Var("x"), new Num(1))))->interp() == 8);
+    CHECK((new Add(new Mult(new Num(5), new _let(new Var("x"), new Num(5), new Var("x"))), new Num(1)))->interp() == 26);
 
-//    CHECK((new Add(new Num(0), new Num(0)))->interp() == 0);
-//    CHECK((new Add(new Num(0), new Num(1)))->interp() == 1);
-//    CHECK((new Add(new Num(1), new Num(0)))->interp() == 1);
-//    CHECK((new Add(new Num(-5), new Num(18)))->interp() == 13);
 }
 
 TEST_CASE("_let has_variable() tests") {
@@ -111,10 +138,21 @@ TEST_CASE("_let print()/to_string() tests") {
 }
 
 TEST_CASE("_let pretty_print() tests") {
-//    std::stringstream out("");
-//    (new Add(new Num(1), new Num(2)))->pretty_print(out);
-//    CHECK(out.str() == "1 + 2");
-//    out.str(std::string());
+    std::stringstream out("");
+    (new _let(new Var("x"), new Num(5), new Add(new Var("x"), new Num(1))))->pretty_print(out);
+    CHECK(out.str() == "_let x = 5\n"
+                       "_in  x + 1");
+    out.str(std::string());
+    (new Add(new _let(new Var("x"), new Num(5), new Var("x")), new Num(1)))->pretty_print(out);
+    CHECK(out.str() == "(_let x = 5\n"
+                       " _in  x) + 1");
+    out.str(std::string());
+    (new _let(new Var("x"), new Num(5), new Add(new _let(new Var("y"), new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))
+            ->pretty_print(out);
+    CHECK(out.str() == "_let x = 5\n"
+                       "_in  (_let y = 3\n"
+                       "      _in  y + 2) + x");
+    out.str(std::string());
 //    (new Add(new Add(new Num(1), new Num(2)), new Num(3)))->pretty_print(out);
 //    CHECK(out.str() == "(1 + 2) + 3");
 //    out.str(std::string());
