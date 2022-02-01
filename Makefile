@@ -1,8 +1,8 @@
 INCS = cmdline.h
 OBJS = main.o cmdline.o
 
-msdscript: main.o cmdline.o expr.o num.o add.o mult.o var.o
-	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o
+msdscript: main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o
+	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o
 
 .PHONY: test
 test: msdscript
@@ -20,17 +20,17 @@ expr.o: expr.cpp expr.h
 num.o: num.cpp num.h catch.h
 	c++ --std=c++14 -O2 -c num.cpp
 
-add.o: add.cpp add.h catch.h num.h
+add.o: add.cpp add.h mult.h num.h var.h catch.h
 	c++ --std=c++14 -O2 -c add.cpp
 
-mult.o: mult.cpp mult.h add.h catch.h num.h
+mult.o: mult.cpp mult.h add.h num.h var.h catch.h
 	c++ --std=c++14 -O2 -c mult.cpp
 
-var.o: var.cpp var.h catch.h num.h
+var.o: var.cpp var.h add.h num.h mult.h catch.h
 	c++ --std=c++14 -O2 -c var.cpp
 
-_let.o: _let.cpp _let.h
-	c++ --std+c++14 -O2 -c _let.cpp
+_let.o: _let.cpp _let.h add.h num.h mult.h var.h catch.h
+	c++ --std=c++14 -O2 -c _let.cpp
 
 clean:
-	rm msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o
+	rm msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o

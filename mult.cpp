@@ -49,10 +49,10 @@ void Mult::pretty_print_at(std::ostream &out, precedence_t prec, bool let_parent
     if (prec == prec_mult) {
         out << "(";
     }
-    //FIXME
+
     this->lhs_->pretty_print_at(out, prec_mult, true, last_new_line_pos);
     out << " * ";
-    this->rhs_->pretty_print_at(out, prec_add, true, last_new_line_pos);
+    this->rhs_->pretty_print_at(out, prec_add, let_parentheses, last_new_line_pos);
 
     if (prec == prec_mult) {
         out << ")";

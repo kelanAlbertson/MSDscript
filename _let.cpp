@@ -9,6 +9,7 @@
 #include "var.h"
 #include "catch.h"
 #include <sstream>
+#include <iostream>
 
 
 _let::_let(Var* lhs, Expr* rhs, Expr* body) {
@@ -111,7 +112,7 @@ TEST_CASE("_let interp() tests") {
     CHECK((new _let(new Var("x"), new Num(5), new Add(new Var("x"), new Num(1))))->interp() == 6);
     CHECK((new _let(new Var("x"), new Add(new Num(5), new Num(2)), new Add(new Var("x"), new Num(1))))->interp() == 8);
     CHECK((new Add(new Mult(new Num(5), new _let(new Var("x"), new Num(5), new Var("x"))), new Num(1)))->interp() == 26);
-
+    CHECK((new _let(new Var("x"), new _let(new Var("y"), new Num(6), new Mult(new Var("y"), new Num(2))), new Add(new Var("x"), new Num(1))))->interp() == 13);
 }
 
 TEST_CASE("_let has_variable() tests") {
@@ -127,6 +128,15 @@ TEST_CASE("_let subst() tests") {
                   ->equals(new _let(new Var("y"), new Num(6), new Add(new Num(5), new Num(1)))));
     CHECK((new _let(new Var("x"), new Add(new Var("x"), new Num(2)), new Add(new Var("x"), new Num(1))))->subst("x", new Num(5))
                   ->equals(new _let(new Var("x"), new Add(new Num(5), new Num(2)), new Add(new Var("x"), new Num(1)))));
+    CHECK((new _let(new Var("x"), new _let(new Var("y"), new Num(6), new Mult(new Var("y"), new Num(2))), new Add(new Var("x"), new Num(1)))));
+//    _let *let1 = new _let( new Var("Niemann"), new Num(5), new Add(new Num(3), new Var("Niemann")));
+//    std::cout << let1->to_string() << "\n";
+//    Expr *let2 = (let1->subst("Niemann", new Var("Jason")));
+//    std::cout << let2->to_string() << "\n";
+//    _let *let3 = new _let( new Var("Niemann"), new Num(5), new Add(new Num(3), new Var("Jason")));
+//    std::cout << let3->to_string() << "\n";
+//    CHECK( ( let1->subst("Niemann", new Var("Jason"))->equals(let3)) );
+
 }
 
 TEST_CASE("_let print()/to_string() tests") {
@@ -147,15 +157,22 @@ TEST_CASE("_let pretty_print() tests") {
     CHECK(out.str() == "(_let x = 5\n"
                        " _in  x) + 1");
     out.str(std::string());
+    (new Mult(new Num(5), new _let(new Var("x"), new Num(5), new Add(new Var("x"), new Num(1)))))->pretty_print(out);
+    CHECK(out.str() == "5 * _let x = 5\n"
+                       "    _in  x + 1");
+    out.str(std::string());
+    (new Add(new Mult(new Num(5), new _let(new Var("x"), new Num(5), new Var("x"))), new Num(1)))->pretty_print(out);
+    CHECK(out.str() == "5 * (_let x = 5\n"
+                       "     _in  x) + 1");
+    out.str(std::string());
     (new _let(new Var("x"), new Num(5), new Add(new _let(new Var("y"), new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))
             ->pretty_print(out);
     CHECK(out.str() == "_let x = 5\n"
                        "_in  (_let y = 3\n"
                        "      _in  y + 2) + x");
     out.str(std::string());
-//    (new Add(new Add(new Num(1), new Num(2)), new Num(3)))->pretty_print(out);
-//    CHECK(out.str() == "(1 + 2) + 3");
-//    out.str(std::string());
-//    (new Add(new Num(1), new Mult(new Num(2), new Num(3))))->pretty_print(out);
-//    CHECK(out.str() == "1 + 2 * 3");
+    (new _let(new Var("x"), new _let(new Var("y"), new Num(6), new Mult(new Var("y"), new Num(2))), new Add(new Var("x"), new Num(1))))->pretty_print(out);
+    CHECK(out.str() == "_let x = _let y = 6\n"
+                       "         _in  y * 2\n"
+                       "_in  x + 1");
 }
