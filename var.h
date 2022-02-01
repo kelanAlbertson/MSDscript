@@ -11,7 +11,7 @@ public:
     std::string name_;
 
     Var(std::string name);
-    //returns whether this Expr has all the same fields as the other Expr
+    //returns whether the other Expr is a Var and has the same name as this Var
     virtual bool equals(Expr* other);
     //returns an integer interpretation of the Var
     virtual int interp();
@@ -24,6 +24,6 @@ public:
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses
     //using an accumulator prec to determine which Expr need parentheses around them
-    virtual void pretty_print_at(std::ostream &out, precedence_t prec);
+    virtual void pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &pos);
 };
 

@@ -30,14 +30,14 @@ bool Num::has_variable() {
 }
 
 Expr* Num::subst(std::string variableName, Expr *replacement) {
-    return new Num(this->value_);
+    return this;
 }
 
 void Num::print(std::ostream &out) {
     out << this->value_;
 }
 
-void Num::pretty_print_at(std::ostream &out, Expr::precedence_t prec) {
+void Num::pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
     out << this->value_;
 }
 

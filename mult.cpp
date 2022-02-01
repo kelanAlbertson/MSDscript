@@ -34,7 +34,7 @@ bool Mult::has_variable() {
 
 Expr* Mult::subst(std::string variableName, Expr *replacement) {
     return new Mult(this->lhs_->subst(variableName, replacement),
-            this->rhs_->subst(variableName, replacement));
+                    this->rhs_->subst(variableName, replacement));
 }
 
 void Mult::print(std::ostream &out) {
@@ -45,14 +45,14 @@ void Mult::print(std::ostream &out) {
     out << ")";
 }
 
-void Mult::pretty_print_at(std::ostream &out, Expr::precedence_t prec) {
+void Mult::pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
     if (prec == prec_mult) {
         out << "(";
     }
 
-    this->lhs_->pretty_print_at(out, prec_mult);
+    this->lhs_->pretty_print_at(out, prec_mult, true, last_new_line_pos);
     out << " * ";
-    this->rhs_->pretty_print_at(out, prec_add);
+    this->rhs_->pretty_print_at(out, prec_add, let_parentheses, last_new_line_pos);
 
     if (prec == prec_mult) {
         out << ")";

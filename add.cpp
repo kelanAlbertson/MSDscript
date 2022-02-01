@@ -45,14 +45,14 @@ void Add::print(std::ostream &out) {
     out << ")";
 }
 
-void Add::pretty_print_at(std::ostream &out, Expr::precedence_t prec) {
+void Add::pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
     if (prec >= prec_add) {
         out << "(";
     }
 
-    this->lhs_->pretty_print_at(out, prec_add);
+    this->lhs_->pretty_print_at(out, prec_add, true, last_new_line_pos);
     out << " + ";
-    this->rhs_->pretty_print_at(out, prec_none);
+    this->rhs_->pretty_print_at(out, prec_none, false, last_new_line_pos);
 
     if (prec >= prec_add) {
         out << ")";

@@ -13,5 +13,6 @@ std::string Expr::to_string() {
 }
 
 void Expr::pretty_print(std::ostream &out) {
-    pretty_print_at(out, prec_none);
+    std::streampos zero = out.tellp();
+    pretty_print_at(out, prec_none, false, zero);
 }

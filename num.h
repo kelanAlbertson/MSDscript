@@ -11,7 +11,7 @@ public:
     int value_;
 
     Num (int value);
-    //returns whether this Num is the same type and has the same value as the other Expr
+    //returns whether the other Expr is a Num and has the same value as this Num
     virtual bool equals (Expr* other);
     //returns an integer interpretation of the Num
     virtual int interp();
@@ -24,5 +24,5 @@ public:
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses
     //using an accumulator prec to determine which Expr need parentheses around them
-    virtual void pretty_print_at(std::ostream &out, precedence_t prec);
+    virtual void pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos);
 };
