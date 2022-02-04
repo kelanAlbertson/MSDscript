@@ -29,12 +29,8 @@ bool _let::equals(Expr* other) {
 }
 
 int _let::interp() {
-    if (!this->rhs_->has_variable()) {
-        int n = this->rhs_->interp();
-        this->rhs_ = new Num(n);
-    }
-    return this->body_->subst(this->lhs_->name_, this->rhs_)->interp();
-    //FIXME break into steps (fully subst before doing interp on just body)
+    int n = this->rhs_->interp();
+    return this->body_->subst(this->lhs_->name_, new Num(n))->interp();
 }
 
 bool _let::has_variable() {
@@ -129,14 +125,6 @@ TEST_CASE("_let subst() tests") {
     CHECK((new _let(new Var("x"), new Add(new Var("x"), new Num(2)), new Add(new Var("x"), new Num(1))))->subst("x", new Num(5))
                   ->equals(new _let(new Var("x"), new Add(new Num(5), new Num(2)), new Add(new Var("x"), new Num(1)))));
     CHECK((new _let(new Var("x"), new _let(new Var("y"), new Num(6), new Mult(new Var("y"), new Num(2))), new Add(new Var("x"), new Num(1)))));
-//    _let *let1 = new _let( new Var("Niemann"), new Num(5), new Add(new Num(3), new Var("Niemann")));
-//    std::cout << let1->to_string() << "\n";
-//    Expr *let2 = (let1->subst("Niemann", new Var("Jason")));
-//    std::cout << let2->to_string() << "\n";
-//    _let *let3 = new _let( new Var("Niemann"), new Num(5), new Add(new Num(3), new Var("Jason")));
-//    std::cout << let3->to_string() << "\n";
-//    CHECK( ( let1->subst("Niemann", new Var("Jason"))->equals(let3)) );
-
 }
 
 TEST_CASE("_let print()/to_string() tests") {

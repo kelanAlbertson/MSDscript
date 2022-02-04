@@ -29,4 +29,6 @@ public:
     } precedence_t;
     //pretty_print using an accumulator prec to determine which Expr need parentheses around them
     virtual void pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) = 0;
+    //returns the string representation of the Expr using the pretty_print() function
+    std::string to_pretty_string();
 };

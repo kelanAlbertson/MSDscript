@@ -16,3 +16,9 @@ void Expr::pretty_print(std::ostream &out) {
     std::streampos zero = out.tellp();
     pretty_print_at(out, prec_none, false, zero);
 }
+
+std::string Expr::to_pretty_string() {
+    std::stringstream out("");
+    this->pretty_print(out);
+    return out.str();
+}
