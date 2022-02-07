@@ -1,8 +1,8 @@
 INCS = cmdline.h
 OBJS = main.o cmdline.o
 
-msdscript: main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o
-	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o
+msdscript: main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o
+	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o
 
 .PHONY: test
 test: msdscript
@@ -31,6 +31,9 @@ var.o: var.cpp var.h add.h num.h mult.h catch.h
 
 _let.o: _let.cpp _let.h add.h num.h mult.h var.h catch.h
 	c++ --std=c++14 -O2 -c _let.cpp
+
+parse.o: parse.cpp
+	c++ --std=c++14 -O2 -c parse.cpp
 
 clean:
 	rm msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o

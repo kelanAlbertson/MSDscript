@@ -77,17 +77,12 @@ void _let::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool let_
         out << " ";
     }
 
-    int in_pos = out.tellp();
     out << "_in  ";
     this->body_->pretty_print_at(out, prec_none, false, last_new_line_pos);
 
     if (let_parentheses) {
         out << ")";
     }
-
-//    out << "\nnew line last_new_line_pos: " << last_new_line_pos;
-//    out << "\nlet indent: " << let_indent;
-//    out << "\nin last_new_line_pos: " << in_pos << "\n";
 }
 
 /**

@@ -16,8 +16,12 @@ int use_arguments (int argc, char *argv[]) {
         for (int i = 1; i < argc; ++i) {
             std::string arg = argv[i];
             if (arg == "--help") {
-                std::cout << "Possible arguments:" << std::endl << "  '--help' displays all possible arguments" <<
-                std::endl << "  '--test' displays the test results" << std::endl;
+                std::cout << "Possible arguments:" << std::endl;
+                std::cout << "  '--help' displays all possible arguments" << std::endl;
+                std::cout << "  '--test' runs tests" << std::endl;
+                std::cout << "  '--interp' accepts a single expression and prints the interp value of it" << std::endl;
+                std::cout << "  '--print' accepts a single expression and prints it with basic formatting" << std::endl;
+                std::cout << "  '--pretty-print' accepts a single expression and prints it with better formatting" << std::endl;
                 exit(0);
             }
             else if (arg == "--test") {
