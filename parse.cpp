@@ -12,7 +12,7 @@
 #include "mult.h"
 #include "_let.h"
 
-static Expr *parse(std::istream &in) {
+Expr *parse(std::istream &in) {
     Expr *e = parse_expr(in);
 
     skip_whitespace(in);
@@ -23,12 +23,12 @@ static Expr *parse(std::istream &in) {
     return e;
 }
 
-static Expr *parse_string(std::string s) {
+Expr *parse_string(std::string s) {
     std::stringstream ss(s);
     return parse(ss);
 }
 
-static Expr *parse_expr(std::istream &in) {
+Expr *parse_expr(std::istream &in) {
     Expr *e;
 
     e = parse_addend(in);
@@ -46,7 +46,7 @@ static Expr *parse_expr(std::istream &in) {
     }
 }
 
-static Expr *parse_addend(std::istream &in) {
+Expr *parse_addend(std::istream &in) {
     Expr *e;
 
     e = parse_multicand(in);
@@ -64,7 +64,7 @@ static Expr *parse_addend(std::istream &in) {
     }
 }
 
-static Expr *parse_multicand(std::istream &in) {
+Expr *parse_multicand(std::istream &in) {
     skip_whitespace(in);
 
     int c = in.peek();
@@ -93,7 +93,7 @@ static Expr *parse_multicand(std::istream &in) {
     }
 }
 
-static Num *parse_num(std::istream &in) {
+Num *parse_num(std::istream &in) {
     int n = 0;
     bool negative = false;
 
@@ -123,7 +123,7 @@ static Num *parse_num(std::istream &in) {
     return new Num(n);
 }
 
-static Var *parse_var(std::istream &in) {
+Var *parse_var(std::istream &in) {
     std::string s = "";
 
     while (1) {
@@ -140,7 +140,7 @@ static Var *parse_var(std::istream &in) {
     return new Var(s);
 }
 
-static _let *parse_let(std::istream &in) {
+_let *parse_let(std::istream &in) {
     std::string letText = "_let";
     for (int i = 0; i < 4; ++i) {
         int c = in.peek();
@@ -186,7 +186,7 @@ static _let *parse_let(std::istream &in) {
     return new _let(lhs, rhs, body);
 }
 
-static void skip_whitespace(std::istream &in) {
+void skip_whitespace(std::istream &in) {
     while(1) {
         int c = in.peek();
         if (!isspace(c)) {
@@ -196,7 +196,7 @@ static void skip_whitespace(std::istream &in) {
     }
 }
 
-static void consume(std::istream &in, int expect) {
+void consume(std::istream &in, int expect) {
     int c = in.get();
     if (c != expect) {
         throw std::runtime_error("consume mismatch");

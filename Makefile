@@ -36,4 +36,4 @@ parse.o: parse.cpp
 	c++ --std=c++14 -O2 -c parse.cpp
 
 clean:
-	rm msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o
+	rm msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o
