@@ -15,18 +15,20 @@ Expr *parse(std::istream &in);
 //just for testing purposes
 Expr *parse_string(std::string s);
 //parses an Expr
-Expr *parse_expr(std::istream &in);
+static Expr *parse_expr(std::istream &in);
 //parses an added
-Expr *parse_addend(std::istream &in);
+static Expr *parse_addend(std::istream &in);
 //parses a multicand
-Expr *parse_multicand(std::istream &in);
+static Expr *parse_multicand(std::istream &in);
 //parses a Num
-Num *parse_num(std::istream &in);
+static Num *parse_num(std::istream &in);
 //parses a Var
-Var *parse_var(std::istream &in);
+static Var *parse_var(std::istream &in);
 //parses a _let
-_let *parse_let(std::istream &in);
+static _let *parse_let(std::istream &in);
 //skips any whitespace in the istream
-void skip_whitespace(std::istream &in);
+static void skip_whitespace(std::istream &in);
 //consumes the next character in the istream as long as it matches the character that is expected, if not it throws an error
-void consume(std::istream &in, int expect);
+static void consume(std::istream &in, int expect);
+//checks that the next characters of the stream match the expected string and consumes them if they do
+static void checkString(std::istream &in, std::string expect);

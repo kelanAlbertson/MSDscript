@@ -28,7 +28,7 @@ Expr *parse_string(std::string s) {
     return parse(ss);
 }
 
-Expr *parse_expr(std::istream &in) {
+static Expr *parse_expr(std::istream &in) {
     Expr *e;
 
     e = parse_addend(in);
@@ -46,7 +46,7 @@ Expr *parse_expr(std::istream &in) {
     }
 }
 
-Expr *parse_addend(std::istream &in) {
+static Expr *parse_addend(std::istream &in) {
     Expr *e;
 
     e = parse_multicand(in);
@@ -64,7 +64,7 @@ Expr *parse_addend(std::istream &in) {
     }
 }
 
-Expr *parse_multicand(std::istream &in) {
+static Expr *parse_multicand(std::istream &in) {
     skip_whitespace(in);
 
     int c = in.peek();
@@ -93,7 +93,7 @@ Expr *parse_multicand(std::istream &in) {
     }
 }
 
-Num *parse_num(std::istream &in) {
+static Num *parse_num(std::istream &in) {
     int n = 0;
     bool negative = false;
 
@@ -123,7 +123,7 @@ Num *parse_num(std::istream &in) {
     return new Num(n);
 }
 
-Var *parse_var(std::istream &in) {
+static Var *parse_var(std::istream &in) {
     std::string s = "";
 
     while (1) {
@@ -140,17 +140,8 @@ Var *parse_var(std::istream &in) {
     return new Var(s);
 }
 
-_let *parse_let(std::istream &in) {
-    std::string letText = "_let";
-    for (int i = 0; i < 4; ++i) {
-        int c = in.peek();
-        if (c == letText[i]) {
-            consume(in, letText[i]);
-        }
-        else {
-            throw std::runtime_error("invalid input after underscore");
-        }
-    }
+static _let *parse_let(std::istream &in) {
+    checkString(in, "_let");
 
     skip_whitespace(in);
 
@@ -163,30 +154,21 @@ _let *parse_let(std::istream &in) {
         consume(in, '=');
     }
     else {
-        throw std::runtime_error("invalid input in _let expression");
+        throw std::runtime_error("missing or invalid location of equals sign in _let expression");
     }
 
     Expr *rhs = parse_expr(in);
 
     skip_whitespace(in);
 
-    std::string inText = "_in";
-    for (int i = 0; i < 3; ++i) {
-        int c = in.peek();
-        if (c == inText[i]) {
-            consume(in, inText[i]);
-        }
-        else {
-            throw std::runtime_error("invalid input in _let expression");
-        }
-    }
+    checkString(in, "_in");
 
     Expr *body = parse_expr(in);
 
     return new _let(lhs, rhs, body);
 }
 
-void skip_whitespace(std::istream &in) {
+static void skip_whitespace(std::istream &in) {
     while(1) {
         int c = in.peek();
         if (!isspace(c)) {
@@ -196,10 +178,22 @@ void skip_whitespace(std::istream &in) {
     }
 }
 
-void consume(std::istream &in, int expect) {
+static void consume(std::istream &in, int expect) {
     int c = in.get();
     if (c != expect) {
         throw std::runtime_error("consume mismatch");
+    }
+}
+
+static void checkString(std::istream &in, std::string expect) {
+    for (int i = 0; i < expect.length(); ++i) {
+        int c = in.peek();
+        if (c == expect[i]) {
+            consume(in, expect[i]);
+        }
+        else {
+            throw std::runtime_error("checkString mismatch");
+        }
     }
 }
 
@@ -209,15 +203,16 @@ TEST_CASE("parse errors") {
     CHECK_THROWS_WITH( parse_string("(1"), "missing close parenthesis" );
     CHECK_THROWS_WITH( parse_string("-"), "invalid input" );
     CHECK_THROWS_WITH( parse_string(" -   5  "), "invalid input" );
-    CHECK_THROWS_WITH(parse_string("0 + "), "invalid input");
-    CHECK_THROWS_WITH(parse_string("0        ++"), "invalid input");
-    CHECK_THROWS_WITH(parse_string("*t"), "invalid input");
+    CHECK_THROWS_WITH( parse_string("0 + "), "invalid input");
+    CHECK_THROWS_WITH( parse_string("0        ++"), "invalid input");
+    CHECK_THROWS_WITH( parse_string("*t"), "invalid input");
     CHECK_THROWS_WITH( parse_string("x_z"), "unexpected input after expression" );
     CHECK_THROWS_WITH( parse_string("x Y"), "unexpected input after expression" );
-    CHECK_THROWS_WITH( parse_string("_leet x = 5 _in 1"), "invalid input after underscore");
-    CHECK_THROWS_WITH( parse_string("_let x 5 _in 1"), "invalid input in _let expression");
-    CHECK_THROWS_WITH( parse_string("_let x = 5 _on 1"), "invalid input in _let expression");
-    //test consume with expect mismatch
+    CHECK_THROWS_WITH( parse_string("_leet x = 5 _in 1"), "checkString mismatch");
+    CHECK_THROWS_WITH( parse_string("_let x 5 _in 1"), "missing or invalid location of equals sign in _let expression");
+    CHECK_THROWS_WITH( parse_string("_let x = 5 _on 1"), "checkString mismatch");
+    std::stringstream test("test");
+    CHECK_THROWS_WITH(consume(test, 'x'), "consume mismatch");
 }
 
 TEST_CASE("parse Nums") {
