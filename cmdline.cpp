@@ -33,7 +33,7 @@ int use_arguments (int argc, char *argv[]) {
                 }
                 else {
                     if (Catch::Session().run(1, argv) != 0) {
-                        exit(1);
+                        exit(0);
                     }
                     alreadyTested = true;
                 }
@@ -54,7 +54,7 @@ int use_arguments (int argc, char *argv[]) {
                 exit(0);
             }
             else {
-                std::cerr << "Error: invalid argument, can only handle '--help' or '--test'" << std::endl;
+                std::cerr << "Error: invalid argument, use '--help' to see all acceptable arguments" << std::endl;
                 exit(1);
             }
         }
