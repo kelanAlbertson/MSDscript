@@ -7,6 +7,7 @@
 #include "exec.h"
 
 std::string random_expr_string();
+std::string random_expr_without_unbound_vars();
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
@@ -21,7 +22,9 @@ int main(int argc, char *argv[]) {
     const char *const pretty_print1_argv[] = {argv[1], "--pretty-print"};
     if (argc == 2) {
         for (int i = 0; i < 100; ++i) {
-            std::string in = random_expr_string();
+            // can allow unbound variables or not depending on which of the following is uncommented
+//            std::string in = random_expr_string();
+            std::string in = random_expr_without_unbound_vars();
             std::cout << "Trying " << in << "\n";
 
             // test that interp, print, and pretty print return exit code 0
@@ -63,7 +66,9 @@ int main(int argc, char *argv[]) {
         const char *const pretty_print2_argv[] = {argv[2], "--pretty-print"};
 
         for (int i = 0; i < 100; ++i) {
+            // can allow unbound variables or not depending on which of the following is uncommented
             std::string in = random_expr_string();
+//            std::string in = random_expr_without_unbound_vars();
             std::cout << "Trying " << in << "\n";
 
             // test that interp, print, and pretty print return the same result from both msdscript programs
@@ -128,33 +133,24 @@ std::string random_var_name() {
 
 std::string random_expr_without_unbound_vars() {
     int rand_num = rand() % 10;
-    if (rand_num < 3) {
-        // 30% chance of generating a number
+    if (rand_num < 4) {
+        // 40% chance of generating a number
         return std::to_string(rand());
     }
-    else if (rand_num >= 3 && rand_num < 6) {
-        // 30% chance of generating a string (variable)
-        return random_var_name();
-    }
-    else if (rand_num == 6) {
-        // 10% chance of generating a parenthesized expression
+    else if (rand_num == 4 || rand_num == 5) {
+        // 20% chance of generating a parenthesized expression
         // generates another random expression inside it
-        return "(" + random_expr_string() + ")";
+        return "(" + random_expr_without_unbound_vars() + ")";
     }
-    else if (rand_num == 7) {
-        // 10% chance of generating an add
+    else if (rand_num == 6 || rand_num == 7) {
+        // 20% chance of generating an add
         // generates another two random expression inside it
-        return random_expr_string() + "+" + random_expr_string();
-    }
-    else if (rand_num == 8) {
-        // 10% chance of generating a mult
-        // generates another two random expression inside it
-        return random_expr_string() + "*" + random_expr_string();
+        return random_expr_without_unbound_vars() + "+" + random_expr_without_unbound_vars();
     }
     else {
-        // 10% chance of generating a _let
-        // generates a random variable and two random expressions inside it
-        return "_let " + random_var_name() + " = " + random_expr_string() + " _in " + random_expr_string();
+        // 20% chance of generating a mult
+        // generates another two random expression inside it
+        return random_expr_without_unbound_vars() + "*" + random_expr_without_unbound_vars();
     }
 }
 
