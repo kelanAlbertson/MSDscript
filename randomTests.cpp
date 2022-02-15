@@ -94,6 +94,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+// creates a random string to be used as a variable name
 std::string random_var_name() {
     int rand_num = rand() % 10;
     if (rand_num < 6) {
@@ -131,30 +132,7 @@ std::string random_var_name() {
     }
 }
 
-std::string random_expr_without_unbound_vars() {
-    int rand_num = rand() % 10;
-    if (rand_num < 4) {
-        // 40% chance of generating a number
-        return std::to_string(rand());
-    }
-    else if (rand_num == 4 || rand_num == 5) {
-        // 20% chance of generating a parenthesized expression
-        // generates another random expression inside it
-        return "(" + random_expr_without_unbound_vars() + ")";
-    }
-    else if (rand_num == 6 || rand_num == 7) {
-        // 20% chance of generating an add
-        // generates another two random expression inside it
-        return random_expr_without_unbound_vars() + "+" + random_expr_without_unbound_vars();
-    }
-    else {
-        // 20% chance of generating a mult
-        // generates another two random expression inside it
-        return random_expr_without_unbound_vars() + "*" + random_expr_without_unbound_vars();
-    }
-}
-
-
+// creates a string to represent a random expression (including the possibility of unbound variables)
 std::string random_expr_string() {
     int rand_num = rand() % 10;
     if (rand_num < 3) {
@@ -187,4 +165,26 @@ std::string random_expr_string() {
     }
 }
 
-
+// creates a string to represent a random expression (with no unbound variables possible)
+std::string random_expr_without_unbound_vars() {
+    int rand_num = rand() % 10;
+    if (rand_num < 4) {
+        // 40% chance of generating a number
+        return std::to_string(rand());
+    }
+    else if (rand_num == 4 || rand_num == 5) {
+        // 20% chance of generating a parenthesized expression
+        // generates another random expression inside it
+        return "(" + random_expr_without_unbound_vars() + ")";
+    }
+    else if (rand_num == 6 || rand_num == 7) {
+        // 20% chance of generating an add
+        // generates another two random expression inside it
+        return random_expr_without_unbound_vars() + "+" + random_expr_without_unbound_vars();
+    }
+    else {
+        // 20% chance of generating a mult
+        // generates another two random expression inside it
+        return random_expr_without_unbound_vars() + "*" + random_expr_without_unbound_vars();
+    }
+}
