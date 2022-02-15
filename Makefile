@@ -4,6 +4,9 @@ OBJS = main.o cmdline.o
 msdscript: main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o
 	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o
 
+test_msdscript: randomTests.o exec.o
+	c++ --std=c++14 -O2 -o test_msdscript randomTests.o exec.o
+
 .PHONY: test
 test: msdscript
 	./msdscript --test
@@ -32,8 +35,14 @@ var.o: var.cpp var.h add.h num.h mult.h catch.h
 _let.o: _let.cpp _let.h add.h num.h mult.h var.h catch.h
 	c++ --std=c++14 -O2 -c _let.cpp
 
-parse.o: parse.cpp
+parse.o: parse.cpp parse.h
 	c++ --std=c++14 -O2 -c parse.cpp
 
+randomTests.o: randomTests.cpp exec.h
+	c++ --std=c++14 -O2 -c randomTests.cpp
+
+exec.o: exec.cpp exec.h
+	c++ --std=c++14 -O2 -c exec.cpp
+
 clean:
-	rm msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o
+	rm msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o test_msdscript randomTests.o exec.o
