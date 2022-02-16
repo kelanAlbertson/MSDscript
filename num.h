@@ -8,13 +8,13 @@
 
 class Num : public Expr {
 public:
-    int value_;
+    int rep_;
 
     Num (int value);
     //returns whether the other Expr is a Num and has the same value as this Num
     virtual bool equals (Expr* other);
     //returns an integer interpretation of the Num
-    virtual int interp();
+    virtual Val * interp();
     //returns whether this Num contains a variable (this will always be false)
     virtual bool has_variable();
     //replaces every instance of a Var matching the provided name in this Expr with a replacement Expr

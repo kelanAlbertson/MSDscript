@@ -24,7 +24,7 @@ bool Add::equals(Expr* other) {
     }
 }
 
-int Add::interp() {
+Val * Add::interp() {
     return (this->lhs_->interp() + this->rhs_->interp());
 }
 

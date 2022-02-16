@@ -17,7 +17,7 @@ public:
     //returns whether the other Expr is a _let and has all the same fields as this _let
     virtual bool equals (Expr* other);
     //returns an interpretation of the _let
-    virtual int interp();
+    virtual Val * interp();
     //returns whether this _let contains a variable
     virtual bool has_variable();
     //replaces every instance of a Var matching the provided name in this _let with a replacement Expr

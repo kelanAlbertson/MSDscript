@@ -14,7 +14,7 @@ public:
     //returns whether the other Expr is a Var and has the same name as this Var
     virtual bool equals(Expr* other);
     //returns an integer interpretation of the Var
-    virtual int interp();
+    virtual Val * interp();
     //returns whether this Var is a variable (this will always be true)
     virtual bool has_variable();
     //if the variable name matches the name of this Var, then replaces this Var with the provided replacement Expr

@@ -4,6 +4,7 @@
 
 #include "expr.h"
 #include "catch.h"
+#include "val.h"
 #include <sstream>
 
 std::string Expr::to_string() {

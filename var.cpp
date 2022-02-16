@@ -24,7 +24,7 @@ bool Var::equals(Expr *other) {
     }
 }
 
-int Var::interp() {
+Val * Var::interp() {
     throw std::runtime_error("Error: Var cannot be interpreted");
 }
 

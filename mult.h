@@ -15,7 +15,7 @@ public:
     //returns whether the other Expr is an Mult and has all the same fields as this Mult
     virtual bool equals (Expr* other);
     //returns an integer interpretation of the Mult
-    virtual int interp();
+    virtual Val * interp();
     //returns whether this Mult contains a variable
     virtual bool has_variable();
     //replaces every instance of a Var matching the provided name in this Mult with a replacement Expr

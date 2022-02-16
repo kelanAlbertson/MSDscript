@@ -15,7 +15,7 @@ public:
     //returns whether the other Expr is an Add and has all the same fields as this Add
     virtual bool equals (Expr* other);
     //returns an integer interpretation of the Add
-    virtual int interp();
+    virtual Val * interp();
     //returns whether this Add contains a variable
     virtual bool has_variable();
     //replaces every instance of a Var matching the provided name in this Add with a replacement Expr

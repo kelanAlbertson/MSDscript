@@ -28,7 +28,7 @@ bool _let::equals(Expr* other) {
     }
 }
 
-int _let::interp() {
+Val * _let::interp() {
     int n = this->rhs_->interp();
     return this->body_->subst(this->lhs_->name_, new Num(n))->interp();
 }

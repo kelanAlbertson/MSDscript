@@ -8,7 +8,7 @@
 #include <sstream>
 
 Num::Num(int value) {
-    this->value_ = value;
+    this->rep_ = value;
 }
 
 bool Num::equals(Expr* other) {
@@ -17,12 +17,12 @@ bool Num::equals(Expr* other) {
         return false;
     }
     else {
-        return (this->value_ == n->value_);
+        return (this->rep_ == n->rep_);
     }
 }
 
-int Num::interp() {
-    return this->value_;
+Val * Num::interp() {
+    return this->rep_;
 }
 
 bool Num::has_variable() {
@@ -34,11 +34,11 @@ Expr* Num::subst(std::string variableName, Expr *replacement) {
 }
 
 void Num::print(std::ostream &out) {
-    out << this->value_;
+    out << this->rep_;
 }
 
 void Num::pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
-    out << this->value_;
+    out << this->rep_;
 }
 
 /**

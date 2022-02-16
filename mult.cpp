@@ -24,7 +24,7 @@ bool Mult::equals(Expr *other) {
     }
 }
 
-int Mult::interp() {
+Val * Mult::interp() {
     return (this->lhs_->interp() * this->rhs_->interp());
 }
 
