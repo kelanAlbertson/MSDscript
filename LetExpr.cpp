@@ -96,15 +96,19 @@ TEST_CASE("LetExpr equals() tests") {
     CHECK((new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr ("x"), new NumExpr(1))))
             ->equals(new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr ("x"), new NumExpr(1)))) == true);
     CHECK((new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr ("x"), new NumExpr(1))))
-                  ->equals(new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr ("a"), new NumExpr(1)))) == false);
+            ->equals(new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr ("a"), new NumExpr(1)))) == false);
     CHECK((new LetExpr(new VarExpr("x"), new NumExpr(1), new NumExpr(0)))->equals(new VarExpr("x")) == false);
 }
 
 TEST_CASE("LetExpr interp() tests") {
-    CHECK((new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1))))->interp() == 6);
-    CHECK((new LetExpr(new VarExpr("x"), new AddExpr(new NumExpr(5), new NumExpr(2)), new AddExpr(new VarExpr("x"), new NumExpr(1))))->interp() == 8);
-    CHECK((new AddExpr(new MultExpr(new NumExpr(5), new LetExpr(new VarExpr("x"), new NumExpr(5), new VarExpr("x"))), new NumExpr(1)))->interp() == 26);
-    CHECK((new LetExpr(new VarExpr("x"), new LetExpr(new VarExpr("y"), new NumExpr(6), new MultExpr(new VarExpr("y"), new NumExpr(2))), new AddExpr(new VarExpr("x"), new NumExpr(1))))->interp() == 13);
+    CHECK((new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1))))
+            ->interp()->equals(new NumVal(6)));
+    CHECK((new LetExpr(new VarExpr("x"), new AddExpr(new NumExpr(5), new NumExpr(2)), new AddExpr(new VarExpr("x"), new NumExpr(1))))
+            ->interp()->equals(new NumVal(8)));
+    CHECK((new AddExpr(new MultExpr(new NumExpr(5), new LetExpr(new VarExpr("x"), new NumExpr(5), new VarExpr("x"))), new NumExpr(1)))
+            ->interp()->equals(new NumVal(26)));
+    CHECK((new LetExpr(new VarExpr("x"), new LetExpr(new VarExpr("y"), new NumExpr(6), new MultExpr(new VarExpr("y"), new NumExpr(2))), new AddExpr(new VarExpr("x"), new NumExpr(1))))
+            ->interp()->equals(new NumVal(13)));
 }
 
 TEST_CASE("LetExpr has_variable() tests") {
@@ -124,7 +128,7 @@ TEST_CASE("LetExpr subst() tests") {
 }
 
 TEST_CASE("LetExpr print()/to_string() tests") {
-    CHECK((new LetExpr(new VarExpr("y"), new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))))->to_string() == "(LetExpr y=3 _in (y+2))");
+    CHECK((new LetExpr(new VarExpr("y"), new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))))->to_string() == "(_let y=3 _in (y+2))");
     CHECK((new LetExpr(new VarExpr("x"), new NumExpr(5), new LetExpr(new VarExpr("y"), new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2)))))
             ->to_string() == "(_let x=5 _in (_let y=3 _in (y+2)))");
     CHECK((new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new LetExpr(new VarExpr("y"), new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x"))))

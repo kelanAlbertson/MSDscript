@@ -72,10 +72,10 @@ TEST_CASE("AddExpr equals() tests") {
 }
 
 TEST_CASE("AddExpr interp() tests") {
-    CHECK((new AddExpr(new NumExpr(0), new NumExpr(0)))->interp() == 0);
-    CHECK((new AddExpr(new NumExpr(0), new NumExpr(1)))->interp() == 1);
-    CHECK((new AddExpr(new NumExpr(1), new NumExpr(0)))->interp() == 1);
-    CHECK((new AddExpr(new NumExpr(-5), new NumExpr(18)))->interp() == 13);
+    CHECK((new AddExpr(new NumExpr(0), new NumExpr(0)))->interp()->equals(new NumVal(0)));
+    CHECK((new AddExpr(new NumExpr(0), new NumExpr(1)))->interp()->equals(new NumVal(1)));
+    CHECK((new AddExpr(new NumExpr(1), new NumExpr(0)))->interp()->equals(new NumVal(1)));
+    CHECK((new AddExpr(new NumExpr(-5), new NumExpr(18)))->interp()->equals(new NumVal(13)));
 }
 
 TEST_CASE("AddExpr has_variable() tests") {

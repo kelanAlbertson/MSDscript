@@ -141,7 +141,7 @@ static VarExpr *parse_var(std::istream &in) {
 }
 
 static LetExpr *parse_let(std::istream &in) {
-    checkString(in, "LetExpr");
+    checkString(in, "_let");
 
     skip_whitespace(in);
 
@@ -154,7 +154,7 @@ static LetExpr *parse_let(std::istream &in) {
         consume(in, '=');
     }
     else {
-        throw std::runtime_error("missing or invalid location of equals sign in LetExpr expression");
+        throw std::runtime_error("missing or invalid location of equals sign in _let expression");
     }
 
     Expr *rhs = parse_expr(in);
@@ -209,8 +209,8 @@ TEST_CASE("parse errors") {
     CHECK_THROWS_WITH( parse_string("x_z"), "unexpected input after expression" );
     CHECK_THROWS_WITH( parse_string("x Y"), "unexpected input after expression" );
     CHECK_THROWS_WITH( parse_string("_leet x = 5 _in 1"), "checkString mismatch");
-    CHECK_THROWS_WITH( parse_string("LetExpr x 5 _in 1"), "missing or invalid location of equals sign in LetExpr expression");
-    CHECK_THROWS_WITH( parse_string("LetExpr x = 5 _on 1"), "checkString mismatch");
+    CHECK_THROWS_WITH( parse_string("_let x 5 _in 1"), "missing or invalid location of equals sign in _let expression");
+    CHECK_THROWS_WITH( parse_string("_let x = 5 _on 1"), "checkString mismatch");
     std::stringstream test("test");
     CHECK_THROWS_WITH(consume(test, 'x'), "consume mismatch");
 }
@@ -244,8 +244,8 @@ TEST_CASE("parse VarExpr") {
 }
 
 TEST_CASE("parse LetExpr") {
-    CHECK( parse_string("  LetExpr  x  =  5  _in  x  +  1")->equals(new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1)))) );
-    CHECK( parse_string("_letx=5_in(LetExpr y = 3_iny+2)+x")
+    CHECK( parse_string("  _let  x  =  5  _in  x  +  1")->equals(new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1)))) );
+    CHECK( parse_string("_letx=5_in(_let y = 3_iny+2)+x")
             ->equals(new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new LetExpr(new VarExpr("y"), new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x")))) );
 }
 

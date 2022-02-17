@@ -1,8 +1,8 @@
 INCS = cmdline.h
 OBJS = main.o cmdline.o
 
-msdscript: main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o
-	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o
+msdscript: main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o
+	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o
 
 test_msdscript: randomTests.o exec.o
 	c++ --std=c++14 -O2 -o test_msdscript randomTests.o exec.o
@@ -17,23 +17,29 @@ main.o: main.cpp cmdline.h
 cmdline.o: cmdline.cpp catch.h cmdline.h
 	c++ --std=c++14 -O2 -c cmdline.cpp
 
-expr.o: Expr.cpp Expr.h
-	c++ --std=c++14 -O2 -c expr.cpp
+Expr.o: Expr.cpp Expr.h
+	c++ --std=c++14 -O2 -c Expr.cpp
 
-num.o: NumExpr.cpp NumExpr.h catch.h
-	c++ --std=c++14 -O2 -c num.cpp
+NumExpr.o: NumExpr.cpp NumExpr.h catch.h
+	c++ --std=c++14 -O2 -c NumExpr.cpp
 
-add.o: AddExpr.cpp AddExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h
-	c++ --std=c++14 -O2 -c add.cpp
+AddExpr.o: AddExpr.cpp AddExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h
+	c++ --std=c++14 -O2 -c AddExpr.cpp
 
-mult.o: MultExpr.cpp MultExpr.h AddExpr.h NumExpr.h VarExpr.h catch.h
-	c++ --std=c++14 -O2 -c mult.cpp
+MultExpr.o: MultExpr.cpp MultExpr.h AddExpr.h NumExpr.h VarExpr.h catch.h
+	c++ --std=c++14 -O2 -c MultExpr.cpp
 
-var.o: VarExpr.cpp VarExpr.h AddExpr.h NumExpr.h MultExpr.h catch.h
-	c++ --std=c++14 -O2 -c var.cpp
+VarExpr.o: VarExpr.cpp VarExpr.h AddExpr.h NumExpr.h MultExpr.h catch.h
+	c++ --std=c++14 -O2 -c VarExpr.cpp
 
-_let.o: LetExpr.cpp LetExpr.h AddExpr.h NumExpr.h MultExpr.h VarExpr.h catch.h
-	c++ --std=c++14 -O2 -c _let.cpp
+LetExpr.o: LetExpr.cpp LetExpr.h AddExpr.h NumExpr.h MultExpr.h VarExpr.h catch.h
+	c++ --std=c++14 -O2 -c LetExpr.cpp
+
+Val.o: Val.cpp Val.h
+	c++ --std=c++14 -O2 -c Val.cpp
+
+NumVal.o: NumVal.cpp NumVal.h
+	c++ --std=c++14 -O2 -c NumVal.cpp
 
 parse.o: parse.cpp parse.h
 	c++ --std=c++14 -O2 -c parse.cpp
@@ -45,4 +51,4 @@ exec.o: exec.cpp exec.h
 	c++ --std=c++14 -O2 -c exec.cpp
 
 clean:
-	rm msdscript main.o cmdline.o expr.o num.o add.o mult.o var.o _let.o parse.o test_msdscript randomTests.o exec.o
+	rm msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o test_msdscript randomTests.o exec.o

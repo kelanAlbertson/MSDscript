@@ -5291,7 +5291,7 @@ namespace Catch {
         unsigned int benchmarkSamples = 100;
         double benchmarkConfidenceInterval = 0.95;
         unsigned int benchmarkResamples = 100000;
-        std::chrono::milliseconds::rep_ benchmarkWarmupTime = 100;
+        std::chrono::milliseconds::rep benchmarkWarmupTime = 100;
 
         Verbosity verbosity = Verbosity::Normal;
         WarnAbout::What warnings = WarnAbout::Nothing;
@@ -11313,7 +11313,7 @@ namespace Catch {
     std::string TagInfo::all() const {
         size_t size = 0;
         for (auto const& spelling : spellings) {
-            // AddExpr 2 for the brackes
+            // Add 2 for the brackes
             size += spelling.size() + 2;
         }
 
@@ -14090,7 +14090,7 @@ namespace Catch {
             }
         }
         if( isHidden ) {
-            // AddExpr all "hidden" tags to make them behave identically
+            // Add all "hidden" tags to make them behave identically
             tags.insert( tags.end(), { ".", "!hide" } );
         }
 

@@ -54,10 +54,10 @@ TEST_CASE("NumExpr equals() tests") {
 }
 
 TEST_CASE("NumExpr interp() tests") {
-    CHECK((new NumExpr(0))->interp() == 0);
-    CHECK((new NumExpr(1))->interp() == 1);
-    CHECK((new NumExpr(99))->interp() == 99);
-    CHECK((new NumExpr(-1))->interp() == -1);
+    CHECK((new NumExpr(0))->interp()->equals(new NumVal(0)));
+    CHECK((new NumExpr(1))->interp()->equals(new NumVal(1)));
+    CHECK((new NumExpr(99))->interp()->equals(new NumVal(99)));
+    CHECK((new NumExpr(-1))->interp()->equals(new NumVal(-1)));
 }
 
 TEST_CASE("NumExpr has_variable() tests") {
