@@ -4,23 +4,23 @@
 
 #pragma once
 
-#include "expr.h"
+#include "Expr.h"
 
-class Var : public Expr {
+class VarExpr : public Expr {
 public:
     std::string name_;
 
-    Var(std::string name);
-    //returns whether the other Expr is a Var and has the same name as this Var
+    VarExpr(std::string name);
+    //returns whether the other Expr is a VarExpr and has the same name as this VarExpr
     virtual bool equals(Expr* other);
-    //returns an integer interpretation of the Var
+    //returns an integer interpretation of the VarExpr
     virtual Val * interp();
-    //returns whether this Var is a variable (this will always be true)
+    //returns whether this VarExpr is a variable (this will always be true)
     virtual bool has_variable();
-    //if the variable name matches the name of this Var, then replaces this Var with the provided replacement Expr
-    //if the variable does not match the name of this Var, then a new Var equal to this Var is returned
+    //if the variable name matches the name of this VarExpr, then replaces this VarExpr with the provided replacement Expr
+    //if the variable does not match the name of this VarExpr, then a new VarExpr equal to this VarExpr is returned
     virtual Expr* subst(std::string variableName, Expr* replacement);
-    //prints the Var
+    //prints the VarExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses
     //using an accumulator prec to determine which Expr need parentheses around them

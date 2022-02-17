@@ -4,24 +4,24 @@
 
 #pragma once
 
-#include "expr.h"
+#include "Expr.h"
 
-class Mult : public Expr {
+class AddExpr : public Expr {
 public:
     Expr* lhs_;
     Expr* rhs_;
 
-    Mult(Expr* lhs, Expr* rhs);
-    //returns whether the other Expr is an Mult and has all the same fields as this Mult
+    AddExpr (Expr* lhs, Expr* rhs);
+    //returns whether the other Expr is an AddExpr and has all the same fields as this AddExpr
     virtual bool equals (Expr* other);
-    //returns an integer interpretation of the Mult
+    //returns an integer interpretation of the AddExpr
     virtual Val * interp();
-    //returns whether this Mult contains a variable
+    //returns whether this AddExpr contains a variable
     virtual bool has_variable();
-    //replaces every instance of a Var matching the provided name in this Mult with a replacement Expr
-    //if there is no matching Var then nothing is replaced and a new Expr equal to this Mult is returned
+    //replaces every instance of a VarExpr matching the provided name in this AddExpr with a replacement Expr
+    //if there is no matching VarExpr then nothing is replaced and a new Expr equal to this AddExpr is returned
     virtual Expr* subst(std::string variableName, Expr* replacement);
-    //prints the Mult
+    //prints the AddExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses
     //using an accumulator prec to determine which Expr need parentheses around them

@@ -4,26 +4,26 @@
 
 #pragma once
 
-#include "expr.h"
-#include "var.h"
+#include "Expr.h"
+#include "VarExpr.h"
 
-class _let : public Expr {
+class LetExpr : public Expr {
 public:
-    Var* lhs_;
+    VarExpr* lhs_;
     Expr* rhs_;
     Expr* body_;
 
-    _let (Var* lhs, Expr* rhs, Expr* body);
-    //returns whether the other Expr is a _let and has all the same fields as this _let
+    LetExpr (VarExpr* lhs, Expr* rhs, Expr* body);
+    //returns whether the other Expr is a LetExpr and has all the same fields as this LetExpr
     virtual bool equals (Expr* other);
-    //returns an interpretation of the _let
+    //returns an interpretation of the LetExpr
     virtual Val * interp();
-    //returns whether this _let contains a variable
+    //returns whether this LetExpr contains a variable
     virtual bool has_variable();
-    //replaces every instance of a Var matching the provided name in this _let with a replacement Expr
-    //if there is no matching Var then nothing is replaced and a new Expr equal to this _let is returned
+    //replaces every instance of a VarExpr matching the provided name in this LetExpr with a replacement Expr
+    //if there is no matching VarExpr then nothing is replaced and a new Expr equal to this LetExpr is returned
     virtual Expr* subst(std::string variableName, Expr* replacement);
-    //prints the Add
+    //prints the AddExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses
     //using an accumulator prec to determine which Expr need parentheses around them

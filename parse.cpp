@@ -4,13 +4,13 @@
 
 #include <sstream>
 #include "parse.h"
-#include "add.h"
-#include "expr.h"
-#include "num.h"
+#include "AddExpr.h"
+#include "Expr.h"
+#include "NumExpr.h"
 #include "catch.h"
-#include "var.h"
-#include "mult.h"
-#include "_let.h"
+#include "VarExpr.h"
+#include "MultExpr.h"
+#include "LetExpr.h"
 
 Expr *parse(std::istream &in) {
     Expr *e = parse_expr(in);
@@ -39,7 +39,7 @@ static Expr *parse_expr(std::istream &in) {
     if (c == '+') {
         consume(in, '+');
         Expr *rhs = parse_expr(in);
-        return new Add(e, rhs);
+        return new AddExpr(e, rhs);
     }
     else {
         return e;
@@ -57,7 +57,7 @@ static Expr *parse_addend(std::istream &in) {
     if (c == '*') {
         consume(in, '*');
         Expr *rhs = parse_addend(in);
-        return new Mult(e, rhs);
+        return new MultExpr(e, rhs);
     }
     else {
         return e;
@@ -93,7 +93,7 @@ static Expr *parse_multicand(std::istream &in) {
     }
 }
 
-static Num *parse_num(std::istream &in) {
+static NumExpr *parse_num(std::istream &in) {
     int n = 0;
     bool negative = false;
 
@@ -120,10 +120,10 @@ static Num *parse_num(std::istream &in) {
         n = -n;
     }
 
-    return new Num(n);
+    return new NumExpr(n);
 }
 
-static Var *parse_var(std::istream &in) {
+static VarExpr *parse_var(std::istream &in) {
     std::string s = "";
 
     while (1) {
@@ -137,15 +137,15 @@ static Var *parse_var(std::istream &in) {
         }
     }
 
-    return new Var(s);
+    return new VarExpr(s);
 }
 
-static _let *parse_let(std::istream &in) {
-    checkString(in, "_let");
+static LetExpr *parse_let(std::istream &in) {
+    checkString(in, "LetExpr");
 
     skip_whitespace(in);
 
-    Var *lhs = parse_var(in);
+    VarExpr *lhs = parse_var(in);
 
     skip_whitespace(in);
 
@@ -154,7 +154,7 @@ static _let *parse_let(std::istream &in) {
         consume(in, '=');
     }
     else {
-        throw std::runtime_error("missing or invalid location of equals sign in _let expression");
+        throw std::runtime_error("missing or invalid location of equals sign in LetExpr expression");
     }
 
     Expr *rhs = parse_expr(in);
@@ -165,7 +165,7 @@ static _let *parse_let(std::istream &in) {
 
     Expr *body = parse_expr(in);
 
-    return new _let(lhs, rhs, body);
+    return new LetExpr(lhs, rhs, body);
 }
 
 static void skip_whitespace(std::istream &in) {
@@ -209,54 +209,54 @@ TEST_CASE("parse errors") {
     CHECK_THROWS_WITH( parse_string("x_z"), "unexpected input after expression" );
     CHECK_THROWS_WITH( parse_string("x Y"), "unexpected input after expression" );
     CHECK_THROWS_WITH( parse_string("_leet x = 5 _in 1"), "checkString mismatch");
-    CHECK_THROWS_WITH( parse_string("_let x 5 _in 1"), "missing or invalid location of equals sign in _let expression");
-    CHECK_THROWS_WITH( parse_string("_let x = 5 _on 1"), "checkString mismatch");
+    CHECK_THROWS_WITH( parse_string("LetExpr x 5 _in 1"), "missing or invalid location of equals sign in LetExpr expression");
+    CHECK_THROWS_WITH( parse_string("LetExpr x = 5 _on 1"), "checkString mismatch");
     std::stringstream test("test");
     CHECK_THROWS_WITH(consume(test, 'x'), "consume mismatch");
 }
 
 TEST_CASE("parse Nums") {
-    CHECK( parse_string("1")->equals(new Num(1)) );
-    CHECK( parse_string("1234")->equals(new Num(1234)) );
-    CHECK( parse_string("-3")->equals(new Num(-3)) );
-    CHECK( parse_string("  \n 5  ")->equals(new Num(5)) );
-    CHECK( parse_string("(1)")->equals(new Num(1)) );
-    CHECK( parse_string("(((1)))")->equals(new Num(1)) );
+    CHECK( parse_string("1")->equals(new NumExpr(1)) );
+    CHECK( parse_string("1234")->equals(new NumExpr(1234)) );
+    CHECK( parse_string("-3")->equals(new NumExpr(-3)) );
+    CHECK( parse_string("  \n 5  ")->equals(new NumExpr(5)) );
+    CHECK( parse_string("(1)")->equals(new NumExpr(1)) );
+    CHECK( parse_string("(((1)))")->equals(new NumExpr(1)) );
 }
 
-TEST_CASE("parse Add") {
-    CHECK( parse_string("1 + 2")->equals(new Add(new Num(1), new Num(2))) );
-    CHECK( parse_string("\tx+y")->equals(new Add(new Var("x"), new Var("y"))) );
+TEST_CASE("parse AddExpr") {
+    CHECK( parse_string("1 + 2")->equals(new AddExpr(new NumExpr(1), new NumExpr(2))) );
+    CHECK( parse_string("\tx+y")->equals(new AddExpr(new VarExpr("x"), new VarExpr("y"))) );
     CHECK( parse_string("(-99 + a) + (2 + 2)")
-            ->equals(new Add(new Add(new Num(-99), new Var("a")), new Add(new Num(2), new Num(2)))));
+            ->equals(new AddExpr(new AddExpr(new NumExpr(-99), new VarExpr("a")), new AddExpr(new NumExpr(2), new NumExpr(2)))));
 }
 
-TEST_CASE("parse Mult") {
-    CHECK( parse_string("1     *         2")->equals(new Mult(new Num(1), new Num(2))) );
-    CHECK( parse_string("x * y")->equals(new Mult(new Var("x"), new Var("y"))) );
-    CHECK( parse_string("(0*12345)\n*a")->equals(new Mult(new Mult(new Num(0), new Num(12345)), new Var("a"))) );
+TEST_CASE("parse MultExpr") {
+    CHECK( parse_string("1     *         2")->equals(new MultExpr(new NumExpr(1), new NumExpr(2))) );
+    CHECK( parse_string("x * y")->equals(new MultExpr(new VarExpr("x"), new VarExpr("y"))) );
+    CHECK( parse_string("(0*12345)\n*a")->equals(new MultExpr(new MultExpr(new NumExpr(0), new NumExpr(12345)), new VarExpr("a"))) );
 }
 
-TEST_CASE("parse Var") {
-    CHECK( parse_string("x")->equals(new Var("x")) );
-    CHECK( parse_string("xyz")->equals(new Var("xyz")) );
-    CHECK( parse_string("xYZ")->equals(new Var("xYZ")) );
+TEST_CASE("parse VarExpr") {
+    CHECK( parse_string("x")->equals(new VarExpr("x")) );
+    CHECK( parse_string("xyz")->equals(new VarExpr("xyz")) );
+    CHECK( parse_string("xYZ")->equals(new VarExpr("xYZ")) );
 }
 
-TEST_CASE("parse _let") {
-    CHECK( parse_string("  _let  x  =  5  _in  x  +  1")->equals(new _let(new Var("x"), new Num(5), new Add(new Var("x"), new Num(1)))) );
-    CHECK( parse_string("_letx=5_in(_let y = 3_iny+2)+x")
-            ->equals(new _let(new Var("x"), new Num(5), new Add(new _let(new Var("y"), new Num(3), new Add(new Var("y"), new Num(2))), new Var("x")))) );
+TEST_CASE("parse LetExpr") {
+    CHECK( parse_string("  LetExpr  x  =  5  _in  x  +  1")->equals(new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1)))) );
+    CHECK( parse_string("_letx=5_in(LetExpr y = 3_iny+2)+x")
+            ->equals(new LetExpr(new VarExpr("x"), new NumExpr(5), new AddExpr(new LetExpr(new VarExpr("y"), new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x")))) );
 }
 
 TEST_CASE("parse combined") {
     CHECK( parse_string("z * x + y")
-                   ->equals(new Add(new Mult(new Var("z"), new Var("x")),
-                                    new Var("y"))) );
+                   ->equals(new AddExpr(new MultExpr(new VarExpr("z"), new VarExpr("x")),
+                                        new VarExpr("y"))) );
 
     CHECK( parse_string("z * (x + y)")
-                   ->equals(new Mult(new Var("z"),
-                                     new Add(new Var("x"), new Var("y"))) ));
+                   ->equals(new MultExpr(new VarExpr("z"),
+                                         new AddExpr(new VarExpr("x"), new VarExpr("y"))) ));
     //add more to these
 }
 
@@ -266,15 +266,15 @@ TEST_CASE("parse combined") {
 //TEST_CASE("parse") {
 //    CHECK_THROWS_WITH( parse_string("()"), "bad input" );
 //
-//    CHECK( parse_string("(1)")->equals(new Num(1)) );
-//    CHECK( parse_string("(((1)))")->equals(new Num(1)) );
+//    CHECK( parse_string("(1)")->equals(new NumExpr(1)) );
+//    CHECK( parse_string("(((1)))")->equals(new NumExpr(1)) );
 //
 //    CHECK_THROWS_WITH( parse_string("(1"), "bad input" );
 //
-//    CHECK( parse_string("1")->equals(new Num(1)) );
-//    CHECK( parse_string("10")->equals(new Num(10)) );
-//    CHECK( parse_string("-3")->equals(new Num(-3)) );
-//    CHECK( parse_string("  \n 5  ")->equals(new Num(5)) );
+//    CHECK( parse_string("1")->equals(new NumExpr(1)) );
+//    CHECK( parse_string("10")->equals(new NumExpr(10)) );
+//    CHECK( parse_string("-3")->equals(new NumExpr(-3)) );
+//    CHECK( parse_string("  \n 5  ")->equals(new NumExpr(5)) );
 //
 //    CHECK_THROWS_WITH( parse_string("-"), "invalid input" );
 //    // This was some temporary debugging code:
@@ -283,19 +283,19 @@ TEST_CASE("parse combined") {
 //
 //    CHECK_THROWS_WITH( parse_string(" -   5  "), "invalid input" );
 //
-//    CHECK( parse_string("x")->equals(new Var("x")) );
-//    CHECK( parse_string("xyz")->equals(new Var("xyz")) );
-//    CHECK( parse_string("xYz")->equals(new Var("xYz")) );
+//    CHECK( parse_string("x")->equals(new VarExpr("x")) );
+//    CHECK( parse_string("xyz")->equals(new VarExpr("xyz")) );
+//    CHECK( parse_string("xYz")->equals(new VarExpr("xYz")) );
 //    CHECK_THROWS_WITH( parse_string("x_z"), "invalid input" );
 //
-//    CHECK( parse_string("x + y")->equals(new Add(new Var("x"), new Var("y"))) );
-//    CHECK( parse_string("x * y")->equals(new Mult(new Var("x"), new Var("y"))) );
+//    CHECK( parse_string("x + y")->equals(new AddExpr(new VarExpr("x"), new VarExpr("y"))) );
+//    CHECK( parse_string("x * y")->equals(new MultExpr(new VarExpr("x"), new VarExpr("y"))) );
 //    CHECK( parse_string("z * x + y")
-//                   ->equals(new Add(new Mult(new Var("z"), new Var("x")),
-//                                    new Var("y"))) );
+//                   ->equals(new AddExpr(new MultExpr(new VarExpr("z"), new VarExpr("x")),
+//                                    new VarExpr("y"))) );
 //
 //    CHECK( parse_string("z * (x + y)")
-//                   ->equals(new Mult(new Var("z"),
-//                                     new Add(new Var("x"), new Var("y"))) ));
+//                   ->equals(new MultExpr(new VarExpr("z"),
+//                                     new AddExpr(new VarExpr("x"), new VarExpr("y"))) ));
 //}
 

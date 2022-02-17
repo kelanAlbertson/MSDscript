@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "cmdline.h"
-#include "expr.h"
+#include "Expr.h"
 #include "parse.h"
 
 int use_arguments (int argc, char *argv[]) {

@@ -16,7 +16,7 @@ public:
     virtual Val* interp() = 0;
     //returns whether this Expr is or contains a variable
     virtual bool has_variable() = 0;
-    //replaces every instance in the Expr of a Var matching the provided name with a replacement Expr
+    //replaces every instance in the Expr of a VarExpr matching the provided name with a replacement Expr
     virtual Expr* subst(std::string variableName, Expr* replacement) = 0;
     //prints the expression
     virtual void print(std::ostream &out) = 0;
