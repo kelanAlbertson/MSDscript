@@ -159,9 +159,9 @@ std::string random_expr_string() {
         return random_expr_string() + "*" + random_expr_string();
     }
     else {
-        // 10% chance of generating a _let
+        // 10% chance of generating a LetExpr
         // generates a random variable and two random expressions inside it
-        return "_let " + random_var_name() + " = " + random_expr_string() + " _in " + random_expr_string();
+        return "LetExpr " + random_var_name() + " = " + random_expr_string() + " _in " + random_expr_string();
     }
 }
 

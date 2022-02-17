@@ -9,7 +9,8 @@
 #include <iostream>
 
 #include "cmdline.h"
-#include "expr.h"
+#include "Expr.h"
+#include "Val.h"
 #include "parse.h"
 
 int use_arguments (int argc, char *argv[]) {
@@ -39,8 +40,8 @@ int use_arguments (int argc, char *argv[]) {
                 }
             }
             else if (arg == "--interp") {
-                int interpreted = parse(std::cin)->interp();
-                std::cout << interpreted << "\n";
+                Val* interpreted = parse(std::cin)->interp();
+                std::cout << interpreted->to_string() << "\n";
                 exit(0);
             }
             else if (arg == "--print") {

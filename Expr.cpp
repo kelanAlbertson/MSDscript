@@ -2,8 +2,9 @@
 // Created by Kelan Albertson on 1/16/22.
 //
 
-#include "expr.h"
+#include "Expr.h"
 #include "catch.h"
+#include "Val.h"
 #include <sstream>
 
 std::string Expr::to_string() {
