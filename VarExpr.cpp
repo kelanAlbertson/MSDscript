@@ -25,7 +25,7 @@ bool VarExpr::equals(Expr *other) {
 }
 
 Val * VarExpr::interp() {
-    throw std::runtime_error("Error: VarExpr cannot be interpreted");
+    throw std::runtime_error("VarExpr cannot be interpreted");
 }
 
 bool VarExpr::has_variable() {
@@ -60,7 +60,7 @@ TEST_CASE("VarExpr equals() tests") {
     CHECK((new VarExpr("one"))->equals(new NumExpr(1)) == false);
 }
 TEST_CASE("VarExpr interp() tests") {
-    CHECK_THROWS_WITH((new VarExpr("x"))->interp(), "Error: VarExpr cannot be interpreted");
+    CHECK_THROWS_WITH((new VarExpr("x"))->interp(), "VarExpr cannot be interpreted");
 }
 
 TEST_CASE("VarExpr has_variable() tests") {

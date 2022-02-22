@@ -1,26 +1,26 @@
 //
-// Created by Kelan Albertson on 1/16/22.
+// Created by Kelan Albertson on 2/20/22.
 //
 
 #pragma once
 
 #include "Expr.h"
 
-class NumExpr : public Expr {
+class BoolExpr : public Expr {
 public:
     int rep_;
 
-    NumExpr (int rep);
-    //returns whether the other Expr is a NumExpr and has the same value as this NumExpr
+    BoolExpr (int rep);
+    //returns whether the other Expr is a BoolExpr and has the same value as this BoolExpr
     virtual bool equals (Expr* other);
-    //returns an integer interpretation of the NumExpr
+    //returns a Val representation of this BoolExpr
     virtual Val * interp();
-    //returns whether this NumExpr contains a variable (this will always be false)
+    //returns whether this BoolExpr contains a variable (this will always be false)
     virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this Expr with a replacement Expr
-    //but since there cannot be a VarExpr within a NumExpr, this will always return a new NumExpr equal to this NumExpr
+    //but since there cannot be a VarExpr within a BoolExpr, this will always return a new BoolExpr equal to this BoolExpr
     virtual Expr* subst(std::string variableName, Expr* replacement);
-    //prints the NumExpr
+    //prints the BoolExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses
     //using an accumulator prec to determine which Expr need parentheses around them

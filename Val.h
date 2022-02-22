@@ -20,5 +20,7 @@ public:
     virtual Val* add_to(Val* other) = 0;
     // multiply a Val by a Val
     virtual Val* multiply_by(Val* other) = 0;
+    // returns whether or not a Val is a BoolVal set to true
+    virtual bool is_true() = 0;
 };
 
