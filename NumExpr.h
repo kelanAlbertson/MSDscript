@@ -10,7 +10,7 @@ class NumExpr : public Expr {
 public:
     int rep_;
 
-    NumExpr (int value);
+    NumExpr (int rep);
     //returns whether the other Expr is a NumExpr and has the same value as this NumExpr
     virtual bool equals (Expr* other);
     //returns an integer interpretation of the NumExpr

@@ -22,7 +22,12 @@ bool BoolVal::equals(Val *other) {
 }
 
 std::string BoolVal::to_string() {
-    return this->rep_ ? "true" : "false";
+    if (this->rep_) {
+        return "_true";
+    }
+    else {
+        return "_false";
+    }
 }
 
 Expr *BoolVal::to_expr() {
@@ -49,8 +54,8 @@ TEST_CASE("BoolVal equals() tests") {
 }
 
 TEST_CASE("BoolVal to_string() tests") {
-    CHECK((new BoolVal(true))->to_string() == "true");
-    CHECK((new BoolVal(false))->to_string() == "false");
+    CHECK((new BoolVal(true))->to_string() == "_true");
+    CHECK((new BoolVal(false))->to_string() == "_false");
 }
 
 TEST_CASE("BoolVal to_expr() tests") {
