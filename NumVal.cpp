@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include "NumVal.h"
 #include "NumExpr.h"
+#include "BoolVal.h"
 #include "catch.h"
 
 NumVal::NumVal(int rep) {
@@ -52,7 +53,7 @@ Val *NumVal::multiply_by(Val *other) {
 TEST_CASE("NumVal equals() tests") {
     CHECK((new NumVal(1))->equals(new NumVal(1)) == true);
     CHECK((new NumVal(-99))->equals(new NumVal(99999)) == false);
-    CHECK((new NumVal(0))->equals(nullptr) == false); // NOTE: using nullptr is bad practice, should change this in the future
+    CHECK((new NumVal(0))->equals(new BoolVal(false)) == false); // NOTE: using nullptr is bad practice, should change this in the future
 }
 
 TEST_CASE("NumVal to_string() tests") {
