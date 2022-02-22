@@ -21,5 +21,7 @@ public:
     virtual Val* add_to(Val* other);
     // multiply a Val by another Val
     virtual Val* multiply_by(Val* other);
+    // will always throw an error because is_true will only work on BoolVals
+    virtual bool is_true();
 };
 

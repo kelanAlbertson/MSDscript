@@ -43,6 +43,10 @@ Val *BoolVal::multiply_by(Val *other) {
     throw std::runtime_error("Cannot multiply_by() with a BoolVal");
 }
 
+bool BoolVal::is_true() {
+    return this->rep_;
+}
+
 /**
  *************************   TESTS   **************************
  **/
@@ -70,4 +74,9 @@ TEST_CASE("BoolVal add_to() tests") {
 TEST_CASE("BoolVal multiply_by() tests") {
     CHECK_THROWS_WITH((new BoolVal(true))->multiply_by(new BoolVal(true)), "Cannot multiply_by() with a BoolVal");
     CHECK_THROWS_WITH((new BoolVal(false))->multiply_by(new NumVal(0)), "Cannot multiply_by() with a BoolVal");
+}
+
+TEST_CASE("BoolVal is_true() tests") {
+    CHECK((new BoolVal(true))->is_true() == true);
+    CHECK((new BoolVal(false))->is_true() == false);
 }
