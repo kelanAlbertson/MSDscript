@@ -4,6 +4,15 @@
 
 #include "IfExpr.h"
 #include "Val.h"
+#include "AddExpr.h"
+#include "NumExpr.h"
+#include "MultExpr.h"
+#include "VarExpr.h"
+#include "catch.h"
+#include "EqExpr.h"
+#include "BoolExpr.h"
+#include "BoolVal.h"
+#include "NumVal.h"
 #include <sstream>
 
 IfExpr::IfExpr(Expr *condition, Expr *ts, Expr *es) {
@@ -53,7 +62,41 @@ void IfExpr::print(std::ostream &out) {
     out << ")";
 }
 
-void IfExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool let_parentheses,
-                             std::streampos &last_new_line_pos) {
+void IfExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
+    //TODO
+}
 
+/**
+ *************************   TESTS   **************************
+ **/
+
+TEST_CASE("IfExpr equals() tests") {
+    CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))
+            ->equals(new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false))) == true);
+    CHECK((new IfExpr(new BoolExpr(false), new NumExpr(0), new VarExpr("y")))
+                  ->equals(new IfExpr(new BoolExpr(true), new NumExpr(0), new VarExpr("y"))) == false);
+    CHECK((new IfExpr(new EqExpr(new VarExpr("x"), new VarExpr("x")), new NumExpr(1), new NumExpr(0)))
+                  ->equals(new EqExpr(new VarExpr("x"), new VarExpr("x"))) == false);
+}
+
+TEST_CASE("IfExpr interp() tests") {
+    CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))
+            ->interp()->equals(new BoolVal(false)));
+    CHECK_THROWS_WITH((new IfExpr(new BoolExpr(false), new NumExpr(0), new VarExpr("y")))->interp(), "VarExpr cannot be interpreted");
+    CHECK((new IfExpr(new EqExpr(new AddExpr(new NumExpr(3), new NumExpr(1)), new AddExpr(new NumExpr(2), new NumExpr(2))), new NumExpr(25), new NumExpr(100)))->interp()->equals(new NumVal(25)));
+    CHECK((new IfExpr(new BoolExpr(false), new NumExpr(-1), new BoolExpr(false)))->interp()->equals(new BoolVal(false)));
+}
+
+TEST_CASE("IfExpr has_variable() tests") {
+    CHECK((new IfExpr(new EqExpr(new NumExpr(0), new NumExpr(1)), new VarExpr("x"), new VarExpr("y")))->has_variable() == true);
+    CHECK((new IfExpr(new BoolExpr(true), new NumExpr(1), new NumExpr(2)))->has_variable() == false);
+}
+
+TEST_CASE("IfExpr subst() tests") {
+}
+
+TEST_CASE("IfExpr print()/to_string() tests") {
+}
+
+TEST_CASE("IfExpr pretty_print() tests") {
 }
