@@ -63,4 +63,4 @@ IfExpr.o: IfExpr.cpp IfExpr.h
 	c++ --std=c++14 -O2 -c IfExpr.cpp
 
 clean:
-	rm msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o test_msdscript randomTests.o exec.o
+	rm msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o test_msdscript randomTests.o exec.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o

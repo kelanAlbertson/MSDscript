@@ -8,6 +8,7 @@ class Expr;
 class LetExpr;
 class NumExpr;
 class VarExpr;
+class IfExpr;
 
 //parses an Expr from the input provided through the istream
 Expr *parse(std::istream &in);
@@ -16,6 +17,8 @@ Expr *parse(std::istream &in);
 Expr *parse_string(std::string s);
 //parses an Expr
 static Expr *parse_expr(std::istream &in);
+//parses a comparg
+static Expr *parse_comparg(std::istream &in);
 //parses an added
 static Expr *parse_addend(std::istream &in);
 //parses a multicand
@@ -26,6 +29,8 @@ static NumExpr *parse_num(std::istream &in);
 static VarExpr *parse_var(std::istream &in);
 //parses a LetExpr
 static LetExpr *parse_let(std::istream &in);
+//parses an IfExpr
+static IfExpr *parse_if(std::istream &in);
 //skips any whitespace in the istream
 static void skip_whitespace(std::istream &in);
 //consumes the next character in the istream as long as it matches the character that is expected, if not it throws an error
