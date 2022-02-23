@@ -26,11 +26,12 @@ public:
     virtual void pretty_print(std::ostream &out);
     typedef enum {
         prec_none,      // = 0
-        prec_add,       // = 1
-        prec_mult       // = 2
+        prec_eq,        // = 1
+        prec_add,       // = 2
+        prec_mult       // = 3
     } precedence_t;
     //pretty_print using an accumulator prec to determine which Expr need parentheses around them
-    virtual void pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) = 0;
+    virtual void pretty_print_at(std::ostream &out, precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) = 0;
     //returns the string representation of the Expr using the pretty_print() function
     std::string to_pretty_string();
 };

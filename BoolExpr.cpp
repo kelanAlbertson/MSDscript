@@ -43,8 +43,8 @@ void BoolExpr::print(std::ostream &out) {
     }
 }
 
-void BoolExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
-    //TODO
+void BoolExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) {
+    this->print(out); //does the exact same thing as print in this case so just reuse it
 }
 
 /**
@@ -76,4 +76,6 @@ TEST_CASE("BoolExpr print()/to_string() tests") {
 }
 
 TEST_CASE("BoolExpr pretty_print() tests") {
+    CHECK((new BoolExpr(true))->to_pretty_string() == "_true");
+    CHECK((new BoolExpr(false))->to_pretty_string() == "_false");
 }

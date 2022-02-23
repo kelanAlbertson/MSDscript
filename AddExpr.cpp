@@ -46,14 +46,14 @@ void AddExpr::print(std::ostream &out) {
     out << ")";
 }
 
-void AddExpr::pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
+void AddExpr::pretty_print_at(std::ostream &out, precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) {
     if (prec >= prec_add) {
         out << "(";
     }
 
     this->lhs_->pretty_print_at(out, prec_add, true, last_new_line_pos);
     out << " + ";
-    this->rhs_->pretty_print_at(out, prec_none, false, last_new_line_pos);
+    this->rhs_->pretty_print_at(out, prec_eq, false, last_new_line_pos);
 
     if (prec >= prec_add) {
         out << ")";

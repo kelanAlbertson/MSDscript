@@ -45,7 +45,7 @@ void VarExpr::print(std::ostream &out) {
     out << this->name_;
 }
 
-void VarExpr::pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &pos) {
+void VarExpr::pretty_print_at(std::ostream &out, precedence_t prec, bool keyword_parentheses, std::streampos &pos) {
     out << this->name_;
 }
 

@@ -38,7 +38,7 @@ void NumExpr::print(std::ostream &out) {
     out << this->rep_;
 }
 
-void NumExpr::pretty_print_at(std::ostream &out, precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
+void NumExpr::pretty_print_at(std::ostream &out, precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) {
     out << this->rep_;
 }
 

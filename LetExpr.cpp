@@ -63,8 +63,8 @@ void LetExpr::print(std::ostream &out) {
     out << ")";
 }
 
-void LetExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
-    if (let_parentheses) {
+void LetExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) {
+    if (keyword_parentheses) {
         out << "(";
     }
 
@@ -81,7 +81,7 @@ void LetExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool l
     out << "_in  ";
     this->body_->pretty_print_at(out, prec_none, false, last_new_line_pos);
 
-    if (let_parentheses) {
+    if (keyword_parentheses) {
         out << ")";
     }
 }

@@ -31,8 +31,7 @@ std::string BoolVal::to_string() {
 }
 
 Expr *BoolVal::to_expr() {
-    return nullptr; //TODO
-//    return new BoolExpr(this->rep_);
+    return new BoolExpr(this->rep_);
 }
 
 Val *BoolVal::add_to(Val *other) {
@@ -63,7 +62,8 @@ TEST_CASE("BoolVal to_string() tests") {
 }
 
 TEST_CASE("BoolVal to_expr() tests") {
-    //TODO
+    CHECK((new BoolVal(true))->to_expr()->equals(new BoolExpr(true)));
+    CHECK((new BoolVal(false))->to_expr()->equals(new BoolExpr(false)));
 }
 
 TEST_CASE("BoolVal add_to() tests") {

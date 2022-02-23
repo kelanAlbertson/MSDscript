@@ -9,6 +9,7 @@
 #include "VarExpr.h"
 #include "BoolExpr.h"
 #include "AddExpr.h"
+#include "MultExpr.h"
 #include <sstream>
 
 EqExpr::EqExpr(Expr *lhs, Expr *rhs) {
@@ -47,8 +48,18 @@ void EqExpr::print(std::ostream &out) {
     out << ")";
 }
 
-void EqExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool let_parentheses, std::streampos &last_new_line_pos) {
-    //TODO
+void EqExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) {
+    if (prec >= prec_eq) {
+        out << "(";
+    }
+
+    this->lhs_->pretty_print_at(out, prec_eq, true, last_new_line_pos);
+    out << " == ";
+    this->rhs_->pretty_print_at(out, prec_none, false, last_new_line_pos);
+
+    if (prec >= prec_eq) {
+        out << ")";
+    }
 }
 
 /**
@@ -96,5 +107,14 @@ TEST_CASE("EqExpr print()/to_string() tests") {
 }
 
 TEST_CASE("EqExpr pretty_print() tests") {
-    //TODO
+    CHECK((new EqExpr(new NumExpr(1), new NumExpr(1)))->to_pretty_string() == "1 == 1");
+    CHECK((new EqExpr(new VarExpr("zero"), new NumExpr(0)))->to_pretty_string() == "zero == 0");
+    CHECK((new EqExpr(new AddExpr(new NumExpr(1), new NumExpr(1)), new VarExpr("y")))
+            ->to_pretty_string() == "1 + 1 == y");
+    CHECK((new AddExpr(new BoolExpr(false), new EqExpr(new NumExpr(0), new BoolExpr(false))))
+            ->to_pretty_string() == "_false + (0 == _false)");
+    CHECK((new EqExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new NumExpr(3)))
+            ->to_pretty_string() == "(1 == 2) == 3");
+    CHECK((new AddExpr(new MultExpr(new EqExpr(new AddExpr(new VarExpr("x"), new NumExpr(1)), new EqExpr(new BoolExpr(true), new NumExpr(9))), new VarExpr("x")), new NumExpr(1)))
+            ->to_pretty_string() == "(x + 1 == _true == 9) * x + 1");
 }
