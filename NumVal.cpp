@@ -50,6 +50,10 @@ bool NumVal::is_true() {
     throw std::runtime_error("Cannot use is_true() on a NumVal");
 }
 
+Val* NumVal::call(Val* arg) {
+    throw std::runtime_error("Cannot call() a NumVal");
+}
+
 /**
  *************************   TESTS   **************************
  **/
@@ -82,4 +86,8 @@ TEST_CASE("NumVal multiply_by() tests") {
 
 TEST_CASE("NumVal is_true() tests") {
     CHECK_THROWS_WITH((new NumVal(1))->is_true(), "Cannot use is_true() on a NumVal");
+}
+
+TEST_CASE("NumVal call() tests") {
+    CHECK_THROWS_WITH((new NumVal(99))->call(new NumVal(2)), "Cannot call() a NumVal");
 }

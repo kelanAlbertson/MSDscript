@@ -46,6 +46,10 @@ bool BoolVal::is_true() {
     return this->rep_;
 }
 
+Val* BoolVal::call(Val* arg) {
+    throw std::runtime_error("Cannot call() a BoolVal");
+}
+
 /**
  *************************   TESTS   **************************
  **/
@@ -79,4 +83,8 @@ TEST_CASE("BoolVal multiply_by() tests") {
 TEST_CASE("BoolVal is_true() tests") {
     CHECK((new BoolVal(true))->is_true() == true);
     CHECK((new BoolVal(false))->is_true() == false);
+}
+
+TEST_CASE("BoolVal call() tests") {
+    CHECK_THROWS_WITH((new BoolVal(99))->call(new BoolVal(2)), "Cannot call() a BoolVal");
 }
