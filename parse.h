@@ -37,3 +37,4 @@ static void skip_whitespace(std::istream &in);
 static void consume(std::istream &in, int expect);
 //checks that the next characters of the stream match the expected string and consumes them if they do
 static void checkString(std::istream &in, std::string expect);
+static std::string parse_keyword(std::istream &in);

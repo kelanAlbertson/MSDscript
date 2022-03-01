@@ -260,6 +260,15 @@ static void checkString(std::istream &in, std::string expect) {
     }
 }
 
+static std::string parse_keyword(std::istream &in) {
+    std::string result;
+    int c = in.peek();
+    while (isalpha(c)) {
+        result += std::to_string(c);
+    }
+    return result;
+}
+
 TEST_CASE("parse errors") {
     CHECK_THROWS_WITH( parse_string(""), "invalid input");
     CHECK_THROWS_WITH( parse_string("()"), "invalid input" );

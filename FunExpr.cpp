@@ -51,7 +51,7 @@ void FunExpr::print(std::ostream &out) {
 }
 
 void FunExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) {
-
+    this->print(out);
 }
 
 /**
@@ -96,5 +96,5 @@ TEST_CASE("FunExpr print() tests") {
 }
 
 TEST_CASE("FunExpr pretty_print() tests") {
-
+    CHECK((new FunExpr(new VarExpr("x"), new NumExpr(1)))->to_pretty_string() == "(_fun (x) 1)");
 }
