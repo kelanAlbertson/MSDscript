@@ -9,6 +9,7 @@ class LetExpr;
 class NumExpr;
 class VarExpr;
 class IfExpr;
+class FunExpr;
 
 //parses an Expr from the input provided through the istream
 Expr *parse(std::istream &in);
@@ -23,6 +24,8 @@ static Expr *parse_comparg(std::istream &in);
 static Expr *parse_addend(std::istream &in);
 //parses a multicand
 static Expr *parse_multicand(std::istream &in);
+//parses an inner
+static Expr *parse_inner(std::istream & in);
 //parses a NumExpr
 static NumExpr *parse_num(std::istream &in);
 //parses a VarExpr
@@ -31,10 +34,13 @@ static VarExpr *parse_var(std::istream &in);
 static LetExpr *parse_let(std::istream &in);
 //parses an IfExpr
 static IfExpr *parse_if(std::istream &in);
+//parses a FunExpr
+static FunExpr *parse_fun(std::istream &in);
 //skips any whitespace in the istream
 static void skip_whitespace(std::istream &in);
 //consumes the next character in the istream as long as it matches the character that is expected, if not it throws an error
 static void consume(std::istream &in, int expect);
 //checks that the next characters of the stream match the expected string and consumes them if they do
-static void checkString(std::istream &in, std::string expect);
+static void consume_string(std::istream &in, std::string expect);
+//parses a string of chars up until the next non-alpha char
 static std::string parse_keyword(std::istream &in);
