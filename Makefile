@@ -1,8 +1,8 @@
 INCS = cmdline.h
 OBJS = main.o cmdline.o
 
-msdscript: main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o
-	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o
+msdscript: main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o FunVal.o FunExpr.o CallExpr.o
+	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o FunVal.o FunExpr.o CallExpr.o
 
 test_msdscript: randomTests.o exec.o
 	c++ --std=c++14 -O2 -o test_msdscript randomTests.o exec.o
@@ -62,5 +62,14 @@ EqExpr.o: EqExpr.cpp EqExpr.h
 IfExpr.o: IfExpr.cpp IfExpr.h
 	c++ --std=c++14 -O2 -c IfExpr.cpp
 
+FunVal.o: FunVal.cpp FunVal.h
+	c++ --std=c++14 -O2 -c FunVal.cpp
+
+FunExpr.o: FunExpr.cpp FunExpr.h
+	c++ --std=c++14 -O2 -c FunExpr.cpp
+
+CallExpr.o: CallExpr.cpp CallExpr.h
+	c++ --std=c++14 -O2 -c CallExpr.cpp
+
 clean:
-	rm msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o test_msdscript randomTests.o exec.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o
+	rm msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o test_msdscript randomTests.o exec.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o FunVal.o FunExpr.o CallExpr.o

@@ -1,17 +1,19 @@
 //
-// Created by Kelan Albertson on 2/20/22.
+// Created by Kelan Albertson on 2/26/22.
 //
 
 #pragma once
 
 #include "Val.h"
+class VarExpr;
 
-class BoolVal : public Val {
+class FunVal : public Val {
 public:
-    bool rep_;
+    VarExpr* arg_;
+    Expr* body_;
 
-    BoolVal (bool rep_);
-    //returns whether the other Val is a BoolVal and has the same value as this BoolVal
+    FunVal (VarExpr* arg, Expr* body);
+    //returns whether the other Val is a FunVal and has the same value as this FunVal
     virtual bool equals(Val* other);
     // converts the Val to a human readable string
     virtual std::string to_string();

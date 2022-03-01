@@ -23,5 +23,7 @@ public:
     virtual Val* multiply_by(Val* other);
     // will always throw an error because is_true will only work on BoolVals
     virtual bool is_true();
+    // calls a FunVal with the provided arg (raises an error for other Val types)
+    virtual Val* call(Val* arg);
 };
 

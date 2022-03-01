@@ -142,17 +142,21 @@ TEST_CASE("IfExpr print()/to_string() tests") {
 
 TEST_CASE("IfExpr pretty_print() tests") {
     CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))
-                  ->to_pretty_string() == "_if 1 == 2\n"
-                                          "_then _true\n"
-                                          "_else _false");
+            ->to_pretty_string() == "_if 1 == 2\n"
+                                    "_then _true\n"
+                                    "_else _false");
     CHECK((new IfExpr(new BoolExpr(false), new AddExpr(new NumExpr(0), new NumExpr(0)), new EqExpr(new VarExpr("y"), new NumExpr(1))))
-                  ->to_pretty_string() == "_if _false\n"
-                                          "_then 0 + 0\n"
-                                          "_else y == 1");
+            ->to_pretty_string() == "_if _false\n"
+                                    "_then 0 + 0\n"
+                                    "_else y == 1");
     CHECK((new IfExpr(new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(1)), new BoolExpr(true), new BoolExpr(false)), new NumExpr(10), new NumExpr(20)))
-                  ->to_pretty_string() == "_if _if 1 == 1\n"
-                                          "    _then _true\n"
-                                          "    _else _false\n"
-                                          "_then 10\n"
-                                          "_else 20");
+            ->to_pretty_string() == "_if _if 1 == 1\n"
+                                    "    _then _true\n"
+                                    "    _else _false\n"
+                                    "_then 10\n"
+                                    "_else 20");
+    CHECK((new AddExpr(new IfExpr(new BoolExpr(true), new NumExpr(1), new NumExpr(0)), new NumExpr(5)))
+            ->to_pretty_string() == "(_if _true\n"
+                                    " _then 1\n"
+                                    " _else 0) + 5");
 }

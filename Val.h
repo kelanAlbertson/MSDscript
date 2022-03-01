@@ -22,5 +22,7 @@ public:
     virtual Val* multiply_by(Val* other) = 0;
     // returns whether or not a Val is a BoolVal set to true
     virtual bool is_true() = 0;
+    // calls a FunVal with the provided arg (raises an error for other Val types)
+    virtual Val* call(Val* arg) = 0;
 };
 
