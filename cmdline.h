@@ -4,4 +4,4 @@
 
 #pragma once
 
-int use_arguments (int argc, char *argv[]);
+int use_arguments (int argc, char* argv[]);

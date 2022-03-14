@@ -9,7 +9,7 @@
 std::string random_expr_string();
 std::string random_expr_without_unbound_vars();
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     if (argc == 1 || argc > 3) {
@@ -17,9 +17,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    const char *const interp1_argv[] = {argv[1], "--interp"};
-    const char *const print1_argv[] = {argv[1], "--print"};
-    const char *const pretty_print1_argv[] = {argv[1], "--pretty-print"};
+    const char* const interp1_argv[] = {argv[1], "--interp"};
+    const char* const print1_argv[] = {argv[1], "--print"};
+    const char* const pretty_print1_argv[] = {argv[1], "--pretty-print"};
     if (argc == 2) {
         for (int i = 0; i < 100; ++i) {
             // can allow unbound variables or not depending on which of the following is uncommented
@@ -61,9 +61,9 @@ int main(int argc, char *argv[]) {
         }
     }
     else if (argc == 3) {
-        const char *const interp2_argv[] = {argv[2], "--interp"};
-        const char *const print2_argv[] = {argv[2], "--print"};
-        const char *const pretty_print2_argv[] = {argv[2], "--pretty-print"};
+        const char* const interp2_argv[] = {argv[2], "--interp"};
+        const char* const print2_argv[] = {argv[2], "--print"};
+        const char* const pretty_print2_argv[] = {argv[2], "--pretty-print"};
 
         for (int i = 0; i < 100; ++i) {
             // can allow unbound variables or not depending on which of the following is uncommented

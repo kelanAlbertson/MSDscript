@@ -12,8 +12,8 @@ BoolExpr::BoolExpr(int rep) {
     this->rep_ = rep;
 }
 
-bool BoolExpr::equals(Expr *other) {
-    BoolExpr* b = dynamic_cast<BoolExpr*>(other);
+bool BoolExpr::equals(PTR(Expr)other) {
+    PTR(BoolExpr) b = CAST(BoolExpr)(other);
     if (b == nullptr) {
         return false;
     }
@@ -22,16 +22,16 @@ bool BoolExpr::equals(Expr *other) {
     }
 }
 
-Val *BoolExpr::interp() {
-    return new BoolVal(this->rep_);
+PTR(Val)BoolExpr::interp() {
+    return NEW(BoolVal)(this->rep_);
 }
 
 //bool BoolExpr::has_variable() {
 //    return false;
 //}
 
-Expr *BoolExpr::subst(std::string variableName, Expr *replacement) {
-    return this;
+PTR(Expr)BoolExpr::subst(std::string variableName, PTR(Expr)replacement) {
+    return THIS;
 }
 
 void BoolExpr::print(std::ostream &out) {
@@ -52,14 +52,14 @@ void BoolExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool 
  **/
 
 TEST_CASE("BoolExpr equals() tests") {
-    CHECK((new BoolExpr(true))->equals(new BoolExpr(true)) == true);
-    CHECK((new BoolExpr(false))->equals(new BoolExpr(true)) == false);
-    CHECK((new BoolExpr(false))->equals(new NumExpr(0)) == false);
+    CHECK((NEW(BoolExpr)(true))->equals(NEW(BoolExpr)(true)) == true);
+    CHECK((NEW(BoolExpr)(false))->equals(NEW(BoolExpr)(true)) == false);
+    CHECK((NEW(BoolExpr)(false))->equals(NEW(NumExpr)(0)) == false);
 }
 
 TEST_CASE("BoolExpr interp() tests") {
-    CHECK((new BoolExpr(true))->interp()->equals(new BoolVal(true)));
-    CHECK((new BoolExpr(false))->interp()->equals(new BoolVal(false)));
+    CHECK((NEW(BoolExpr)(true))->interp()->equals(NEW(BoolVal)(true)));
+    CHECK((NEW(BoolExpr)(false))->interp()->equals(NEW(BoolVal)(false)));
 }
 
 //TEST_CASE("BoolExpr has_variable() tests") {
@@ -67,15 +67,15 @@ TEST_CASE("BoolExpr interp() tests") {
 //}
 
 TEST_CASE("BoolExpr subst() tests") {
-    CHECK((new BoolExpr(true))->subst("x", new NumExpr(5))->equals(new BoolExpr(true)));
+    CHECK((NEW(BoolExpr)(true))->subst("x", NEW(NumExpr)(5))->equals(NEW(BoolExpr)(true)));
 }
 
 TEST_CASE("BoolExpr print()/to_string() tests") {
-    CHECK((new BoolExpr(true))->to_string() == "_true");
-    CHECK((new BoolExpr(false))->to_string() == "_false");
+    CHECK((NEW(BoolExpr)(true))->to_string() == "_true");
+    CHECK((NEW(BoolExpr)(false))->to_string() == "_false");
 }
 
 TEST_CASE("BoolExpr pretty_print() tests") {
-    CHECK((new BoolExpr(true))->to_pretty_string() == "_true");
-    CHECK((new BoolExpr(false))->to_pretty_string() == "_false");
+    CHECK((NEW(BoolExpr)(true))->to_pretty_string() == "_true");
+    CHECK((NEW(BoolExpr)(false))->to_pretty_string() == "_false");
 }

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "pointer.h"
+
 class Expr;
 class LetExpr;
 class NumExpr;
@@ -12,30 +14,30 @@ class IfExpr;
 class FunExpr;
 
 //parses an Expr from the input provided through the istream
-Expr *parse(std::istream &in);
+PTR(Expr) parse(std::istream &in);
 //parses an Expr from the string passed in
 //just for testing purposes
-Expr *parse_string(std::string s);
+PTR(Expr) parse_string(std::string s);
 //parses an Expr
-static Expr *parse_expr(std::istream &in);
+static PTR(Expr) parse_expr(std::istream &in);
 //parses a comparg
-static Expr *parse_comparg(std::istream &in);
+static PTR(Expr) parse_comparg(std::istream &in);
 //parses an added
-static Expr *parse_addend(std::istream &in);
+static PTR(Expr) parse_addend(std::istream &in);
 //parses a multicand
-static Expr *parse_multicand(std::istream &in);
+static PTR(Expr) parse_multicand(std::istream &in);
 //parses an inner
-static Expr *parse_inner(std::istream & in);
+static PTR(Expr) parse_inner(std::istream & in);
 //parses a NumExpr
-static NumExpr *parse_num(std::istream &in);
+static PTR(NumExpr) parse_num(std::istream &in);
 //parses a VarExpr
-static VarExpr *parse_var(std::istream &in);
+static PTR(VarExpr) parse_var(std::istream &in);
 //parses a LetExpr
-static LetExpr *parse_let(std::istream &in);
+static PTR(LetExpr) parse_let(std::istream &in);
 //parses an IfExpr
-static IfExpr *parse_if(std::istream &in);
+static PTR(IfExpr) parse_if(std::istream &in);
 //parses a FunExpr
-static FunExpr *parse_fun(std::istream &in);
+static PTR(FunExpr) parse_fun(std::istream &in);
 //skips any whitespace in the istream
 static void skip_whitespace(std::istream &in);
 //consumes the next character in the istream as long as it matches the character that is expected, if not it throws an error

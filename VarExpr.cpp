@@ -14,8 +14,8 @@ VarExpr::VarExpr(std::string name) {
     this->name_ = name;
 }
 
-bool VarExpr::equals(Expr *other) {
-    VarExpr* v = dynamic_cast<VarExpr*>(other);
+bool VarExpr::equals(PTR(Expr)other) {
+    PTR(VarExpr) v = CAST(VarExpr)(other);
     if (v == nullptr) {
         return false;
     }
@@ -24,7 +24,7 @@ bool VarExpr::equals(Expr *other) {
     }
 }
 
-Val * VarExpr::interp() {
+PTR(Val) VarExpr::interp() {
     throw std::runtime_error("VarExpr cannot be interpreted");
 }
 
@@ -32,12 +32,12 @@ Val * VarExpr::interp() {
 //    return true;
 //}
 
-Expr* VarExpr::subst(std::string variableName, Expr* replacement) {
+PTR(Expr) VarExpr::subst(std::string variableName, PTR(Expr) replacement) {
     if(this->name_ == variableName) {
         return replacement;
     }
     else {
-        return this;
+        return THIS;
     }
 }
 
@@ -54,13 +54,13 @@ void VarExpr::pretty_print_at(std::ostream &out, precedence_t prec, bool keyword
  **/
 
 TEST_CASE("VarExpr equals() tests") {
-    CHECK((new VarExpr("one"))->equals(new VarExpr("one")) == true);
-    CHECK((new VarExpr("one"))->equals(new VarExpr("ONE")) == false);
-    CHECK((new VarExpr("one"))->equals(new VarExpr("two")) == false);
-    CHECK((new VarExpr("one"))->equals(new NumExpr(1)) == false);
+    CHECK((NEW(VarExpr)("one"))->equals(NEW(VarExpr)("one")) == true);
+    CHECK((NEW(VarExpr)("one"))->equals(NEW(VarExpr)("ONE")) == false);
+    CHECK((NEW(VarExpr)("one"))->equals(NEW(VarExpr)("two")) == false);
+    CHECK((NEW(VarExpr)("one"))->equals(NEW(NumExpr)(1)) == false);
 }
 TEST_CASE("VarExpr interp() tests") {
-    CHECK_THROWS_WITH((new VarExpr("x"))->interp(), "VarExpr cannot be interpreted");
+    CHECK_THROWS_WITH((NEW(VarExpr)("x"))->interp(), "VarExpr cannot be interpreted");
 }
 
 //TEST_CASE("VarExpr has_variable() tests") {
@@ -69,21 +69,21 @@ TEST_CASE("VarExpr interp() tests") {
 //}
 
 TEST_CASE("VarExpr subst() tests") {
-    CHECK((new VarExpr("x"))->subst("x", new VarExpr("y"))->equals(new VarExpr("y")));
+    CHECK((NEW(VarExpr)("x"))->subst("x", NEW(VarExpr)("y"))->equals(NEW(VarExpr)("y")));
 }
 
 TEST_CASE("VarExpr print()/to_string() tests") {
-    CHECK((new VarExpr("x"))->to_string() == "x");
+    CHECK((NEW(VarExpr)("x"))->to_string() == "x");
 }
 
 TEST_CASE("VarExpr pretty_print() tests") {
     std::stringstream out("");
-    (new VarExpr("x"))->pretty_print(out);
+    (NEW(VarExpr)("x"))->pretty_print(out);
     CHECK(out.str() == "x");
     out.str(std::string());
-    (new MultExpr(new AddExpr(new NumExpr(1), new VarExpr("x")), new NumExpr(3)))->pretty_print(out);
+    (NEW(MultExpr)(NEW(AddExpr)(NEW(NumExpr)(1), NEW(VarExpr)("x")), NEW(NumExpr)(3)))->pretty_print(out);
     CHECK(out.str() == "(1 + x) * 3");
     out.str(std::string());
-    (new AddExpr(new AddExpr(new MultExpr(new NumExpr(3), new AddExpr(new VarExpr("x"), new NumExpr(-2))), new MultExpr(new NumExpr(-2), new AddExpr(new VarExpr("x"), new NumExpr(-3)))), new NumExpr(-5)))->pretty_print(out);
+    (NEW(AddExpr)(NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(3), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(-2))), NEW(MultExpr)(NEW(NumExpr)(-2), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(-3)))), NEW(NumExpr)(-5)))->pretty_print(out);
     CHECK(out.str() == "(3 * (x + -2) + -2 * (x + -3)) + -5");
 }

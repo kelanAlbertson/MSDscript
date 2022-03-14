@@ -12,14 +12,14 @@ public:
 
     BoolExpr (int rep);
     //returns whether the other Expr is a BoolExpr and has the same value as this BoolExpr
-    virtual bool equals (Expr* other);
+    virtual bool equals (PTR(Expr) other);
     //returns a Val representation of this BoolExpr
-    virtual Val * interp();
+    virtual PTR(Val) interp();
     //returns whether this BoolExpr contains a variable (this will always be false)
 //    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this Expr with a replacement Expr
     //but since there cannot be a VarExpr within a BoolExpr, this will always return a new BoolExpr equal to this BoolExpr
-    virtual Expr* subst(std::string variableName, Expr* replacement);
+    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement);
     //prints the BoolExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses

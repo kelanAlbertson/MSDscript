@@ -4,21 +4,22 @@
 
 #pragma once
 
+#include "pointer.h"
 #include <string>
 
 class Val;
 
-class Expr {
+CLASS(Expr) {
 public:
     //returns whether this Expr has all the same fields as the other Expr
-    virtual bool equals(Expr* other) = 0;
+    virtual bool equals(PTR(Expr) other) = 0;
     //returns an integer interpretation of the Expr (if possible)
-    virtual Val* interp() = 0;
+    virtual PTR(Val) interp() = 0;
     //returns whether this Expr is or contains a variable
     //no longer necessary so commenting out
 //    virtual bool has_variable() = 0;
     //replaces every instance in the Expr of a VarExpr matching the provided name with a replacement Expr
-    virtual Expr* subst(std::string variableName, Expr* replacement) = 0;
+    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement) = 0;
     //prints the expression
     virtual void print(std::ostream &out) = 0;
     //returns the string representation of the Expr using the print() function

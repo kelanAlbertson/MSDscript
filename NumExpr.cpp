@@ -12,8 +12,8 @@ NumExpr::NumExpr(int rep) {
     this->rep_ = rep;
 }
 
-bool NumExpr::equals(Expr* other) {
-    NumExpr* n = dynamic_cast<NumExpr*>(other);
+bool NumExpr::equals(PTR(Expr) other) {
+    PTR(NumExpr) n = CAST(NumExpr)(other);
     if (n == nullptr) {
         return false;
     }
@@ -22,16 +22,16 @@ bool NumExpr::equals(Expr* other) {
     }
 }
 
-Val * NumExpr::interp() {
-    return new NumVal(this->rep_);
+PTR(Val) NumExpr::interp() {
+    return NEW(NumVal)(this->rep_);
 }
 
 //bool NumExpr::has_variable() {
 //    return false;
 //}
 
-Expr* NumExpr::subst(std::string variableName, Expr *replacement) {
-    return this;
+PTR(Expr) NumExpr::subst(std::string variableName, PTR(Expr) replacement) {
+    return THIS;
 }
 
 void NumExpr::print(std::ostream &out) {
@@ -47,17 +47,17 @@ void NumExpr::pretty_print_at(std::ostream &out, precedence_t prec, bool keyword
  **/
 
 TEST_CASE("NumExpr equals() tests") {
-    CHECK((new NumExpr(0))->equals(new NumExpr(0)) == true);
-    CHECK((new NumExpr(8))->equals(new NumExpr(8)) == true);
-    CHECK((new NumExpr(8))->equals(new NumExpr(-1)) == false);
-    CHECK((new NumExpr(8))->equals(new VarExpr("8")) == false);
+    CHECK((NEW(NumExpr)(0))->equals(NEW(NumExpr)(0)) == true);
+    CHECK((NEW(NumExpr)(8))->equals(NEW(NumExpr)(8)) == true);
+    CHECK((NEW(NumExpr)(8))->equals(NEW(NumExpr)(-1)) == false);
+    CHECK((NEW(NumExpr)(8))->equals(NEW(VarExpr)("8")) == false);
 }
 
 TEST_CASE("NumExpr interp() tests") {
-    CHECK((new NumExpr(0))->interp()->equals(new NumVal(0)));
-    CHECK((new NumExpr(1))->interp()->equals(new NumVal(1)));
-    CHECK((new NumExpr(99))->interp()->equals(new NumVal(99)));
-    CHECK((new NumExpr(-1))->interp()->equals(new NumVal(-1)));
+    CHECK((NEW(NumExpr)(0))->interp()->equals(NEW(NumVal)(0)));
+    CHECK((NEW(NumExpr)(1))->interp()->equals(NEW(NumVal)(1)));
+    CHECK((NEW(NumExpr)(99))->interp()->equals(NEW(NumVal)(99)));
+    CHECK((NEW(NumExpr)(-1))->interp()->equals(NEW(NumVal)(-1)));
 }
 
 //TEST_CASE("NumExpr has_variable() tests") {
@@ -66,15 +66,15 @@ TEST_CASE("NumExpr interp() tests") {
 //}
 
 TEST_CASE("NumExpr subst() tests") {
-    CHECK((new NumExpr(1))->subst("x", new VarExpr("y"))->equals(new NumExpr(1)));
+    CHECK((NEW(NumExpr)(1))->subst("x", NEW(VarExpr)("y"))->equals(NEW(NumExpr)(1)));
 }
 
 TEST_CASE("NumExpr print()/to_string() tests") {
-    CHECK((new NumExpr(1))->to_string() == "1");
+    CHECK((NEW(NumExpr)(1))->to_string() == "1");
 }
 
 TEST_CASE("NumExpr pretty_print() tests") {
     std::stringstream out("");
-    (new NumExpr(4))->pretty_print(out);
+    (NEW(NumExpr)(4))->pretty_print(out);
     CHECK(out.str() == "4");
 }

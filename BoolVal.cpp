@@ -11,8 +11,8 @@ BoolVal::BoolVal(bool rep) {
     this->rep_ = rep;
 }
 
-bool BoolVal::equals(Val *other) {
-    BoolVal *bv = dynamic_cast<BoolVal*>(other);
+bool BoolVal::equals(PTR(Val)other) {
+    PTR(BoolVal) bv = CAST(BoolVal)(other);
     if (bv == nullptr) {
         return false;
     }
@@ -30,15 +30,15 @@ std::string BoolVal::to_string() {
     }
 }
 
-Expr *BoolVal::to_expr() {
-    return new BoolExpr(this->rep_);
+PTR(Expr) BoolVal::to_expr() {
+    return NEW(BoolExpr)(this->rep_);
 }
 
-Val *BoolVal::add_to(Val *other) {
+PTR(Val) BoolVal::add_to(PTR(Val)other) {
     throw std::runtime_error("Cannot add_to() with a BoolVal");
 }
 
-Val *BoolVal::multiply_by(Val *other) {
+PTR(Val) BoolVal::multiply_by(PTR(Val)other) {
     throw std::runtime_error("Cannot multiply_by() with a BoolVal");
 }
 
@@ -46,7 +46,7 @@ bool BoolVal::is_true() {
     return this->rep_;
 }
 
-Val* BoolVal::call(Val* arg) {
+PTR(Val) BoolVal::call(PTR(Val) arg) {
     throw std::runtime_error("Cannot call() a BoolVal");
 }
 
@@ -55,36 +55,36 @@ Val* BoolVal::call(Val* arg) {
  **/
 
 TEST_CASE("BoolVal equals() tests") {
-    CHECK((new BoolVal(true))->equals(new BoolVal(true)) == true);
-    CHECK((new BoolVal(false))->equals(new BoolVal(true)) == false);
-    CHECK((new BoolVal(true))->equals(new NumVal(1)) == false);
+    CHECK((NEW(BoolVal)(true))->equals(NEW(BoolVal)(true)) == true);
+    CHECK((NEW(BoolVal)(false))->equals(NEW(BoolVal)(true)) == false);
+    CHECK((NEW(BoolVal)(true))->equals(NEW(NumVal)(1)) == false);
 }
 
 TEST_CASE("BoolVal to_string() tests") {
-    CHECK((new BoolVal(true))->to_string() == "_true");
-    CHECK((new BoolVal(false))->to_string() == "_false");
+    CHECK((NEW(BoolVal)(true))->to_string() == "_true");
+    CHECK((NEW(BoolVal)(false))->to_string() == "_false");
 }
 
 TEST_CASE("BoolVal to_expr() tests") {
-    CHECK((new BoolVal(true))->to_expr()->equals(new BoolExpr(true)));
-    CHECK((new BoolVal(false))->to_expr()->equals(new BoolExpr(false)));
+    CHECK((NEW(BoolVal)(true))->to_expr()->equals(NEW(BoolExpr)(true)));
+    CHECK((NEW(BoolVal)(false))->to_expr()->equals(NEW(BoolExpr)(false)));
 }
 
 TEST_CASE("BoolVal add_to() tests") {
-    CHECK_THROWS_WITH((new BoolVal(true))->add_to(new BoolVal(true)), "Cannot add_to() with a BoolVal");
-    CHECK_THROWS_WITH((new BoolVal(false))->add_to(new NumVal(0)), "Cannot add_to() with a BoolVal");
+    CHECK_THROWS_WITH((NEW(BoolVal)(true))->add_to(NEW(BoolVal)(true)), "Cannot add_to() with a BoolVal");
+    CHECK_THROWS_WITH((NEW(BoolVal)(false))->add_to(NEW(NumVal)(0)), "Cannot add_to() with a BoolVal");
 }
 
 TEST_CASE("BoolVal multiply_by() tests") {
-    CHECK_THROWS_WITH((new BoolVal(true))->multiply_by(new BoolVal(true)), "Cannot multiply_by() with a BoolVal");
-    CHECK_THROWS_WITH((new BoolVal(false))->multiply_by(new NumVal(0)), "Cannot multiply_by() with a BoolVal");
+    CHECK_THROWS_WITH((NEW(BoolVal)(true))->multiply_by(NEW(BoolVal)(true)), "Cannot multiply_by() with a BoolVal");
+    CHECK_THROWS_WITH((NEW(BoolVal)(false))->multiply_by(NEW(NumVal)(0)), "Cannot multiply_by() with a BoolVal");
 }
 
 TEST_CASE("BoolVal is_true() tests") {
-    CHECK((new BoolVal(true))->is_true() == true);
-    CHECK((new BoolVal(false))->is_true() == false);
+    CHECK((NEW(BoolVal)(true))->is_true() == true);
+    CHECK((NEW(BoolVal)(false))->is_true() == false);
 }
 
 TEST_CASE("BoolVal call() tests") {
-    CHECK_THROWS_WITH((new BoolVal(99))->call(new BoolVal(2)), "Cannot call() a BoolVal");
+    CHECK_THROWS_WITH((NEW(BoolVal)(99))->call(NEW(BoolVal)(2)), "Cannot call() a BoolVal");
 }
