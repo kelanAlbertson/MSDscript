@@ -17,7 +17,7 @@ public:
     //returns a Val representing the evaluation of this CallExpr
     virtual Val* interp();
     //returns whether this CallExpr contains a variable
-    virtual bool has_variable();
+//    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this CallExpr with a replacement Expr
     //if there is no matching VarExpr then nothing is replaced and a new Expr equal to this FunExpr is returned
     virtual Expr* subst(std::string variableName, Expr* replacement);

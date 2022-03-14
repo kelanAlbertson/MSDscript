@@ -16,7 +16,7 @@ public:
     //returns an integer interpretation of the VarExpr
     virtual Val * interp();
     //returns whether this VarExpr is a variable (this will always be true)
-    virtual bool has_variable();
+//    virtual bool has_variable();
     //if the variable name matches the name of this VarExpr, then replaces this VarExpr with the provided replacement Expr
     //if the variable does not match the name of this VarExpr, then a new VarExpr equal to this VarExpr is returned
     virtual Expr* subst(std::string variableName, Expr* replacement);

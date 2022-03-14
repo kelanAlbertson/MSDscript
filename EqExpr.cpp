@@ -31,9 +31,9 @@ Val *EqExpr::interp() {
     return new BoolVal(this->lhs_->interp()->equals(this->rhs_->interp()));
 }
 
-bool EqExpr::has_variable() {
-    return (this->lhs_->has_variable() || this->rhs_->has_variable());
-}
+//bool EqExpr::has_variable() {
+//    return (this->lhs_->has_variable() || this->rhs_->has_variable());
+//}
 
 Expr *EqExpr::subst(std::string variableName, Expr *replacement) {
     return new EqExpr(this->lhs_->subst(variableName, replacement),
@@ -81,12 +81,12 @@ TEST_CASE("EqExpr interp() tests") {
     CHECK_THROWS_WITH((new EqExpr(new VarExpr("x"), new NumExpr(2)))->interp()->equals(new BoolVal(false)), "VarExpr cannot be interpreted");
 }
 
-TEST_CASE("EqExpr has_variable() tests") {
-    CHECK((new EqExpr(new NumExpr(1), new NumExpr(1)))->has_variable() == false);
-    CHECK((new EqExpr(new VarExpr("y"), new NumExpr(1)))->has_variable() == true);
-    CHECK((new EqExpr(new NumExpr(1), new VarExpr("test")))->has_variable() == true);
-    CHECK((new EqExpr(new NumExpr(1), new AddExpr(new NumExpr(1), new VarExpr("x"))))->has_variable() == true);
-}
+//TEST_CASE("EqExpr has_variable() tests") {
+//    CHECK((new EqExpr(new NumExpr(1), new NumExpr(1)))->has_variable() == false);
+//    CHECK((new EqExpr(new VarExpr("y"), new NumExpr(1)))->has_variable() == true);
+//    CHECK((new EqExpr(new NumExpr(1), new VarExpr("test")))->has_variable() == true);
+//    CHECK((new EqExpr(new NumExpr(1), new AddExpr(new NumExpr(1), new VarExpr("x"))))->has_variable() == true);
+//}
 
 TEST_CASE("EqExpr subst() tests") {
     CHECK((new EqExpr(new VarExpr("y"), new VarExpr("y")))->subst("y", new NumExpr(20))

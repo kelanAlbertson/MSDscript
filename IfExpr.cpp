@@ -44,9 +44,9 @@ Val *IfExpr::interp() {
     }
 }
 
-bool IfExpr::has_variable() {
-    return (this->condition_->has_variable() || this->then_statement_->has_variable() || this->else_statement_->has_variable());
-}
+//bool IfExpr::has_variable() {
+//    return (this->condition_->has_variable() || this->then_statement_->has_variable() || this->else_statement_->has_variable());
+//}
 
 Expr *IfExpr::subst(std::string variableName, Expr *replacement) {
     return new IfExpr(this->condition_->subst(variableName, replacement),
@@ -116,10 +116,10 @@ TEST_CASE("IfExpr interp() tests") {
     CHECK_THROWS_WITH((new IfExpr(new NumExpr(7), new AddExpr(new VarExpr("a"), new VarExpr("b")), new NumExpr(0)))->interp(), "Cannot use is_true() on a NumVal");
 }
 
-TEST_CASE("IfExpr has_variable() tests") {
-    CHECK((new IfExpr(new EqExpr(new NumExpr(0), new NumExpr(1)), new VarExpr("x"), new VarExpr("y")))->has_variable() == true);
-    CHECK((new IfExpr(new BoolExpr(true), new NumExpr(1), new NumExpr(2)))->has_variable() == false);
-}
+//TEST_CASE("IfExpr has_variable() tests") {
+//    CHECK((new IfExpr(new EqExpr(new NumExpr(0), new NumExpr(1)), new VarExpr("x"), new VarExpr("y")))->has_variable() == true);
+//    CHECK((new IfExpr(new BoolExpr(true), new NumExpr(1), new NumExpr(2)))->has_variable() == false);
+//}
 
 TEST_CASE("IfExpr subst() tests") {
     CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))

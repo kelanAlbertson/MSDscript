@@ -34,10 +34,9 @@ Val *CallExpr::interp() {
     return to_be_called_->interp()->call(arg_->interp());
 }
 
-bool CallExpr::has_variable() {
-    return false;
-    //TODO
-}
+//bool CallExpr::has_variable() {
+//    return false;
+//}
 
 Expr *CallExpr::subst(std::string variableName, Expr *replacement) {
     return new CallExpr(this->to_be_called_->subst(variableName, replacement),
@@ -52,7 +51,17 @@ void CallExpr::print(std::ostream &out) {
 }
 
 void CallExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) {
-    this->print(out);
+    if (prec == prec_call) {
+        out << "(";
+    }
+    this->to_be_called_->pretty_print_at(out, prec_none, true, last_new_line_pos);
+    if (prec == prec_call) {
+        out << ")";
+    }
+
+    out << "(";
+    this->arg_->pretty_print_at(out, prec_none, false, last_new_line_pos);
+    out << ")";
 }
 
 /**
@@ -108,5 +117,11 @@ TEST_CASE("CallExpr print() tests") {
 
 TEST_CASE("CallExpr pretty_print() tests") {
     CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(1)))
-                  ->to_pretty_string() == "(_fun (x) (x+1))(1)");
+        ->to_pretty_string() == "(_fun (x)\n"
+                                "   x + 1)(1)");
+    CHECK((new CallExpr(new BoolExpr(false), new NumExpr(1)))->to_pretty_string() == "_false(1)");
+    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new CallExpr(new FunExpr(new VarExpr("y"), new AddExpr(new MultExpr(new VarExpr("x"), new VarExpr("x")), new MultExpr(new VarExpr("y"), new VarExpr("y")))), new NumExpr(3))),new NumExpr(2)))
+            ->to_pretty_string() == "(_fun (x)\n"
+                                    "   (_fun (y)\n"
+                                    "      x * x + y * y)(3))(2)");
 }

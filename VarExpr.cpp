@@ -28,9 +28,9 @@ Val * VarExpr::interp() {
     throw std::runtime_error("VarExpr cannot be interpreted");
 }
 
-bool VarExpr::has_variable() {
-    return true;
-}
+//bool VarExpr::has_variable() {
+//    return true;
+//}
 
 Expr* VarExpr::subst(std::string variableName, Expr* replacement) {
     if(this->name_ == variableName) {
@@ -63,10 +63,10 @@ TEST_CASE("VarExpr interp() tests") {
     CHECK_THROWS_WITH((new VarExpr("x"))->interp(), "VarExpr cannot be interpreted");
 }
 
-TEST_CASE("VarExpr has_variable() tests") {
-    CHECK((new VarExpr(""))->has_variable() == true);
-    CHECK((new VarExpr("test"))->has_variable() == true);
-}
+//TEST_CASE("VarExpr has_variable() tests") {
+//    CHECK((new VarExpr(""))->has_variable() == true);
+//    CHECK((new VarExpr("test"))->has_variable() == true);
+//}
 
 TEST_CASE("VarExpr subst() tests") {
     CHECK((new VarExpr("x"))->subst("x", new VarExpr("y"))->equals(new VarExpr("y")));

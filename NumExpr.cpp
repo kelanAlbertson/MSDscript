@@ -26,9 +26,9 @@ Val * NumExpr::interp() {
     return new NumVal(this->rep_);
 }
 
-bool NumExpr::has_variable() {
-    return false;
-}
+//bool NumExpr::has_variable() {
+//    return false;
+//}
 
 Expr* NumExpr::subst(std::string variableName, Expr *replacement) {
     return this;
@@ -60,10 +60,10 @@ TEST_CASE("NumExpr interp() tests") {
     CHECK((new NumExpr(-1))->interp()->equals(new NumVal(-1)));
 }
 
-TEST_CASE("NumExpr has_variable() tests") {
-    CHECK((new NumExpr(0))->has_variable() == false);
-    CHECK((new NumExpr(-11))->has_variable() == false);
-}
+//TEST_CASE("NumExpr has_variable() tests") {
+//    CHECK((new NumExpr(0))->has_variable() == false);
+//    CHECK((new NumExpr(-11))->has_variable() == false);
+//}
 
 TEST_CASE("NumExpr subst() tests") {
     CHECK((new NumExpr(1))->subst("x", new VarExpr("y"))->equals(new NumExpr(1)));

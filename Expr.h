@@ -15,7 +15,8 @@ public:
     //returns an integer interpretation of the Expr (if possible)
     virtual Val* interp() = 0;
     //returns whether this Expr is or contains a variable
-    virtual bool has_variable() = 0;
+    //no longer necessary so commenting out
+//    virtual bool has_variable() = 0;
     //replaces every instance in the Expr of a VarExpr matching the provided name with a replacement Expr
     virtual Expr* subst(std::string variableName, Expr* replacement) = 0;
     //prints the expression
@@ -28,7 +29,8 @@ public:
         prec_none,      // = 0
         prec_eq,        // = 1
         prec_add,       // = 2
-        prec_mult       // = 3
+        prec_mult,      // = 3
+        prec_call       // = 4
     } precedence_t;
     //pretty_print using an accumulator prec to determine which Expr need parentheses around them
     virtual void pretty_print_at(std::ostream &out, precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) = 0;

@@ -17,7 +17,7 @@ public:
     //returns an integer interpretation of the AddExpr
     virtual Val * interp();
     //returns whether this AddExpr contains a variable
-    virtual bool has_variable();
+//    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this AddExpr with a replacement Expr
     //if there is no matching VarExpr then nothing is replaced and a new Expr equal to this AddExpr is returned
     virtual Expr* subst(std::string variableName, Expr* replacement);

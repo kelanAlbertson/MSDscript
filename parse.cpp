@@ -17,6 +17,7 @@
 #include "IfExpr.h"
 #include "FunExpr.h"
 #include "CallExpr.h"
+#include "NumVal.h"
 
 Expr *parse(std::istream &in) {
     Expr *e = parse_expr(in);
@@ -406,4 +407,34 @@ TEST_CASE("parse CallExpr") {
             ->equals(new CallExpr(new FunExpr(new VarExpr("x"), new VarExpr("x")), new NumExpr(2))));
     CHECK(parse_string("(_fun (x) (_fun (y) ((x*x)+(y*y)))(3))(2)")
             ->equals(new CallExpr(new FunExpr(new VarExpr("x"), new CallExpr(new FunExpr(new VarExpr("y"), new AddExpr(new MultExpr(new VarExpr("x"), new VarExpr("x")), new MultExpr(new VarExpr("y"), new VarExpr("y")))), new NumExpr(3))),new NumExpr(2))));
+}
+
+TEST_CASE("Matthew's factorial test") {
+    // this should do 10! which is equal to 3628800
+    CHECK((parse_string("_let factrl = _fun (factrl)\n"
+                 "                _fun (x)\n"
+                 "                  _if x == 1\n"
+                 "                  _then 1\n"
+                 "                  _else x * factrl(factrl)(x + -1)\n"
+                 "_in  factrl(factrl)(10)"))
+                 ->interp()->equals(new NumVal(3628800)));
+    Expr *e = parse_string("_let factrl = _fun (factrl)\n"
+                  "                _fun (x)\n"
+                  "                  _if x == 1\n"
+                  "                  _then 1\n"
+                  "                  _else x * factrl(factrl)(x + -1)\n"
+                  "_in  factrl(factrl)(10)");
+
+    CHECK((parse_string("_let factrl = _fun (factrl)\n"
+                        "                _fun (x)\n"
+                        "                  _if x == 1\n"
+                        "                  _then 1\n"
+                        "                  _else x * factrl(factrl)(x + -1)\n"
+                        "_in  factrl(factrl)(10)"))
+                  ->to_pretty_string() == "_let factrl = _fun (factrl)\n"
+                                          "                _fun (x)\n"
+                                          "                  _if x == 1\n"
+                                          "                  _then 1\n"
+                                          "                  _else x * factrl(factrl)(x + -1)\n"
+                                          "_in  factrl(factrl)(10)");
 }

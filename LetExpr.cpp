@@ -34,9 +34,9 @@ Val * LetExpr::interp() {
     return this->body_->subst(this->lhs_->name_, rhs_val->to_expr())->interp();
 }
 
-bool LetExpr::has_variable() {
-    return (this->rhs_->has_variable() || this->body_->has_variable());
-}
+//bool LetExpr::has_variable() {
+//    return (this->rhs_->has_variable() || this->body_->has_variable());
+//}
 
 Expr *LetExpr::subst(std::string variableName, Expr *replacement) {
     // rules from lecture videos:
@@ -111,11 +111,11 @@ TEST_CASE("LetExpr interp() tests") {
             ->interp()->equals(new NumVal(13)));
 }
 
-TEST_CASE("LetExpr has_variable() tests") {
-    CHECK((new LetExpr(new VarExpr("x"), new NumExpr(1), new AddExpr(new VarExpr("x"), new NumExpr(1))))->has_variable() == true);
-    CHECK((new LetExpr(new VarExpr("x"), new AddExpr(new VarExpr("y"), new NumExpr(1)), new NumExpr(1)))->has_variable() == true);
-    CHECK((new LetExpr(new VarExpr("x"), new NumExpr(1), new NumExpr(0)))->has_variable() == false);
-}
+//TEST_CASE("LetExpr has_variable() tests") {
+//    CHECK((new LetExpr(new VarExpr("x"), new NumExpr(1), new AddExpr(new VarExpr("x"), new NumExpr(1))))->has_variable() == true);
+//    CHECK((new LetExpr(new VarExpr("x"), new AddExpr(new VarExpr("y"), new NumExpr(1)), new NumExpr(1)))->has_variable() == true);
+//    CHECK((new LetExpr(new VarExpr("x"), new NumExpr(1), new NumExpr(0)))->has_variable() == false);
+//}
 
 TEST_CASE("LetExpr subst() tests") {
     CHECK((new LetExpr(new VarExpr("x"), new NumExpr(6), new AddExpr(new VarExpr("x"), new NumExpr(1))))->subst("x", new NumExpr(5))

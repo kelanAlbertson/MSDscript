@@ -29,9 +29,9 @@ Val * MultExpr::interp() {
     return (this->lhs_->interp()->multiply_by(this->rhs_->interp()));
 }
 
-bool MultExpr::has_variable() {
-    return (this->lhs_->has_variable() || this->rhs_->has_variable());
-}
+//bool MultExpr::has_variable() {
+//    return (this->lhs_->has_variable() || this->rhs_->has_variable());
+//}
 
 Expr* MultExpr::subst(std::string variableName, Expr *replacement) {
     return new MultExpr(this->lhs_->subst(variableName, replacement),
@@ -78,11 +78,11 @@ TEST_CASE("MultExpr interp() tests") {
     CHECK((new MultExpr(new NumExpr(-5), new NumExpr(-5)))->interp()->equals(new NumVal(25)));
 }
 
-TEST_CASE("MultExpr has_variable() tests") {
-    CHECK((new MultExpr(new NumExpr(0), new NumExpr(1)))->has_variable() == false);
-    CHECK((new MultExpr(new VarExpr("test"), new NumExpr(1)))->has_variable() == true);
-    CHECK((new MultExpr(new VarExpr("test"), new VarExpr("test")))->has_variable() == true);
-}
+//TEST_CASE("MultExpr has_variable() tests") {
+//    CHECK((new MultExpr(new NumExpr(0), new NumExpr(1)))->has_variable() == false);
+//    CHECK((new MultExpr(new VarExpr("test"), new NumExpr(1)))->has_variable() == true);
+//    CHECK((new MultExpr(new VarExpr("test"), new VarExpr("test")))->has_variable() == true);
+//}
 
 TEST_CASE("MultExpr subst() tests") {
     CHECK((new MultExpr(new VarExpr("x"), new VarExpr("x")))->subst("x", new VarExpr("y"))

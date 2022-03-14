@@ -26,9 +26,9 @@ Val *BoolExpr::interp() {
     return new BoolVal(this->rep_);
 }
 
-bool BoolExpr::has_variable() {
-    return false;
-}
+//bool BoolExpr::has_variable() {
+//    return false;
+//}
 
 Expr *BoolExpr::subst(std::string variableName, Expr *replacement) {
     return this;
@@ -62,9 +62,9 @@ TEST_CASE("BoolExpr interp() tests") {
     CHECK((new BoolExpr(false))->interp()->equals(new BoolVal(false)));
 }
 
-TEST_CASE("BoolExpr has_variable() tests") {
-    CHECK((new BoolExpr(false))->has_variable() == false);
-}
+//TEST_CASE("BoolExpr has_variable() tests") {
+//    CHECK((new BoolExpr(false))->has_variable() == false);
+//}
 
 TEST_CASE("BoolExpr subst() tests") {
     CHECK((new BoolExpr(true))->subst("x", new NumExpr(5))->equals(new BoolExpr(true)));

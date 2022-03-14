@@ -16,7 +16,7 @@ public:
     //returns an integer interpretation of the NumExpr
     virtual Val * interp();
     //returns whether this NumExpr contains a variable (this will always be false)
-    virtual bool has_variable();
+//    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this Expr with a replacement Expr
     //but since there cannot be a VarExpr within a NumExpr, this will always return a new NumExpr equal to this NumExpr
     virtual Expr* subst(std::string variableName, Expr* replacement);

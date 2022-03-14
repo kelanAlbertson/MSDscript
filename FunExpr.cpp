@@ -30,10 +30,9 @@ Val *FunExpr::interp() {
     return new FunVal(this->arg_, this->body_);
 }
 
-bool FunExpr::has_variable() {
-    return false;
-    //TODO
-}
+//bool FunExpr::has_variable() {
+//    return false;
+//}
 
 Expr *FunExpr::subst(std::string variableName, Expr *replacement) {
     if (this->arg_->name_ == variableName) {
@@ -51,7 +50,23 @@ void FunExpr::print(std::ostream &out) {
 }
 
 void FunExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool keyword_parentheses, std::streampos &last_new_line_pos) {
-    this->print(out);
+    if (keyword_parentheses) {
+        out << "(";
+    }
+
+    int fun_indent = out.tellp() - last_new_line_pos;
+    out << "_fun (" + this->arg_->name_ + ")\n";
+    last_new_line_pos = out.tellp();
+
+    for (int i = 0; i < fun_indent + 2; ++i) {
+        out << " ";
+    }
+
+    this->body_->pretty_print_at(out, prec_none, false, last_new_line_pos);
+
+    if (keyword_parentheses) {
+        out << ")";
+    }
 }
 
 /**
@@ -96,5 +111,10 @@ TEST_CASE("FunExpr print() tests") {
 }
 
 TEST_CASE("FunExpr pretty_print() tests") {
-    CHECK((new FunExpr(new VarExpr("x"), new NumExpr(1)))->to_pretty_string() == "(_fun (x) 1)");
+    CHECK((new FunExpr(new VarExpr("x"), new NumExpr(1)))->to_pretty_string() == "_fun (x)\n"
+                                                                                 "  1");
+    CHECK((new FunExpr(new VarExpr("x"), new FunExpr(new VarExpr("y"), new AddExpr(new MultExpr(new VarExpr("x"), new VarExpr("x")), new MultExpr(new VarExpr("y"), new VarExpr("y"))))))
+            ->to_pretty_string() == "_fun (x)\n"
+                                   "  _fun (y)\n"
+                                   "    x * x + y * y");
 }
