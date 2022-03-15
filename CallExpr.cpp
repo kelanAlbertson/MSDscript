@@ -15,13 +15,13 @@
 #include "BoolExpr.h"
 #include "BoolVal.h"
 
-CallExpr::CallExpr(Expr *to_be_called, Expr *arg) {
+CallExpr::CallExpr(PTR(Expr) to_be_called, PTR(Expr) arg) {
     this->to_be_called_ = to_be_called;
     this->arg_ = arg;
 }
 
-bool CallExpr::equals(Expr *other) {
-    CallExpr *c = dynamic_cast<CallExpr*>(other);
+bool CallExpr::equals(PTR(Expr) other) {
+    PTR(CallExpr) c = CAST(CallExpr)(other);
     if (c == nullptr) {
         return false;
     }
@@ -30,7 +30,7 @@ bool CallExpr::equals(Expr *other) {
     }
 }
 
-Val *CallExpr::interp() {
+PTR(Val)CallExpr::interp() {
     return to_be_called_->interp()->call(arg_->interp());
 }
 
@@ -38,8 +38,8 @@ Val *CallExpr::interp() {
 //    return false;
 //}
 
-Expr *CallExpr::subst(std::string variableName, Expr *replacement) {
-    return new CallExpr(this->to_be_called_->subst(variableName, replacement),
+PTR(Expr)CallExpr::subst(std::string variableName, PTR(Expr)replacement) {
+    return NEW(CallExpr)(this->to_be_called_->subst(variableName, replacement),
                         this->arg_->subst(variableName, replacement));
 }
 
@@ -69,58 +69,58 @@ void CallExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool 
  **/
 
 TEST_CASE("CallExpr equals() tests") {
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(5)))
-            ->equals(new CallExpr(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(5))) == true);
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(5)))
-            ->equals(new CallExpr(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(0))) == false);
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(5)))
-            ->equals(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1)))) == false);
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))), NEW(NumExpr)(5)))
+            ->equals(NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))), NEW(NumExpr)(5))) == true);
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))), NEW(NumExpr)(5)))
+            ->equals(NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))), NEW(NumExpr)(0))) == false);
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))), NEW(NumExpr)(5)))
+            ->equals(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))) == false);
 }
 
 TEST_CASE("CallExpr interp() tests") {
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(5)))
-            ->interp()->equals(new NumVal(6)));
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new MultExpr(new VarExpr("x"), new VarExpr("x"))), new NumExpr(3)))
-            ->interp()->equals(new NumVal(9)));
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"),
-                                    new FunExpr(new VarExpr("y"),
-                                                new AddExpr(new MultExpr(new VarExpr("x"), new VarExpr("x")), new MultExpr(new VarExpr("y"), new VarExpr("y"))))), new NumExpr(2)))
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))), NEW(NumExpr)(5)))
+            ->interp()->equals(NEW(NumVal)(6)));
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x"))), NEW(NumExpr)(3)))
+            ->interp()->equals(NEW(NumVal)(9)));
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"),
+                                    NEW(FunExpr)(NEW(VarExpr)("y"),
+                                                NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))))), NEW(NumExpr)(2)))
                                     ->interp()
-                                    ->equals(new FunVal(new VarExpr("y"),
-                                                        new AddExpr(new MultExpr(new NumExpr(2), new NumExpr(2)), new MultExpr(new VarExpr("y"), new VarExpr("y"))))));
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"),
-                                    new CallExpr(new FunExpr(new VarExpr("y"),
-                                                             new AddExpr(new MultExpr(new VarExpr("x"), new VarExpr("x")), new MultExpr(new VarExpr("y"), new VarExpr("y")))),
-                                                 new NumExpr(3))),
-                        new NumExpr(2)))->interp()->equals(new NumVal(13)));
-    CHECK((new CallExpr(new FunExpr(new VarExpr("b"), new BoolExpr(true)), new NumExpr(-99)))->interp()->equals(new BoolVal(true)));
-    CHECK_THROWS_WITH((new CallExpr(new BoolExpr(false), new NumExpr(1)))->interp(), "Cannot call() a BoolVal");
+                                    ->equals(NEW(FunVal)(NEW(VarExpr)("y"),
+                                                        NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2)), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))))));
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"),
+                                    NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("y"),
+                                                             NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")))),
+                                                 NEW(NumExpr)(3))),
+                        NEW(NumExpr)(2)))->interp()->equals(NEW(NumVal)(13)));
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("b"), NEW(BoolExpr)(true)), NEW(NumExpr)(-99)))->interp()->equals(NEW(BoolVal)(true)));
+    CHECK_THROWS_WITH((NEW(CallExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(1)))->interp(), "Cannot call() a BoolVal");
 }
 
 TEST_CASE("CallExpr subst() tests") {
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new VarExpr("x")), new NumExpr(1)))
-            ->subst("x", new NumExpr(0))->equals(new CallExpr(new FunExpr(new VarExpr("x"), new VarExpr("x")), new NumExpr(1))));
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new MultExpr(new VarExpr("x"), new VarExpr("y"))), new NumExpr(2)))
-                  ->subst("y", new NumExpr(8))->equals(new CallExpr(new FunExpr(new VarExpr("x"), new MultExpr(new VarExpr("x"), new NumExpr(8))), new NumExpr(2))));
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new VarExpr("x")), new VarExpr("x")))
-                  ->subst("x", new NumExpr(0))->equals(new CallExpr(new FunExpr(new VarExpr("x"), new VarExpr("x")), new NumExpr(0))));
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(NumExpr)(1)))
+            ->subst("x", NEW(NumExpr)(0))->equals(NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(NumExpr)(1))));
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("y"))), NEW(NumExpr)(2)))
+                  ->subst("y", NEW(NumExpr)(8))->equals(NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(8))), NEW(NumExpr)(2))));
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(VarExpr)("x")))
+                  ->subst("x", NEW(NumExpr)(0))->equals(NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(NumExpr)(0))));
 }
 
 TEST_CASE("CallExpr print() tests") {
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(1)))
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))), NEW(NumExpr)(1)))
             ->to_string() == "(_fun (x) (x+1))(1)");
-    CHECK((new CallExpr(new FunExpr(new VarExpr("y"), new BoolExpr(false)), new AddExpr(new VarExpr("x"), new NumExpr(1))))
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("y"), NEW(BoolExpr)(false)), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
             ->to_string() == "(_fun (y) _false)((x+1))");
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new CallExpr(new FunExpr(new VarExpr("y"), new AddExpr(new MultExpr(new VarExpr("x"), new VarExpr("x")), new MultExpr(new VarExpr("y"), new VarExpr("y")))), new NumExpr(3))),new NumExpr(2)))
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("y"), NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")))), NEW(NumExpr)(3))),NEW(NumExpr)(2)))
             ->to_string() == "(_fun (x) (_fun (y) ((x*x)+(y*y)))(3))(2)");
 }
 
 TEST_CASE("CallExpr pretty_print() tests") {
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(1)))
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))), NEW(NumExpr)(1)))
         ->to_pretty_string() == "(_fun (x)\n"
                                 "   x + 1)(1)");
-    CHECK((new CallExpr(new BoolExpr(false), new NumExpr(1)))->to_pretty_string() == "_false(1)");
-    CHECK((new CallExpr(new FunExpr(new VarExpr("x"), new CallExpr(new FunExpr(new VarExpr("y"), new AddExpr(new MultExpr(new VarExpr("x"), new VarExpr("x")), new MultExpr(new VarExpr("y"), new VarExpr("y")))), new NumExpr(3))),new NumExpr(2)))
+    CHECK((NEW(CallExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(1)))->to_pretty_string() == "_false(1)");
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("y"), NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")))), NEW(NumExpr)(3))),NEW(NumExpr)(2)))
             ->to_pretty_string() == "(_fun (x)\n"
                                     "   (_fun (y)\n"
                                     "      x * x + y * y)(3))(2)");

@@ -1,75 +1,79 @@
 INCS = cmdline.h
-OBJS = main.o cmdline.o
 
-msdscript: main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o FunVal.o FunExpr.o CallExpr.o
-	c++ --std=c++14 -O2 -o msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o FunVal.o FunExpr.o CallExpr.o
+OBJS = main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o BoolExpr.o EqExpr.o IfExpr.o FunExpr.o CallExpr.o Val.o NumVal.o BoolVal.o FunVal.o parse.o
+TESTOBJS = randomTests.o exec.o
+
+CXXFLAGS = --std=c++14 -O2
+
+msdscript: $(OBJS)
+	$(CXX) $(CXXFLAGS) -o msdscript $(OBJS)
 
 test_msdscript: randomTests.o exec.o
-	c++ --std=c++14 -O2 -o test_msdscript randomTests.o exec.o
+	$(CXX) $(CXXFLAGS) -O2 -o test_msdscript randomTests.o exec.o
 
 .PHONY: test
 test: msdscript
 	./msdscript --test
 
-main.o: main.cpp cmdline.h
-	c++ --std=c++14 -O2 -c main.cpp
+main.o: main.cpp cmdline.h Expr.h
+	$(CXX) $(CXXFLAGS) -O2 -c main.cpp
 
-cmdline.o: cmdline.cpp catch.h cmdline.h
-	c++ --std=c++14 -O2 -c cmdline.cpp
+cmdline.o: cmdline.cpp cmdline.h catch.h Expr.h Val.h parse.h
+	$(CXX) $(CXXFLAGS) -O2 -c cmdline.cpp
 
-Expr.o: Expr.cpp Expr.h
-	c++ --std=c++14 -O2 -c Expr.cpp
+Expr.o: Expr.cpp Expr.h catch.h Val.h
+	$(CXX) $(CXXFLAGS) -O2 -c Expr.cpp
 
-NumExpr.o: NumExpr.cpp NumExpr.h catch.h
-	c++ --std=c++14 -O2 -c NumExpr.cpp
+NumExpr.o: NumExpr.cpp NumExpr.h catch.h VarExpr.h NumVal.h
+	$(CXX) $(CXXFLAGS) -O2 -c NumExpr.cpp
 
-AddExpr.o: AddExpr.cpp AddExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h
-	c++ --std=c++14 -O2 -c AddExpr.cpp
+AddExpr.o: AddExpr.cpp AddExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h NumVal.h
+	$(CXX) $(CXXFLAGS) -O2 -c AddExpr.cpp
 
-MultExpr.o: MultExpr.cpp MultExpr.h AddExpr.h NumExpr.h VarExpr.h catch.h
-	c++ --std=c++14 -O2 -c MultExpr.cpp
+MultExpr.o: MultExpr.cpp MultExpr.h AddExpr.h NumExpr.h VarExpr.h catch.h NumVal.h
+	$(CXX) $(CXXFLAGS) -O2 -c MultExpr.cpp
 
 VarExpr.o: VarExpr.cpp VarExpr.h AddExpr.h NumExpr.h MultExpr.h catch.h
-	c++ --std=c++14 -O2 -c VarExpr.cpp
+	$(CXX) $(CXXFLAGS) -O2 -c VarExpr.cpp
 
-LetExpr.o: LetExpr.cpp LetExpr.h AddExpr.h NumExpr.h MultExpr.h VarExpr.h catch.h
-	c++ --std=c++14 -O2 -c LetExpr.cpp
+LetExpr.o: LetExpr.cpp LetExpr.h AddExpr.h NumExpr.h MultExpr.h VarExpr.h catch.h NumVal.h
+	$(CXX) $(CXXFLAGS) -O2 -c LetExpr.cpp
+
+BoolExpr.o: BoolExpr.cpp BoolExpr.h BoolVal.h NumExpr.h catch.h
+	$(CXX) $(CXXFLAGS) -O2 -c BoolExpr.cpp
+
+EqExpr.o: EqExpr.cpp EqExpr.h BoolVal.h AddExpr.h NumExpr.h MultExpr.h VarExpr.h catch.h BoolExpr.h
+	$(CXX) $(CXXFLAGS) -O2 -c EqExpr.cpp
+
+IfExpr.o: IfExpr.cpp IfExpr.h AddExpr.h BoolExpr.h EqExpr.h LetExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h Val.h BoolVal.h NumVal.h
+	$(CXX) $(CXXFLAGS) -O2 -c IfExpr.cpp
+
+FunExpr.o: FunExpr.cpp FunExpr.h AddExpr.h CallExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h FunVal.h
+	$(CXX) $(CXXFLAGS) -O2 -c FunExpr.cpp
+
+CallExpr.o: CallExpr.cpp CallExpr.h AddExpr.h BoolExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h Val.h BoolVal.h NumVal.h FunVal.h
+	$(CXX) $(CXXFLAGS) -O2 -c CallExpr.cpp
 
 Val.o: Val.cpp Val.h
-	c++ --std=c++14 -O2 -c Val.cpp
+	$(CXX) $(CXXFLAGS) -O2 -c Val.cpp
 
-NumVal.o: NumVal.cpp NumVal.h
-	c++ --std=c++14 -O2 -c NumVal.cpp
+NumVal.o: NumVal.cpp NumVal.h BoolVal.h NumExpr.h catch.h
+	$(CXX) $(CXXFLAGS) -O2 -c NumVal.cpp
 
-parse.o: parse.cpp parse.h
-	c++ --std=c++14 -O2 -c parse.cpp
+BoolVal.o: BoolVal.cpp BoolVal.h BoolExpr.h NumVal.h catch.h
+	$(CXX) $(CXXFLAGS) -O2 -c BoolVal.cpp
 
-randomTests.o: randomTests.cpp exec.h
-	c++ --std=c++14 -O2 -c randomTests.cpp
+FunVal.o: FunVal.cpp FunVal.h NumVal.h BoolVal.h catch.h VarExpr.h AddExpr.h NumExpr.h FunExpr.h BoolExpr.h
+	$(CXX) $(CXXFLAGS) -O2 -c FunVal.cpp
+
+parse.o: parse.cpp parse.h Expr.h AddExpr.h BoolExpr.h CallExpr.h EqExpr.h FunExpr.h IfExpr.h LetExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h NumVal.h
+	$(CXX) $(CXXFLAGS) -O2 -c parse.cpp
 
 exec.o: exec.cpp exec.h
-	c++ --std=c++14 -O2 -c exec.cpp
+	$(CXX) $(CXXFLAGS) -O2 -c exec.cpp
 
-BoolVal.o: BoolVal.cpp BoolVal.h
-	c++ --std=c++14 -O2 -c BoolVal.cpp
-
-BoolExpr.o: BoolExpr.cpp BoolExpr.h
-	c++ --std=c++14 -O2 -c BoolExpr.cpp
-
-EqExpr.o: EqExpr.cpp EqExpr.h
-	c++ --std=c++14 -O2 -c EqExpr.cpp
-
-IfExpr.o: IfExpr.cpp IfExpr.h
-	c++ --std=c++14 -O2 -c IfExpr.cpp
-
-FunVal.o: FunVal.cpp FunVal.h
-	c++ --std=c++14 -O2 -c FunVal.cpp
-
-FunExpr.o: FunExpr.cpp FunExpr.h
-	c++ --std=c++14 -O2 -c FunExpr.cpp
-
-CallExpr.o: CallExpr.cpp CallExpr.h
-	c++ --std=c++14 -O2 -c CallExpr.cpp
+randomTests.o: randomTests.cpp exec.h
+	$(CXX) $(CXXFLAGS) -O2 -c randomTests.cpp
 
 clean:
-	rm msdscript main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o Val.o NumVal.o parse.o test_msdscript randomTests.o exec.o BoolVal.o BoolExpr.o EqExpr.o IfExpr.o FunVal.o FunExpr.o CallExpr.o
+	rm msdscript $(OBJS)

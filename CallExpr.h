@@ -8,19 +8,19 @@
 
 class CallExpr : public Expr {
 public:
-    Expr* to_be_called_;
-    Expr* arg_;
+    PTR(Expr) to_be_called_;
+    PTR(Expr) arg_;
 
-    CallExpr (Expr* to_be_called, Expr *arg);
+    CallExpr (PTR(Expr) to_be_called, PTR(Expr) arg);
     //returns whether the other Expr is a CallExpr and has all the same fields as this CallExpr
-    virtual bool equals(Expr* other);
+    virtual bool equals(PTR(Expr) other);
     //returns a Val representing the evaluation of this CallExpr
-    virtual Val* interp();
+    virtual PTR(Val) interp();
     //returns whether this CallExpr contains a variable
 //    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this CallExpr with a replacement Expr
     //if there is no matching VarExpr then nothing is replaced and a new Expr equal to this FunExpr is returned
-    virtual Expr* subst(std::string variableName, Expr* replacement);
+    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement);
     //prints this CallExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses

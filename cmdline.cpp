@@ -13,7 +13,7 @@
 #include "Val.h"
 #include "parse.h"
 
-int use_arguments (int argc, char *argv[]) {
+int use_arguments (int argc, char* argv[]) {
     bool  alreadyTested = false;
     if (argc > 1) {
         for (int i = 1; i < argc; ++i) {
@@ -40,7 +40,7 @@ int use_arguments (int argc, char *argv[]) {
                 }
             }
             else if (arg == "--interp") {
-                Val* interpreted = parse(std::cin)->interp();
+                PTR(Val) interpreted = parse(std::cin)->interp();
                 std::cout << interpreted->to_string() << "\n";
                 exit(0);
             }

@@ -12,14 +12,14 @@ public:
 
     VarExpr(std::string name);
     //returns whether the other Expr is a VarExpr and has the same name as this VarExpr
-    virtual bool equals(Expr* other);
+    virtual bool equals(PTR(Expr) other);
     //returns an integer interpretation of the VarExpr
-    virtual Val * interp();
+    virtual PTR(Val) interp();
     //returns whether this VarExpr is a variable (this will always be true)
 //    virtual bool has_variable();
     //if the variable name matches the name of this VarExpr, then replaces this VarExpr with the provided replacement Expr
     //if the variable does not match the name of this VarExpr, then a new VarExpr equal to this VarExpr is returned
-    virtual Expr* subst(std::string variableName, Expr* replacement);
+    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement);
     //prints the VarExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses

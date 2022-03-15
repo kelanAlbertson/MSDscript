@@ -17,14 +17,14 @@
 #include <sstream>
 #include <string>
 
-IfExpr::IfExpr(Expr *condition, Expr *ts, Expr *es) {
+IfExpr::IfExpr(PTR(Expr) condition, PTR(Expr) ts, PTR(Expr) es) {
     this->condition_ = condition;
     this->then_statement_ = ts;
     this->else_statement_ = es;
 }
 
-bool IfExpr::equals(Expr *other) {
-    IfExpr* i = dynamic_cast<IfExpr*>(other);
+bool IfExpr::equals(PTR(Expr) other) {
+    PTR(IfExpr) i = CAST(IfExpr)(other);
     if (i == nullptr) {
         return false;
     }
@@ -35,7 +35,7 @@ bool IfExpr::equals(Expr *other) {
     }
 }
 
-Val *IfExpr::interp() {
+PTR(Val)IfExpr::interp() {
     if (this->condition_->interp()->is_true()) {
         return this->then_statement_->interp();
     }
@@ -48,8 +48,8 @@ Val *IfExpr::interp() {
 //    return (this->condition_->has_variable() || this->then_statement_->has_variable() || this->else_statement_->has_variable());
 //}
 
-Expr *IfExpr::subst(std::string variableName, Expr *replacement) {
-    return new IfExpr(this->condition_->subst(variableName, replacement),
+PTR(Expr)IfExpr::subst(std::string variableName, PTR(Expr) replacement) {
+    return NEW(IfExpr)(this->condition_->subst(variableName, replacement),
                       this->then_statement_->subst(variableName, replacement),
                       this->else_statement_->subst(variableName, replacement));
 }
@@ -99,21 +99,21 @@ void IfExpr::pretty_print_at(std::ostream &out, Expr::precedence_t prec, bool ke
  **/
 
 TEST_CASE("IfExpr equals() tests") {
-    CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))
-            ->equals(new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false))) == true);
-    CHECK((new IfExpr(new BoolExpr(false), new NumExpr(0), new VarExpr("y")))
-                  ->equals(new IfExpr(new BoolExpr(true), new NumExpr(0), new VarExpr("y"))) == false);
-    CHECK((new IfExpr(new EqExpr(new VarExpr("x"), new VarExpr("x")), new NumExpr(1), new NumExpr(0)))
-                  ->equals(new EqExpr(new VarExpr("x"), new VarExpr("x"))) == false);
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+            ->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))) == true);
+    CHECK((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(0), NEW(VarExpr)("y")))
+                  ->equals(NEW(IfExpr)(NEW(BoolExpr)(true), NEW(NumExpr)(0), NEW(VarExpr)("y"))) == false);
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(NumExpr)(1), NEW(NumExpr)(0)))
+                  ->equals(NEW(EqExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x"))) == false);
 }
 
 TEST_CASE("IfExpr interp() tests") {
-    CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))
-            ->interp()->equals(new BoolVal(false)));
-    CHECK_THROWS_WITH((new IfExpr(new BoolExpr(false), new NumExpr(0), new VarExpr("y")))->interp(), "VarExpr cannot be interpreted");
-    CHECK((new IfExpr(new EqExpr(new AddExpr(new NumExpr(3), new NumExpr(1)), new AddExpr(new NumExpr(2), new NumExpr(2))), new NumExpr(25), new NumExpr(100)))->interp()->equals(new NumVal(25)));
-    CHECK((new IfExpr(new BoolExpr(false), new NumExpr(-1), new BoolExpr(false)))->interp()->equals(new BoolVal(false)));
-    CHECK_THROWS_WITH((new IfExpr(new NumExpr(7), new AddExpr(new VarExpr("a"), new VarExpr("b")), new NumExpr(0)))->interp(), "Cannot use is_true() on a NumVal");
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+            ->interp()->equals(NEW(BoolVal)(false)));
+    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(0), NEW(VarExpr)("y")))->interp(), "VarExpr cannot be interpreted");
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(AddExpr)(NEW(NumExpr)(3), NEW(NumExpr)(1)), NEW(AddExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2))), NEW(NumExpr)(25), NEW(NumExpr)(100)))->interp()->equals(NEW(NumVal)(25)));
+    CHECK((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(-1), NEW(BoolExpr)(false)))->interp()->equals(NEW(BoolVal)(false)));
+    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(NumExpr)(7), NEW(AddExpr)(NEW(VarExpr)("a"), NEW(VarExpr)("b")), NEW(NumExpr)(0)))->interp(), "Cannot use is_true() on a NumVal");
 }
 
 //TEST_CASE("IfExpr has_variable() tests") {
@@ -122,40 +122,40 @@ TEST_CASE("IfExpr interp() tests") {
 //}
 
 TEST_CASE("IfExpr subst() tests") {
-    CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))
-            ->subst("x", new BoolExpr(false))->equals(new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false))));
-    CHECK((new IfExpr(new EqExpr(new VarExpr("x"), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))
-            ->subst("x", new NumExpr(2))->equals(new IfExpr(new EqExpr(new NumExpr(2), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false))));
-    CHECK((new IfExpr(new VarExpr("test"), new BoolExpr(true), new BoolExpr(false)))
-            ->subst("test", new EqExpr(new BoolExpr(true), new BoolExpr(false)))
-            ->equals(new IfExpr(new EqExpr(new BoolExpr(true), new BoolExpr(false)), new BoolExpr(true), new BoolExpr(false))));
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+            ->subst("x", NEW(BoolExpr)(false))->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))));
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+            ->subst("x", NEW(NumExpr)(2))->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))));
+    CHECK((NEW(IfExpr)(NEW(VarExpr)("test"), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+            ->subst("test", NEW(EqExpr)(NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+            ->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(BoolExpr)(true), NEW(BoolExpr)(false)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))));
 }
 
 TEST_CASE("IfExpr print()/to_string() tests") {
-    CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
             ->to_string() == "(_if (1==2) _then _true _else _false)");
-    CHECK((new IfExpr(new BoolExpr(false), new AddExpr(new NumExpr(0), new NumExpr(0)), new EqExpr(new VarExpr("y"), new NumExpr(1))))
+    CHECK((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)), NEW(EqExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(1))))
             ->to_string() == "(_if _false _then (0+0) _else (y==1))");
-    CHECK((new IfExpr(new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(1)), new BoolExpr(true), new BoolExpr(false)), new NumExpr(10), new NumExpr(20)))
+    CHECK((NEW(IfExpr)(NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(1)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)), NEW(NumExpr)(10), NEW(NumExpr)(20)))
             ->to_string() == "(_if (_if (1==1) _then _true _else _false) _then 10 _else 20)");
 }
 
 TEST_CASE("IfExpr pretty_print() tests") {
-    CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new BoolExpr(true), new BoolExpr(false)))
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
             ->to_pretty_string() == "_if 1 == 2\n"
                                     "_then _true\n"
                                     "_else _false");
-    CHECK((new IfExpr(new BoolExpr(false), new AddExpr(new NumExpr(0), new NumExpr(0)), new EqExpr(new VarExpr("y"), new NumExpr(1))))
+    CHECK((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)), NEW(EqExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(1))))
             ->to_pretty_string() == "_if _false\n"
                                     "_then 0 + 0\n"
                                     "_else y == 1");
-    CHECK((new IfExpr(new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(1)), new BoolExpr(true), new BoolExpr(false)), new NumExpr(10), new NumExpr(20)))
+    CHECK((NEW(IfExpr)(NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(1)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)), NEW(NumExpr)(10), NEW(NumExpr)(20)))
             ->to_pretty_string() == "_if _if 1 == 1\n"
                                     "    _then _true\n"
                                     "    _else _false\n"
                                     "_then 10\n"
                                     "_else 20");
-    CHECK((new AddExpr(new IfExpr(new BoolExpr(true), new NumExpr(1), new NumExpr(0)), new NumExpr(5)))
+    CHECK((NEW(AddExpr)(NEW(IfExpr)(NEW(BoolExpr)(true), NEW(NumExpr)(1), NEW(NumExpr)(0)), NEW(NumExpr)(5)))
             ->to_pretty_string() == "(_if _true\n"
                                     " _then 1\n"
                                     " _else 0) + 5");

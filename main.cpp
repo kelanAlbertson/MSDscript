@@ -6,7 +6,7 @@
 #include "Expr.h"
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 
     try {
         use_arguments(argc, argv);

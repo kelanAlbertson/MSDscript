@@ -8,19 +8,19 @@
 
 class MultExpr : public Expr {
 public:
-    Expr* lhs_;
-    Expr* rhs_;
+    PTR(Expr) lhs_;
+    PTR(Expr) rhs_;
 
-    MultExpr(Expr* lhs, Expr* rhs);
+    MultExpr(PTR(Expr) lhs, PTR(Expr) rhs);
     //returns whether the other Expr is an MultExpr and has all the same fields as this MultExpr
-    virtual bool equals (Expr* other);
+    virtual bool equals (PTR(Expr) other);
     //returns an integer interpretation of the MultExpr
-    virtual Val * interp();
+    virtual PTR(Val) interp();
     //returns whether this MultExpr contains a variable
 //    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this MultExpr with a replacement Expr
     //if there is no matching VarExpr then nothing is replaced and a new Expr equal to this MultExpr is returned
-    virtual Expr* subst(std::string variableName, Expr* replacement);
+    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement);
     //prints the MultExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses

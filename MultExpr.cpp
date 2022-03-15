@@ -10,13 +10,13 @@
 #include "catch.h"
 #include <sstream>
 
-MultExpr::MultExpr(Expr *lhs, Expr *rhs) {
+MultExpr::MultExpr(PTR(Expr) lhs, PTR(Expr) rhs) {
     this->lhs_ = lhs;
     this->rhs_ = rhs;
 }
 
-bool MultExpr::equals(Expr *other) {
-    MultExpr* m = dynamic_cast<MultExpr*>(other);
+bool MultExpr::equals(PTR(Expr) other) {
+    PTR(MultExpr) m = CAST(MultExpr)(other);
     if (m == nullptr) {
         return false;
     }
@@ -25,7 +25,7 @@ bool MultExpr::equals(Expr *other) {
     }
 }
 
-Val * MultExpr::interp() {
+PTR(Val) MultExpr::interp() {
     return (this->lhs_->interp()->multiply_by(this->rhs_->interp()));
 }
 
@@ -33,8 +33,8 @@ Val * MultExpr::interp() {
 //    return (this->lhs_->has_variable() || this->rhs_->has_variable());
 //}
 
-Expr* MultExpr::subst(std::string variableName, Expr *replacement) {
-    return new MultExpr(this->lhs_->subst(variableName, replacement),
+PTR(Expr) MultExpr::subst(std::string variableName, PTR(Expr) replacement) {
+    return NEW(MultExpr)(this->lhs_->subst(variableName, replacement),
                         this->rhs_->subst(variableName, replacement));
 }
 
@@ -65,17 +65,17 @@ void MultExpr::pretty_print_at(std::ostream &out, precedence_t prec, bool keywor
  **/
 
 TEST_CASE("MultExpr equals() tests") {
-    CHECK((new MultExpr(new NumExpr(-1), new NumExpr(0)))->equals(new MultExpr(new NumExpr(-1), new NumExpr(0))) == true);
-    CHECK((new MultExpr(new NumExpr(-1), new NumExpr(0)))->equals(new MultExpr(new NumExpr(0), new NumExpr(-1))) == false);
-    CHECK((new MultExpr(new NumExpr(-1), new NumExpr(0)))->equals(new MultExpr(new NumExpr(100), new NumExpr(0))) == false);
-    CHECK((new MultExpr(new NumExpr(-1), new NumExpr(0)))->equals(new AddExpr(new NumExpr(-1), new NumExpr(0))) == false);
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(-1), NEW(NumExpr)(0)))->equals(NEW(MultExpr)(NEW(NumExpr)(-1), NEW(NumExpr)(0))) == true);
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(-1), NEW(NumExpr)(0)))->equals(NEW(MultExpr)(NEW(NumExpr)(0), NEW(NumExpr)(-1))) == false);
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(-1), NEW(NumExpr)(0)))->equals(NEW(MultExpr)(NEW(NumExpr)(100), NEW(NumExpr)(0))) == false);
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(-1), NEW(NumExpr)(0)))->equals(NEW(AddExpr)(NEW(NumExpr)(-1), NEW(NumExpr)(0))) == false);
 }
 
 TEST_CASE("MultExpr interp() tests") {
-    CHECK((new MultExpr(new NumExpr(0), new NumExpr(0)))->interp()->equals(new NumVal(0)));
-    CHECK((new MultExpr(new NumExpr(0), new NumExpr(1)))->interp()->equals(new NumVal(0)));
-    CHECK((new MultExpr(new NumExpr(-1), new NumExpr(10)))->interp()->equals(new NumVal(-10)));
-    CHECK((new MultExpr(new NumExpr(-5), new NumExpr(-5)))->interp()->equals(new NumVal(25)));
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->interp()->equals(NEW(NumVal)(0)));
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(0), NEW(NumExpr)(1)))->interp()->equals(NEW(NumVal)(0)));
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(-1), NEW(NumExpr)(10)))->interp()->equals(NEW(NumVal)(-10)));
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(-5), NEW(NumExpr)(-5)))->interp()->equals(NEW(NumVal)(25)));
 }
 
 //TEST_CASE("MultExpr has_variable() tests") {
@@ -85,29 +85,29 @@ TEST_CASE("MultExpr interp() tests") {
 //}
 
 TEST_CASE("MultExpr subst() tests") {
-    CHECK((new MultExpr(new VarExpr("x"), new VarExpr("x")))->subst("x", new VarExpr("y"))
-            ->equals(new MultExpr(new VarExpr("y"), new VarExpr("y"))));
-    CHECK((new MultExpr(new VarExpr("a"), new VarExpr("x")))->subst("x", new VarExpr("y"))
-            ->equals(new MultExpr(new VarExpr("a"), new VarExpr("y"))));
+    CHECK((NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")))->subst("x", NEW(VarExpr)("y"))
+            ->equals(NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))));
+    CHECK((NEW(MultExpr)(NEW(VarExpr)("a"), NEW(VarExpr)("x")))->subst("x", NEW(VarExpr)("y"))
+            ->equals(NEW(MultExpr)(NEW(VarExpr)("a"), NEW(VarExpr)("y"))));
 }
 
 TEST_CASE("MultExpr print() tests") {
-    CHECK((new MultExpr(new NumExpr(1), new NumExpr(2)))->to_string() == "(1*2)");
-    CHECK((new MultExpr(new AddExpr(new VarExpr("test"), new NumExpr(0)), new NumExpr(1)))->to_string() == "((test+0)*1)");
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)))->to_string() == "(1*2)");
+    CHECK((NEW(MultExpr)(NEW(AddExpr)(NEW(VarExpr)("test"), NEW(NumExpr)(0)), NEW(NumExpr)(1)))->to_string() == "((test+0)*1)");
 }
 
 TEST_CASE("MultExpr pretty_print() tests") {
     std::stringstream out("");
-    (new MultExpr(new NumExpr(1), new NumExpr(2)))->pretty_print(out);
+    (NEW(MultExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)))->pretty_print(out);
     CHECK(out.str() == "1 * 2");
     out.str(std::string());
-    (new MultExpr(new MultExpr(new NumExpr(2), new NumExpr(3)), new NumExpr(4)))->pretty_print(out);
+    (NEW(MultExpr)(NEW(MultExpr)(NEW(NumExpr)(2), NEW(NumExpr)(3)), NEW(NumExpr)(4)))->pretty_print(out);
     CHECK(out.str() == "(2 * 3) * 4");
     out.str(std::string());
-    (new MultExpr(new NumExpr(2), new MultExpr(new NumExpr(3), new NumExpr(4))))->pretty_print(out);
+    (NEW(MultExpr)(NEW(NumExpr)(2), NEW(MultExpr)(NEW(NumExpr)(3), NEW(NumExpr)(4))))->pretty_print(out);
     CHECK(out.str() == "2 * 3 * 4");
     out.str(std::string());
-    (new MultExpr(new AddExpr(new NumExpr(1), new NumExpr(2)), new AddExpr(new NumExpr(3), new NumExpr(4))))
+    (NEW(MultExpr)(NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(AddExpr)(NEW(NumExpr)(3), NEW(NumExpr)(4))))
             ->pretty_print(out);
     CHECK(out.str() == "(1 + 2) * (3 + 4)");
 }
