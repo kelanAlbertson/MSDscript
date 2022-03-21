@@ -22,7 +22,7 @@ bool NumExpr::equals(PTR(Expr) other) {
     }
 }
 
-PTR(Val) NumExpr::interp() {
+PTR(Val) NumExpr::interp(PTR(Env) env) {
     return NEW(NumVal)(this->rep_);
 }
 
@@ -30,9 +30,9 @@ PTR(Val) NumExpr::interp() {
 //    return false;
 //}
 
-PTR(Expr) NumExpr::subst(std::string variableName, PTR(Expr) replacement) {
-    return THIS;
-}
+//PTR(Expr) NumExpr::subst(std::string variableName, PTR(Expr) replacement) {
+//    return THIS;
+//}
 
 void NumExpr::print(std::ostream &out) {
     out << this->rep_;
@@ -65,9 +65,9 @@ TEST_CASE("NumExpr interp() tests") {
 //    CHECK((new NumExpr(-11))->has_variable() == false);
 //}
 
-TEST_CASE("NumExpr subst() tests") {
-    CHECK((NEW(NumExpr)(1))->subst("x", NEW(VarExpr)("y"))->equals(NEW(NumExpr)(1)));
-}
+//TEST_CASE("NumExpr subst() tests") {
+//    CHECK((NEW(NumExpr)(1))->subst("x", NEW(VarExpr)("y"))->equals(NEW(NumExpr)(1)));
+//}
 
 TEST_CASE("NumExpr print()/to_string() tests") {
     CHECK((NEW(NumExpr)(1))->to_string() == "1");

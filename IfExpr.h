@@ -16,12 +16,12 @@ public:
     //returns whether the other Expr is an IfExpr and has all the same fields as this IfExpr
     virtual bool equals(PTR(Expr) other);
     //returns a Val representing the evaluation of this IfExpr
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env);
     //returns whether this IfExpr contains a variable
 //    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this IfExpr with a replacement Expr
     //if there is no matching VarExpr then nothing is replaced and a new Expr equal to this IfExpr is returned
-    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement);
+//    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement);
     //prints this IfExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses

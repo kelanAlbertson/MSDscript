@@ -26,9 +26,9 @@ std::string NumVal::to_string() {
     return std::to_string(this->rep_);
 }
 
-PTR(Expr)NumVal::to_expr() {
-    return NEW(NumExpr)(this->rep_);
-}
+//PTR(Expr)NumVal::to_expr() {
+//    return NEW(NumExpr)(this->rep_);
+//}
 
 PTR(Val)NumVal::add_to(PTR(Val)other) {
     PTR(NumVal) nv = CAST(NumVal)(other);

@@ -15,7 +15,7 @@ public:
     //returns whether the other Expr is an MultExpr and has all the same fields as this MultExpr
     virtual bool equals (PTR(Expr) other);
     //returns an integer interpretation of the MultExpr
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env);
     //returns whether this MultExpr contains a variable
 //    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this MultExpr with a replacement Expr

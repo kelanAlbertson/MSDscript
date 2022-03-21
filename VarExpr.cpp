@@ -24,7 +24,7 @@ bool VarExpr::equals(PTR(Expr)other) {
     }
 }
 
-PTR(Val) VarExpr::interp() {
+PTR(Val) VarExpr::interp(PTR(Env) env) {
     throw std::runtime_error("VarExpr cannot be interpreted");
 }
 
@@ -32,14 +32,14 @@ PTR(Val) VarExpr::interp() {
 //    return true;
 //}
 
-PTR(Expr) VarExpr::subst(std::string variableName, PTR(Expr) replacement) {
-    if(this->name_ == variableName) {
-        return replacement;
-    }
-    else {
-        return THIS;
-    }
-}
+//PTR(Expr) VarExpr::subst(std::string variableName, PTR(Expr) replacement) {
+//    if(this->name_ == variableName) {
+//        return replacement;
+//    }
+//    else {
+//        return THIS;
+//    }
+//}
 
 void VarExpr::print(std::ostream &out) {
     out << this->name_;
@@ -68,9 +68,9 @@ TEST_CASE("VarExpr interp() tests") {
 //    CHECK((new VarExpr("test"))->has_variable() == true);
 //}
 
-TEST_CASE("VarExpr subst() tests") {
-    CHECK((NEW(VarExpr)("x"))->subst("x", NEW(VarExpr)("y"))->equals(NEW(VarExpr)("y")));
-}
+//TEST_CASE("VarExpr subst() tests") {
+//    CHECK((NEW(VarExpr)("x"))->subst("x", NEW(VarExpr)("y"))->equals(NEW(VarExpr)("y")));
+//}
 
 TEST_CASE("VarExpr print()/to_string() tests") {
     CHECK((NEW(VarExpr)("x"))->to_string() == "x");

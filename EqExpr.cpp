@@ -27,18 +27,18 @@ bool EqExpr::equals(PTR(Expr) other) {
     }
 }
 
-PTR(Val) EqExpr::interp() {
-    return NEW(BoolVal)(this->lhs_->interp()->equals(this->rhs_->interp()));
+PTR(Val) EqExpr::interp(PTR(Env) env) {
+    return NEW(BoolVal)(this->lhs_->interp(env)->equals(this->rhs_->interp(env)));
 }
 
 //bool EqExpr::has_variable() {
 //    return (this->lhs_->has_variable() || this->rhs_->has_variable());
 //}
 
-PTR(Expr) EqExpr::subst(std::string variableName, PTR(Expr) replacement) {
-    return NEW(EqExpr)(this->lhs_->subst(variableName, replacement),
-                      this->rhs_->subst(variableName, replacement));
-}
+//PTR(Expr) EqExpr::subst(std::string variableName, PTR(Expr) replacement) {
+//    return NEW(EqExpr)(this->lhs_->subst(variableName, replacement),
+//                      this->rhs_->subst(variableName, replacement));
+//}
 
 void EqExpr::print(std::ostream &out) {
     out << "(";
@@ -88,16 +88,16 @@ TEST_CASE("EqExpr interp() tests") {
 //    CHECK((new EqExpr(new NumExpr(1), new AddExpr(new NumExpr(1), new VarExpr("x"))))->has_variable() == true);
 //}
 
-TEST_CASE("EqExpr subst() tests") {
-    CHECK((NEW(EqExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")))->subst("y", NEW(NumExpr)(20))
-            ->equals(NEW(EqExpr)(NEW(NumExpr)(20), NEW(NumExpr)(20))));
-    CHECK((NEW(EqExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->subst("x", NEW(NumExpr)(-1))
-            ->equals(NEW(EqExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0))));
-    CHECK((NEW(EqExpr)(NEW(NumExpr)(1), NEW(VarExpr)("test")))->subst("t", NEW(NumExpr)(0))
-            ->equals(NEW(EqExpr)(NEW(NumExpr)(1), NEW(VarExpr)("test"))));
-    CHECK((NEW(EqExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(3), NEW(VarExpr)("y"))))->subst("y", NEW(NumExpr)(0))
-                  ->equals(NEW(EqExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(3), NEW(NumExpr)(0)))));
-}
+//TEST_CASE("EqExpr subst() tests") {
+//    CHECK((NEW(EqExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")))->subst("y", NEW(NumExpr)(20))
+//            ->equals(NEW(EqExpr)(NEW(NumExpr)(20), NEW(NumExpr)(20))));
+//    CHECK((NEW(EqExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->subst("x", NEW(NumExpr)(-1))
+//            ->equals(NEW(EqExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0))));
+//    CHECK((NEW(EqExpr)(NEW(NumExpr)(1), NEW(VarExpr)("test")))->subst("t", NEW(NumExpr)(0))
+//            ->equals(NEW(EqExpr)(NEW(NumExpr)(1), NEW(VarExpr)("test"))));
+//    CHECK((NEW(EqExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(3), NEW(VarExpr)("y"))))->subst("y", NEW(NumExpr)(0))
+//                  ->equals(NEW(EqExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(3), NEW(NumExpr)(0)))));
+//}
 
 TEST_CASE("EqExpr print()/to_string() tests") {
     CHECK((NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(1)))->to_string() == "(1==1)");

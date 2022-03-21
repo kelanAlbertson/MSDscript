@@ -3,3 +3,6 @@
 //
 
 #include "Env.h"
+#include "EmptyEnv.h"
+
+PTR(Env) Env::empty = NEW(EmptyEnv)();

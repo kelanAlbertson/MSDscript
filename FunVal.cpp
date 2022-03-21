@@ -11,10 +11,12 @@
 #include "BoolVal.h"
 #include "NumVal.h"
 #include "BoolExpr.h"
+#include "ExtendedEnv.h"
 
-FunVal::FunVal(PTR(VarExpr) arg, PTR(Expr) body) {
+FunVal::FunVal(PTR(VarExpr) arg, PTR(Expr) body, PTR(Env) env) {
     this->arg_ = arg;
     this->body_ = body;
+    this->env_ = env;
 }
 
 bool FunVal::equals(PTR(Val)other) {
@@ -28,12 +30,13 @@ bool FunVal::equals(PTR(Val)other) {
 }
 
 std::string FunVal::to_string() {
-    return "(_fun (" + this->arg_->to_string() + ") " + this->body_->to_string() + ")";
+//    return "(_fun (" + this->arg_->to_string() + ") " + this->body_->to_string() + ")";
+    return "[function]";
 }
 
-PTR(Expr)FunVal::to_expr() {
-    return NEW(FunExpr)(this->arg_, this->body_);
-}
+//PTR(Expr)FunVal::to_expr() {
+//    return NEW(FunExpr)(this->arg_, this->body_);
+//}
 
 PTR(Val)FunVal::add_to(PTR(Val) other) {
     throw std::runtime_error("Cannot add_to() with a FunVal");
@@ -48,7 +51,7 @@ bool FunVal::is_true() {
 }
 
 PTR(Val) FunVal::call(PTR(Val) arg) {
-    return this->body_->subst(this->arg_->name_, arg->to_expr())->interp();
+    return this->body_->interp(NEW(ExtendedEnv)(this->arg_->name_, arg, this->env_));
 }
 
 /**

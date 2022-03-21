@@ -16,7 +16,7 @@ public:
     // converts the Val to a human readable string
     virtual std::string to_string();
     // converts a Val to an Expr
-    virtual PTR(Expr) to_expr();
+//    virtual PTR(Expr) to_expr();
     // add a Val to a Val
     virtual PTR(Val) add_to(PTR(Val) other);
     // multiply a Val by another Val

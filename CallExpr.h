@@ -15,7 +15,7 @@ public:
     //returns whether the other Expr is a CallExpr and has all the same fields as this CallExpr
     virtual bool equals(PTR(Expr) other);
     //returns a Val representing the evaluation of this CallExpr
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env);
     //returns whether this CallExpr contains a variable
 //    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this CallExpr with a replacement Expr

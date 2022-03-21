@@ -22,7 +22,7 @@ bool BoolExpr::equals(PTR(Expr)other) {
     }
 }
 
-PTR(Val)BoolExpr::interp() {
+PTR(Val)BoolExpr::interp(PTR(Env) env) {
     return NEW(BoolVal)(this->rep_);
 }
 
@@ -30,9 +30,9 @@ PTR(Val)BoolExpr::interp() {
 //    return false;
 //}
 
-PTR(Expr)BoolExpr::subst(std::string variableName, PTR(Expr)replacement) {
-    return THIS;
-}
+//PTR(Expr)BoolExpr::subst(std::string variableName, PTR(Expr)replacement) {
+//    return THIS;
+//}
 
 void BoolExpr::print(std::ostream &out) {
     if(this->rep_) {
@@ -66,9 +66,9 @@ TEST_CASE("BoolExpr interp() tests") {
 //    CHECK((new BoolExpr(false))->has_variable() == false);
 //}
 
-TEST_CASE("BoolExpr subst() tests") {
-    CHECK((NEW(BoolExpr)(true))->subst("x", NEW(NumExpr)(5))->equals(NEW(BoolExpr)(true)));
-}
+//TEST_CASE("BoolExpr subst() tests") {
+//    CHECK((NEW(BoolExpr)(true))->subst("x", NEW(NumExpr)(5))->equals(NEW(BoolExpr)(true)));
+//}
 
 TEST_CASE("BoolExpr print()/to_string() tests") {
     CHECK((NEW(BoolExpr)(true))->to_string() == "_true");
