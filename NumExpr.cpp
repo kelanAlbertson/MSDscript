@@ -6,6 +6,7 @@
 #include "VarExpr.h"
 #include "catch.h"
 #include "NumVal.h"
+#include "Env.h"
 #include <sstream>
 
 NumExpr::NumExpr(int rep) {
@@ -54,10 +55,10 @@ TEST_CASE("NumExpr equals() tests") {
 }
 
 TEST_CASE("NumExpr interp() tests") {
-    CHECK((NEW(NumExpr)(0))->interp()->equals(NEW(NumVal)(0)));
-    CHECK((NEW(NumExpr)(1))->interp()->equals(NEW(NumVal)(1)));
-    CHECK((NEW(NumExpr)(99))->interp()->equals(NEW(NumVal)(99)));
-    CHECK((NEW(NumExpr)(-1))->interp()->equals(NEW(NumVal)(-1)));
+    CHECK((NEW(NumExpr)(0))->interp(Env::empty)->equals(NEW(NumVal)(0)));
+    CHECK((NEW(NumExpr)(1))->interp(Env::empty)->equals(NEW(NumVal)(1)));
+    CHECK((NEW(NumExpr)(99))->interp(Env::empty)->equals(NEW(NumVal)(99)));
+    CHECK((NEW(NumExpr)(-1))->interp(Env::empty)->equals(NEW(NumVal)(-1)));
 }
 
 //TEST_CASE("NumExpr has_variable() tests") {

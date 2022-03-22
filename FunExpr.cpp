@@ -10,6 +10,7 @@
 #include "NumExpr.h"
 #include "CallExpr.h"
 #include "MultExpr.h"
+#include "Env.h"
 
 FunExpr::FunExpr(PTR(VarExpr) arg, PTR(Expr) body) {
     this->arg_ = arg;
@@ -84,11 +85,11 @@ TEST_CASE("FunExpr equals() tests") {
 
 TEST_CASE("FunExpr interp() tests") {
     CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))
-            ->interp()->equals(NEW(FunVal)(NEW(VarExpr)("x"), NEW(NumExpr)(1))));
+            ->interp(Env::empty)->equals(NEW(FunVal)(NEW(VarExpr)("x"), NEW(NumExpr)(1), Env::empty)));
     CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
-            ->interp()->equals(NEW(FunVal)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))));
+            ->interp(Env::empty)->equals(NEW(FunVal)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)), Env::empty)));
     CHECK((NEW(FunExpr)(NEW(VarExpr)("y"), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))))
-            ->interp()->equals(NEW(FunVal)(NEW(VarExpr)("y"), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")))));
+            ->interp(Env::empty)->equals(NEW(FunVal)(NEW(VarExpr)("y"), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")), Env::empty)));
 }
 
 //TEST_CASE("FunExpr subst() tests") {

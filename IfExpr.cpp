@@ -14,6 +14,7 @@
 #include "BoolVal.h"
 #include "NumVal.h"
 #include "LetExpr.h"
+#include "Env.h"
 #include <sstream>
 #include <string>
 
@@ -109,11 +110,11 @@ TEST_CASE("IfExpr equals() tests") {
 
 TEST_CASE("IfExpr interp() tests") {
     CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
-            ->interp()->equals(NEW(BoolVal)(false)));
-    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(0), NEW(VarExpr)("y")))->interp(), "VarExpr cannot be interpreted");
-    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(AddExpr)(NEW(NumExpr)(3), NEW(NumExpr)(1)), NEW(AddExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2))), NEW(NumExpr)(25), NEW(NumExpr)(100)))->interp()->equals(NEW(NumVal)(25)));
-    CHECK((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(-1), NEW(BoolExpr)(false)))->interp()->equals(NEW(BoolVal)(false)));
-    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(NumExpr)(7), NEW(AddExpr)(NEW(VarExpr)("a"), NEW(VarExpr)("b")), NEW(NumExpr)(0)))->interp(), "Cannot use is_true() on a NumVal");
+            ->interp(Env::empty)->equals(NEW(BoolVal)(false)));
+    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(0), NEW(VarExpr)("y")))->interp(Env::empty), "VarExpr cannot be interpreted");
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(AddExpr)(NEW(NumExpr)(3), NEW(NumExpr)(1)), NEW(AddExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2))), NEW(NumExpr)(25), NEW(NumExpr)(100)))->interp(Env::empty)->equals(NEW(NumVal)(25)));
+    CHECK((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(-1), NEW(BoolExpr)(false)))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
+    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(NumExpr)(7), NEW(AddExpr)(NEW(VarExpr)("a"), NEW(VarExpr)("b")), NEW(NumExpr)(0)))->interp(Env::empty), "Cannot use is_true() on a NumVal");
 }
 
 //TEST_CASE("IfExpr has_variable() tests") {

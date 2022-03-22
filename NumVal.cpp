@@ -69,10 +69,10 @@ TEST_CASE("NumVal to_string() tests") {
     CHECK((NEW(NumVal)(123))->to_string() == "123");
 }
 
-TEST_CASE("NumVal to_expr() tests") {
-    CHECK((NEW(NumVal)(1))->to_expr()->equals(NEW(NumExpr)(1)));
-    CHECK((NEW(NumVal)(-99))->to_expr()->equals(NEW(NumExpr)(-99)));
-}
+//TEST_CASE("NumVal to_expr() tests") {
+//    CHECK((NEW(NumVal)(1))->to_expr()->equals(NEW(NumExpr)(1)));
+//    CHECK((NEW(NumVal)(-99))->to_expr()->equals(NEW(NumExpr)(-99)));
+//}
 
 TEST_CASE("NumVal add_to() tests") {
     CHECK((NEW(NumVal)(1))->add_to(NEW(NumVal)(5))->equals(NEW(NumVal)(6)));

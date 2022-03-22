@@ -18,6 +18,7 @@
 #include "FunExpr.h"
 #include "CallExpr.h"
 #include "NumVal.h"
+#include "Env.h"
 
 PTR(Expr) parse(std::istream &in) {
     PTR(Expr) e = parse_expr(in);
@@ -417,7 +418,7 @@ TEST_CASE("Matthew's factorial test") {
                  "                  _then 1\n"
                  "                  _else x * factrl(factrl)(x + -1)\n"
                  "_in  factrl(factrl)(10)"))
-                 ->interp()->equals(NEW(NumVal)(3628800)));
+                 ->interp(Env::empty)->equals(NEW(NumVal)(3628800)));
     PTR(Expr)e = parse_string("_let factrl = _fun (factrl)\n"
                   "                _fun (x)\n"
                   "                  _if x == 1\n"

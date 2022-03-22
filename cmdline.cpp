@@ -11,6 +11,7 @@
 #include "cmdline.h"
 #include "Expr.h"
 #include "Val.h"
+#include "Env.h"
 #include "parse.h"
 
 int use_arguments (int argc, char* argv[]) {
@@ -40,7 +41,7 @@ int use_arguments (int argc, char* argv[]) {
                 }
             }
             else if (arg == "--interp") {
-                PTR(Val) interpreted = parse(std::cin)->interp();
+                PTR(Val) interpreted = parse(std::cin)->interp(Env::empty);
                 std::cout << interpreted->to_string() << "\n";
                 exit(0);
             }

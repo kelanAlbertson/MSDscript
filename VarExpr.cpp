@@ -6,6 +6,7 @@
 #include "AddExpr.h"
 #include "NumExpr.h"
 #include "MultExpr.h"
+#include "Env.h"
 #include "catch.h"
 #include "stdexcept"
 #include <sstream>
@@ -60,7 +61,7 @@ TEST_CASE("VarExpr equals() tests") {
     CHECK((NEW(VarExpr)("one"))->equals(NEW(NumExpr)(1)) == false);
 }
 TEST_CASE("VarExpr interp() tests") {
-    CHECK_THROWS_WITH((NEW(VarExpr)("x"))->interp(), "VarExpr cannot be interpreted");
+    CHECK_THROWS_WITH((NEW(VarExpr)("x"))->interp(Env::empty), "VarExpr cannot be interpreted");
 }
 
 //TEST_CASE("VarExpr has_variable() tests") {

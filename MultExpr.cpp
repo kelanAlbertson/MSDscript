@@ -7,6 +7,7 @@
 #include "NumExpr.h"
 #include "NumVal.h"
 #include "VarExpr.h"
+#include "Env.h"
 #include "catch.h"
 #include <sstream>
 
@@ -72,10 +73,10 @@ TEST_CASE("MultExpr equals() tests") {
 }
 
 TEST_CASE("MultExpr interp() tests") {
-    CHECK((NEW(MultExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->interp()->equals(NEW(NumVal)(0)));
-    CHECK((NEW(MultExpr)(NEW(NumExpr)(0), NEW(NumExpr)(1)))->interp()->equals(NEW(NumVal)(0)));
-    CHECK((NEW(MultExpr)(NEW(NumExpr)(-1), NEW(NumExpr)(10)))->interp()->equals(NEW(NumVal)(-10)));
-    CHECK((NEW(MultExpr)(NEW(NumExpr)(-5), NEW(NumExpr)(-5)))->interp()->equals(NEW(NumVal)(25)));
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->interp(Env::empty)->equals(NEW(NumVal)(0)));
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(0), NEW(NumExpr)(1)))->interp(Env::empty)->equals(NEW(NumVal)(0)));
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(-1), NEW(NumExpr)(10)))->interp(Env::empty)->equals(NEW(NumVal)(-10)));
+    CHECK((NEW(MultExpr)(NEW(NumExpr)(-5), NEW(NumExpr)(-5)))->interp(Env::empty)->equals(NEW(NumVal)(25)));
 }
 
 //TEST_CASE("MultExpr has_variable() tests") {

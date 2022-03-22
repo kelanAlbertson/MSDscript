@@ -5,6 +5,7 @@
 #include "BoolExpr.h"
 #include "BoolVal.h"
 #include "NumExpr.h"
+#include "Env.h"
 #include "catch.h"
 #include <sstream>
 
@@ -58,8 +59,8 @@ TEST_CASE("BoolExpr equals() tests") {
 }
 
 TEST_CASE("BoolExpr interp() tests") {
-    CHECK((NEW(BoolExpr)(true))->interp()->equals(NEW(BoolVal)(true)));
-    CHECK((NEW(BoolExpr)(false))->interp()->equals(NEW(BoolVal)(false)));
+    CHECK((NEW(BoolExpr)(true))->interp(Env::empty)->equals(NEW(BoolVal)(true)));
+    CHECK((NEW(BoolExpr)(false))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
 }
 
 //TEST_CASE("BoolExpr has_variable() tests") {

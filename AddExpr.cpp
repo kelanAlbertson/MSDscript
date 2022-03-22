@@ -7,6 +7,7 @@
 #include "NumExpr.h"
 #include "NumVal.h"
 #include "VarExpr.h"
+#include "Env.h"
 #include "catch.h"
 #include <sstream>
 
@@ -71,12 +72,11 @@ TEST_CASE("AddExpr equals() tests") {
     CHECK((NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(1)))->equals(NEW(NumExpr)(1)) == false);
 }
 
-//TODO
 TEST_CASE("AddExpr interp() tests") {
-    CHECK((NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->interp()->equals(NEW(NumVal)(0)));
-    CHECK((NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(1)))->interp()->equals(NEW(NumVal)(1)));
-    CHECK((NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(0)))->interp()->equals(NEW(NumVal)(1)));
-    CHECK((NEW(AddExpr)(NEW(NumExpr)(-5), NEW(NumExpr)(18)))->interp()->equals(NEW(NumVal)(13)));
+    CHECK((NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->interp(Env::empty)->equals(NEW(NumVal)(0)));
+    CHECK((NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(1)))->interp(Env::empty)->equals(NEW(NumVal)(1)));
+    CHECK((NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(0)))->interp(Env::empty)->equals(NEW(NumVal)(1)));
+    CHECK((NEW(AddExpr)(NEW(NumExpr)(-5), NEW(NumExpr)(18)))->interp(Env::empty)->equals(NEW(NumVal)(13)));
 }
 
 //TEST_CASE("AddExpr has_variable() tests") {

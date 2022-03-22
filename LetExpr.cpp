@@ -104,13 +104,13 @@ TEST_CASE("LetExpr equals() tests") {
 
 TEST_CASE("LetExpr interp() tests") {
     CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(5), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
-            ->interp()->equals(NEW(NumVal)(6)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(6)));
     CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(5), NEW(NumExpr)(2)), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
-            ->interp()->equals(NEW(NumVal)(8)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(8)));
     CHECK((NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(5), NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(5), NEW(VarExpr)("x"))), NEW(NumExpr)(1)))
-            ->interp()->equals(NEW(NumVal)(26)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(26)));
     CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(LetExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(6), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(2))), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
-            ->interp()->equals(NEW(NumVal)(13)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(13)));
 }
 
 //TEST_CASE("LetExpr has_variable() tests") {

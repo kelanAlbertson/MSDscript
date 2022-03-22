@@ -14,6 +14,8 @@
 #include "FunVal.h"
 #include "BoolExpr.h"
 #include "BoolVal.h"
+#include "Env.h"
+#include "ExtendedEnv.h"
 
 CallExpr::CallExpr(PTR(Expr) to_be_called, PTR(Expr) arg) {
     this->to_be_called_ = to_be_called;
@@ -79,22 +81,22 @@ TEST_CASE("CallExpr equals() tests") {
 
 TEST_CASE("CallExpr interp() tests") {
     CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))), NEW(NumExpr)(5)))
-            ->interp()->equals(NEW(NumVal)(6)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(6)));
     CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x"))), NEW(NumExpr)(3)))
-            ->interp()->equals(NEW(NumVal)(9)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(9)));
     CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"),
                                     NEW(FunExpr)(NEW(VarExpr)("y"),
                                                 NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))))), NEW(NumExpr)(2)))
-                                    ->interp()
+                                    ->interp(Env::empty)
                                     ->equals(NEW(FunVal)(NEW(VarExpr)("y"),
-                                                        NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2)), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))))));
+                                                        NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2)), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))), NEW(ExtendedEnv)("x", NEW(NumVal)(2), Env::empty))));
     CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"),
                                     NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("y"),
                                                              NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")))),
                                                  NEW(NumExpr)(3))),
-                        NEW(NumExpr)(2)))->interp()->equals(NEW(NumVal)(13)));
-    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("b"), NEW(BoolExpr)(true)), NEW(NumExpr)(-99)))->interp()->equals(NEW(BoolVal)(true)));
-    CHECK_THROWS_WITH((NEW(CallExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(1)))->interp(), "Cannot call() a BoolVal");
+                        NEW(NumExpr)(2)))->interp(Env::empty)->equals(NEW(NumVal)(13)));
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("b"), NEW(BoolExpr)(true)), NEW(NumExpr)(-99)))->interp(Env::empty)->equals(NEW(BoolVal)(true)));
+    CHECK_THROWS_WITH((NEW(CallExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(1)))->interp(Env::empty), "Cannot call() a BoolVal");
 }
 
 //TEST_CASE("CallExpr subst() tests") {

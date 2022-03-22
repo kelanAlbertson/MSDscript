@@ -10,6 +10,7 @@
 #include "BoolExpr.h"
 #include "AddExpr.h"
 #include "MultExpr.h"
+#include "Env.h"
 #include <sstream>
 
 EqExpr::EqExpr(PTR(Expr)lhs, PTR(Expr)rhs) {
@@ -74,11 +75,11 @@ TEST_CASE("EqExpr equals() tests") {
 }
 
 TEST_CASE("EqExpr interp() tests") {
-    CHECK((NEW(EqExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->interp()->equals(NEW(BoolVal)(true)));
-    CHECK((NEW(EqExpr)(NEW(NumExpr)(-99), NEW(NumExpr)(0)))->interp()->equals(NEW(BoolVal)(false)));
-    CHECK((NEW(EqExpr)(NEW(BoolExpr)(true), NEW(BoolExpr)(true)))->interp()->equals(NEW(BoolVal)(true)));
-    CHECK((NEW(EqExpr)(NEW(BoolExpr)(true), NEW(NumExpr)(1)))->interp()->equals(NEW(BoolVal)(false)));
-    CHECK_THROWS_WITH((NEW(EqExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(2)))->interp()->equals(NEW(BoolVal)(false)), "VarExpr cannot be interpreted");
+    CHECK((NEW(EqExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->interp(Env::empty)->equals(NEW(BoolVal)(true)));
+    CHECK((NEW(EqExpr)(NEW(NumExpr)(-99), NEW(NumExpr)(0)))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
+    CHECK((NEW(EqExpr)(NEW(BoolExpr)(true), NEW(BoolExpr)(true)))->interp(Env::empty)->equals(NEW(BoolVal)(true)));
+    CHECK((NEW(EqExpr)(NEW(BoolExpr)(true), NEW(NumExpr)(1)))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
+    CHECK_THROWS_WITH((NEW(EqExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(2)))->interp(Env::empty)->equals(NEW(BoolVal)(false)), "VarExpr cannot be interpreted");
 }
 
 //TEST_CASE("EqExpr has_variable() tests") {
