@@ -14,6 +14,7 @@
 #include "BoolVal.h"
 #include "NumVal.h"
 #include "LetExpr.h"
+#include "Env.h"
 #include <sstream>
 #include <string>
 
@@ -35,12 +36,12 @@ bool IfExpr::equals(PTR(Expr) other) {
     }
 }
 
-PTR(Val)IfExpr::interp() {
-    if (this->condition_->interp()->is_true()) {
-        return this->then_statement_->interp();
+PTR(Val)IfExpr::interp(PTR(Env) env) {
+    if (this->condition_->interp(env)->is_true()) {
+        return this->then_statement_->interp(env);
     }
     else {
-        return this->else_statement_->interp();
+        return this->else_statement_->interp(env);
     }
 }
 
@@ -48,11 +49,11 @@ PTR(Val)IfExpr::interp() {
 //    return (this->condition_->has_variable() || this->then_statement_->has_variable() || this->else_statement_->has_variable());
 //}
 
-PTR(Expr)IfExpr::subst(std::string variableName, PTR(Expr) replacement) {
-    return NEW(IfExpr)(this->condition_->subst(variableName, replacement),
-                      this->then_statement_->subst(variableName, replacement),
-                      this->else_statement_->subst(variableName, replacement));
-}
+//PTR(Expr)IfExpr::subst(std::string variableName, PTR(Expr) replacement) {
+//    return NEW(IfExpr)(this->condition_->subst(variableName, replacement),
+//                      this->then_statement_->subst(variableName, replacement),
+//                      this->else_statement_->subst(variableName, replacement));
+//}
 
 void IfExpr::print(std::ostream &out) {
     out << "(_if ";
@@ -109,11 +110,11 @@ TEST_CASE("IfExpr equals() tests") {
 
 TEST_CASE("IfExpr interp() tests") {
     CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
-            ->interp()->equals(NEW(BoolVal)(false)));
-    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(0), NEW(VarExpr)("y")))->interp(), "VarExpr cannot be interpreted");
-    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(AddExpr)(NEW(NumExpr)(3), NEW(NumExpr)(1)), NEW(AddExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2))), NEW(NumExpr)(25), NEW(NumExpr)(100)))->interp()->equals(NEW(NumVal)(25)));
-    CHECK((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(-1), NEW(BoolExpr)(false)))->interp()->equals(NEW(BoolVal)(false)));
-    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(NumExpr)(7), NEW(AddExpr)(NEW(VarExpr)("a"), NEW(VarExpr)("b")), NEW(NumExpr)(0)))->interp(), "Cannot use is_true() on a NumVal");
+            ->interp(Env::empty)->equals(NEW(BoolVal)(false)));
+    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(0), NEW(VarExpr)("y")))->interp(Env::empty), "free variable: y");
+    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(AddExpr)(NEW(NumExpr)(3), NEW(NumExpr)(1)), NEW(AddExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2))), NEW(NumExpr)(25), NEW(NumExpr)(100)))->interp(Env::empty)->equals(NEW(NumVal)(25)));
+    CHECK((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(NumExpr)(-1), NEW(BoolExpr)(false)))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
+    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(NumExpr)(7), NEW(AddExpr)(NEW(VarExpr)("a"), NEW(VarExpr)("b")), NEW(NumExpr)(0)))->interp(Env::empty), "Cannot use is_true() on a NumVal");
 }
 
 //TEST_CASE("IfExpr has_variable() tests") {
@@ -121,15 +122,15 @@ TEST_CASE("IfExpr interp() tests") {
 //    CHECK((new IfExpr(new BoolExpr(true), new NumExpr(1), new NumExpr(2)))->has_variable() == false);
 //}
 
-TEST_CASE("IfExpr subst() tests") {
-    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
-            ->subst("x", NEW(BoolExpr)(false))->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))));
-    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
-            ->subst("x", NEW(NumExpr)(2))->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))));
-    CHECK((NEW(IfExpr)(NEW(VarExpr)("test"), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
-            ->subst("test", NEW(EqExpr)(NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
-            ->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(BoolExpr)(true), NEW(BoolExpr)(false)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))));
-}
+//TEST_CASE("IfExpr subst() tests") {
+//    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+//            ->subst("x", NEW(BoolExpr)(false))->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))));
+//    CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+//            ->subst("x", NEW(NumExpr)(2))->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))));
+//    CHECK((NEW(IfExpr)(NEW(VarExpr)("test"), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+//            ->subst("test", NEW(EqExpr)(NEW(BoolExpr)(true), NEW(BoolExpr)(false)))
+//            ->equals(NEW(IfExpr)(NEW(EqExpr)(NEW(BoolExpr)(true), NEW(BoolExpr)(false)), NEW(BoolExpr)(true), NEW(BoolExpr)(false))));
+//}
 
 TEST_CASE("IfExpr print()/to_string() tests") {
     CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)), NEW(BoolExpr)(true), NEW(BoolExpr)(false)))

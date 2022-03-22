@@ -30,9 +30,9 @@ std::string BoolVal::to_string() {
     }
 }
 
-PTR(Expr) BoolVal::to_expr() {
-    return NEW(BoolExpr)(this->rep_);
-}
+//PTR(Expr) BoolVal::to_expr() {
+//    return NEW(BoolExpr)(this->rep_);
+//}
 
 PTR(Val) BoolVal::add_to(PTR(Val)other) {
     throw std::runtime_error("Cannot add_to() with a BoolVal");
@@ -65,10 +65,10 @@ TEST_CASE("BoolVal to_string() tests") {
     CHECK((NEW(BoolVal)(false))->to_string() == "_false");
 }
 
-TEST_CASE("BoolVal to_expr() tests") {
-    CHECK((NEW(BoolVal)(true))->to_expr()->equals(NEW(BoolExpr)(true)));
-    CHECK((NEW(BoolVal)(false))->to_expr()->equals(NEW(BoolExpr)(false)));
-}
+//TEST_CASE("BoolVal to_expr() tests") {
+//    CHECK((NEW(BoolVal)(true))->to_expr()->equals(NEW(BoolExpr)(true)));
+//    CHECK((NEW(BoolVal)(false))->to_expr()->equals(NEW(BoolExpr)(false)));
+//}
 
 TEST_CASE("BoolVal add_to() tests") {
     CHECK_THROWS_WITH((NEW(BoolVal)(true))->add_to(NEW(BoolVal)(true)), "Cannot add_to() with a BoolVal");

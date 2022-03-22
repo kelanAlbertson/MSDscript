@@ -15,12 +15,12 @@ public:
     //returns whether the other Expr is a CallExpr and has all the same fields as this CallExpr
     virtual bool equals(PTR(Expr) other);
     //returns a Val representing the evaluation of this CallExpr
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env);
     //returns whether this CallExpr contains a variable
 //    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this CallExpr with a replacement Expr
     //if there is no matching VarExpr then nothing is replaced and a new Expr equal to this FunExpr is returned
-    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement);
+//    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement);
     //prints this CallExpr
     virtual void print(std::ostream &out);
     //prints the expression with spaces around operators and without unnecessary parentheses

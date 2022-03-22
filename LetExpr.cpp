@@ -9,6 +9,7 @@
 #include "NumVal.h"
 #include "VarExpr.h"
 #include "catch.h"
+#include "ExtendedEnv.h"
 #include <sstream>
 #include <iostream>
 
@@ -29,29 +30,30 @@ bool LetExpr::equals(PTR(Expr) other) {
     }
 }
 
-PTR(Val) LetExpr::interp() {
-    PTR(Val) rhs_val = this->rhs_->interp();
-    return this->body_->subst(this->lhs_->name_, rhs_val->to_expr())->interp();
+PTR(Val) LetExpr::interp(PTR(Env) env) {
+    PTR(Val) rhs_val = this->rhs_->interp(env);
+    PTR(Env) new_env = NEW(ExtendedEnv)(lhs_->name_, rhs_val, env);
+    return this->body_->interp(new_env);
 }
 
 //bool LetExpr::has_variable() {
 //    return (this->rhs_->has_variable() || this->body_->has_variable());
 //}
 
-PTR(Expr)LetExpr::subst(std::string variableName, PTR(Expr) replacement) {
-    // rules from lecture videos:
-    // if bind same variable then do not substitute in body
-    // if bind different variable then do substitute in body
-    // always substitute in rhs
-    if (this->lhs_->name_ == variableName) {
-        return NEW(LetExpr)(this->lhs_, this->rhs_->subst(variableName, replacement), this->body_);
-    }
-    else {
-        return NEW(LetExpr)(this->lhs_,
-                           this->rhs_->subst(variableName, replacement),
-                           this->body_->subst(variableName, replacement));
-    }
-}
+//PTR(Expr)LetExpr::subst(std::string variableName, PTR(Expr) replacement) {
+//    // rules from lecture videos:
+//    // if bind same variable then do not substitute in body
+//    // if bind different variable then do substitute in body
+//    // always substitute in rhs
+//    if (this->lhs_->name_ == variableName) {
+//        return NEW(LetExpr)(this->lhs_, this->rhs_->subst(variableName, replacement), this->body_);
+//    }
+//    else {
+//        return NEW(LetExpr)(this->lhs_,
+//                           this->rhs_->subst(variableName, replacement),
+//                           this->body_->subst(variableName, replacement));
+//    }
+//}
 
 void LetExpr::print(std::ostream &out) {
     out << "(_let ";
@@ -102,13 +104,14 @@ TEST_CASE("LetExpr equals() tests") {
 
 TEST_CASE("LetExpr interp() tests") {
     CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(5), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
-            ->interp()->equals(NEW(NumVal)(6)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(6)));
+    NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(5), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))->interp(Env::empty)->equals(NEW(NumVal)(6));
     CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(5), NEW(NumExpr)(2)), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
-            ->interp()->equals(NEW(NumVal)(8)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(8)));
     CHECK((NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(5), NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(5), NEW(VarExpr)("x"))), NEW(NumExpr)(1)))
-            ->interp()->equals(NEW(NumVal)(26)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(26)));
     CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(LetExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(6), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(2))), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
-            ->interp()->equals(NEW(NumVal)(13)));
+            ->interp(Env::empty)->equals(NEW(NumVal)(13)));
 }
 
 //TEST_CASE("LetExpr has_variable() tests") {
@@ -117,15 +120,15 @@ TEST_CASE("LetExpr interp() tests") {
 //    CHECK((new LetExpr(new VarExpr("x"), new NumExpr(1), new NumExpr(0)))->has_variable() == false);
 //}
 
-TEST_CASE("LetExpr subst() tests") {
-    CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(6), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))->subst("x", NEW(NumExpr)(5))
-                ->equals(NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(6), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))));
-    CHECK((NEW(LetExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(6), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))->subst("x", NEW(NumExpr)(5))
-                  ->equals(NEW(LetExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(6), NEW(AddExpr)(NEW(NumExpr)(5), NEW(NumExpr)(1)))));
-    CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(2)), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))->subst("x", NEW(NumExpr)(5))
-                  ->equals(NEW(LetExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(5), NEW(NumExpr)(2)), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))));
-    CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(LetExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(6), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(2))), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))));
-}
+//TEST_CASE("LetExpr subst() tests") {
+//    CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(6), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))->subst("x", NEW(NumExpr)(5))
+//                ->equals(NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(6), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))));
+//    CHECK((NEW(LetExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(6), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))->subst("x", NEW(NumExpr)(5))
+//                  ->equals(NEW(LetExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(6), NEW(AddExpr)(NEW(NumExpr)(5), NEW(NumExpr)(1)))));
+//    CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(2)), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))->subst("x", NEW(NumExpr)(5))
+//                  ->equals(NEW(LetExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(5), NEW(NumExpr)(2)), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))));
+//    CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(LetExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(6), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(2))), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))));
+//}
 
 TEST_CASE("LetExpr print()/to_string() tests") {
     CHECK((NEW(LetExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(3), NEW(AddExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(2))))->to_string() == "(_let y=3 _in (y+2))");

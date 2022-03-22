@@ -7,6 +7,7 @@
 #include "pointer.h"
 #include <string>
 
+class Env;
 class Val;
 
 CLASS(Expr) {
@@ -14,12 +15,13 @@ public:
     //returns whether this Expr has all the same fields as the other Expr
     virtual bool equals(PTR(Expr) other) = 0;
     //returns an integer interpretation of the Expr (if possible)
-    virtual PTR(Val) interp() = 0;
+    virtual PTR(Val) interp(PTR(Env) env) = 0;
     //returns whether this Expr is or contains a variable
     //no longer necessary so commenting out
 //    virtual bool has_variable() = 0;
     //replaces every instance in the Expr of a VarExpr matching the provided name with a replacement Expr
-    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement) = 0;
+    //no longer necessary so commenting out
+//    virtual PTR(Expr) subst(std::string variableName, PTR(Expr) replacement) = 0;
     //prints the expression
     virtual void print(std::ostream &out) = 0;
     //returns the string representation of the Expr using the print() function

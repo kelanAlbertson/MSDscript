@@ -7,6 +7,7 @@
 #include "NumExpr.h"
 #include "NumVal.h"
 #include "VarExpr.h"
+#include "Env.h"
 #include "catch.h"
 #include <sstream>
 
@@ -25,18 +26,18 @@ bool AddExpr::equals(PTR(Expr) other) {
     }
 }
 
-PTR(Val) AddExpr::interp() {
-    return (this->lhs_->interp()->add_to(this->rhs_->interp()));
+PTR(Val) AddExpr::interp(PTR(Env) env) {
+    return (this->lhs_->interp(env)->add_to(this->rhs_->interp(env)));
 }
 
 //bool AddExpr::has_variable() {
 //    return (this->lhs_->has_variable() || this->rhs_->has_variable());
 //}
 
-PTR(Expr) AddExpr::subst(std::string variableName, PTR(Expr) replacement) {
-    return NEW(AddExpr)(this->lhs_->subst(variableName, replacement),
-                       this->rhs_->subst(variableName, replacement));
-}
+//PTR(Expr) AddExpr::subst(std::string variableName, PTR(Expr) replacement) {
+//    return NEW(AddExpr)(this->lhs_->subst(variableName, replacement),
+//                       this->rhs_->subst(variableName, replacement));
+//}
 
 void AddExpr::print(std::ostream &out) {
     out << "(";
@@ -72,10 +73,10 @@ TEST_CASE("AddExpr equals() tests") {
 }
 
 TEST_CASE("AddExpr interp() tests") {
-    CHECK((NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->interp()->equals(NEW(NumVal)(0)));
-    CHECK((NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(1)))->interp()->equals(NEW(NumVal)(1)));
-    CHECK((NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(0)))->interp()->equals(NEW(NumVal)(1)));
-    CHECK((NEW(AddExpr)(NEW(NumExpr)(-5), NEW(NumExpr)(18)))->interp()->equals(NEW(NumVal)(13)));
+    CHECK((NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(0)))->interp(Env::empty)->equals(NEW(NumVal)(0)));
+    CHECK((NEW(AddExpr)(NEW(NumExpr)(0), NEW(NumExpr)(1)))->interp(Env::empty)->equals(NEW(NumVal)(1)));
+    CHECK((NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(0)))->interp(Env::empty)->equals(NEW(NumVal)(1)));
+    CHECK((NEW(AddExpr)(NEW(NumExpr)(-5), NEW(NumExpr)(18)))->interp(Env::empty)->equals(NEW(NumVal)(13)));
 }
 
 //TEST_CASE("AddExpr has_variable() tests") {
@@ -84,15 +85,15 @@ TEST_CASE("AddExpr interp() tests") {
 //    CHECK((new AddExpr(new VarExpr("test"), new VarExpr("test")))->has_variable() == true);
 //}
 
-TEST_CASE("AddExpr subst() tests") {
-    CHECK((NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(7)))->subst("x", NEW(VarExpr)("y"))
-            ->equals(NEW(AddExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(7))));
-    CHECK((NEW(AddExpr)(NEW(VarExpr)("a"), NEW(NumExpr)(7)))->subst("x", NEW(VarExpr)("y"))
-            ->equals(NEW(AddExpr)(NEW(VarExpr)("a"), NEW(NumExpr)(7))));
-
-    CHECK((NEW(AddExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(-1), NEW(VarExpr)("x")), NEW(VarExpr)("a"))))->subst("x", NEW(VarExpr)("y"))
-            -> equals(NEW(AddExpr)(NEW(VarExpr)("y"), NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(-1), NEW(VarExpr)("y")), NEW(VarExpr)("a")))));
-}
+//TEST_CASE("AddExpr subst() tests") {
+//    CHECK((NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(7)))->subst("x", NEW(VarExpr)("y"))
+//            ->equals(NEW(AddExpr)(NEW(VarExpr)("y"), NEW(NumExpr)(7))));
+//    CHECK((NEW(AddExpr)(NEW(VarExpr)("a"), NEW(NumExpr)(7)))->subst("x", NEW(VarExpr)("y"))
+//            ->equals(NEW(AddExpr)(NEW(VarExpr)("a"), NEW(NumExpr)(7))));
+//
+//    CHECK((NEW(AddExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(-1), NEW(VarExpr)("x")), NEW(VarExpr)("a"))))->subst("x", NEW(VarExpr)("y"))
+//            -> equals(NEW(AddExpr)(NEW(VarExpr)("y"), NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(-1), NEW(VarExpr)("y")), NEW(VarExpr)("a")))));
+//}
 
 TEST_CASE("AddExpr print()/to_string() tests") {
     CHECK((NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(2)))->to_string() == "(1+2)");

@@ -10,6 +10,7 @@
 #include "NumExpr.h"
 #include "CallExpr.h"
 #include "MultExpr.h"
+#include "Env.h"
 
 FunExpr::FunExpr(PTR(VarExpr) arg, PTR(Expr) body) {
     this->arg_ = arg;
@@ -26,20 +27,20 @@ bool FunExpr::equals(PTR(Expr) other) {
     }
 }
 
-PTR(Val)FunExpr::interp() {
-    return NEW(FunVal)(this->arg_, this->body_);
+PTR(Val)FunExpr::interp(PTR(Env) env) {
+    return NEW(FunVal)(this->arg_, this->body_, env);
 }
 
 //bool FunExpr::has_variable() {
 //    return false;
 //}
 
-PTR(Expr)FunExpr::subst(std::string variableName, PTR(Expr) replacement) {
-    if (this->arg_->name_ == variableName) {
-        return THIS;
-    }
-    return NEW(FunExpr)(this->arg_, this->body_->subst(variableName, replacement));
-}
+//PTR(Expr)FunExpr::subst(std::string variableName, PTR(Expr) replacement) {
+//    if (this->arg_->name_ == variableName) {
+//        return THIS;
+//    }
+//    return NEW(FunExpr)(this->arg_, this->body_->subst(variableName, replacement));
+//}
 
 void FunExpr::print(std::ostream &out) {
     out << "(_fun (";
@@ -84,21 +85,21 @@ TEST_CASE("FunExpr equals() tests") {
 
 TEST_CASE("FunExpr interp() tests") {
     CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))
-            ->interp()->equals(NEW(FunVal)(NEW(VarExpr)("x"), NEW(NumExpr)(1))));
+            ->interp(Env::empty)->equals(NEW(FunVal)(NEW(VarExpr)("x"), NEW(NumExpr)(1), Env::empty)));
     CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
-            ->interp()->equals(NEW(FunVal)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))));
+            ->interp(Env::empty)->equals(NEW(FunVal)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)), Env::empty)));
     CHECK((NEW(FunExpr)(NEW(VarExpr)("y"), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))))
-            ->interp()->equals(NEW(FunVal)(NEW(VarExpr)("y"), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")))));
+            ->interp(Env::empty)->equals(NEW(FunVal)(NEW(VarExpr)("y"), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")), Env::empty)));
 }
 
-TEST_CASE("FunExpr subst() tests") {
-    CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("y"))))->subst("y", NEW(NumExpr)(8))
-            ->equals(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(8)))));
-    CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x"))))->subst("x", NEW(NumExpr)(8))
-            ->equals(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")))));
-    CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(1))))->subst("x", NEW(NumExpr)(8))
-                  ->equals(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(1)))));
-}
+//TEST_CASE("FunExpr subst() tests") {
+//    CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("y"))))->subst("y", NEW(NumExpr)(8))
+//            ->equals(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(8)))));
+//    CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x"))))->subst("x", NEW(NumExpr)(8))
+//            ->equals(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")))));
+//    CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(1))))->subst("x", NEW(NumExpr)(8))
+//                  ->equals(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(1), NEW(NumExpr)(1)))));
+//}
 
 TEST_CASE("FunExpr print() tests") {
     CHECK((NEW(FunExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))->to_string() == "(_fun (x) 1)");

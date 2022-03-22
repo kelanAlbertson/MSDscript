@@ -6,6 +6,7 @@
 #include "AddExpr.h"
 #include "NumExpr.h"
 #include "MultExpr.h"
+#include "Env.h"
 #include "catch.h"
 #include "stdexcept"
 #include <sstream>
@@ -24,22 +25,22 @@ bool VarExpr::equals(PTR(Expr)other) {
     }
 }
 
-PTR(Val) VarExpr::interp() {
-    throw std::runtime_error("VarExpr cannot be interpreted");
+PTR(Val) VarExpr::interp(PTR(Env) env) {
+    return env->lookup(this->name_);
 }
 
 //bool VarExpr::has_variable() {
 //    return true;
 //}
 
-PTR(Expr) VarExpr::subst(std::string variableName, PTR(Expr) replacement) {
-    if(this->name_ == variableName) {
-        return replacement;
-    }
-    else {
-        return THIS;
-    }
-}
+//PTR(Expr) VarExpr::subst(std::string variableName, PTR(Expr) replacement) {
+//    if(this->name_ == variableName) {
+//        return replacement;
+//    }
+//    else {
+//        return THIS;
+//    }
+//}
 
 void VarExpr::print(std::ostream &out) {
     out << this->name_;
@@ -60,7 +61,7 @@ TEST_CASE("VarExpr equals() tests") {
     CHECK((NEW(VarExpr)("one"))->equals(NEW(NumExpr)(1)) == false);
 }
 TEST_CASE("VarExpr interp() tests") {
-    CHECK_THROWS_WITH((NEW(VarExpr)("x"))->interp(), "VarExpr cannot be interpreted");
+    CHECK_THROWS_WITH((NEW(VarExpr)("x"))->interp(Env::empty), "free variable: x");
 }
 
 //TEST_CASE("VarExpr has_variable() tests") {
@@ -68,9 +69,9 @@ TEST_CASE("VarExpr interp() tests") {
 //    CHECK((new VarExpr("test"))->has_variable() == true);
 //}
 
-TEST_CASE("VarExpr subst() tests") {
-    CHECK((NEW(VarExpr)("x"))->subst("x", NEW(VarExpr)("y"))->equals(NEW(VarExpr)("y")));
-}
+//TEST_CASE("VarExpr subst() tests") {
+//    CHECK((NEW(VarExpr)("x"))->subst("x", NEW(VarExpr)("y"))->equals(NEW(VarExpr)("y")));
+//}
 
 TEST_CASE("VarExpr print()/to_string() tests") {
     CHECK((NEW(VarExpr)("x"))->to_string() == "x");

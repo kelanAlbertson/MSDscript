@@ -6,6 +6,7 @@
 #include "VarExpr.h"
 #include "catch.h"
 #include "NumVal.h"
+#include "Env.h"
 #include <sstream>
 
 NumExpr::NumExpr(int rep) {
@@ -22,7 +23,7 @@ bool NumExpr::equals(PTR(Expr) other) {
     }
 }
 
-PTR(Val) NumExpr::interp() {
+PTR(Val) NumExpr::interp(PTR(Env) env) {
     return NEW(NumVal)(this->rep_);
 }
 
@@ -30,9 +31,9 @@ PTR(Val) NumExpr::interp() {
 //    return false;
 //}
 
-PTR(Expr) NumExpr::subst(std::string variableName, PTR(Expr) replacement) {
-    return THIS;
-}
+//PTR(Expr) NumExpr::subst(std::string variableName, PTR(Expr) replacement) {
+//    return THIS;
+//}
 
 void NumExpr::print(std::ostream &out) {
     out << this->rep_;
@@ -54,10 +55,10 @@ TEST_CASE("NumExpr equals() tests") {
 }
 
 TEST_CASE("NumExpr interp() tests") {
-    CHECK((NEW(NumExpr)(0))->interp()->equals(NEW(NumVal)(0)));
-    CHECK((NEW(NumExpr)(1))->interp()->equals(NEW(NumVal)(1)));
-    CHECK((NEW(NumExpr)(99))->interp()->equals(NEW(NumVal)(99)));
-    CHECK((NEW(NumExpr)(-1))->interp()->equals(NEW(NumVal)(-1)));
+    CHECK((NEW(NumExpr)(0))->interp(Env::empty)->equals(NEW(NumVal)(0)));
+    CHECK((NEW(NumExpr)(1))->interp(Env::empty)->equals(NEW(NumVal)(1)));
+    CHECK((NEW(NumExpr)(99))->interp(Env::empty)->equals(NEW(NumVal)(99)));
+    CHECK((NEW(NumExpr)(-1))->interp(Env::empty)->equals(NEW(NumVal)(-1)));
 }
 
 //TEST_CASE("NumExpr has_variable() tests") {
@@ -65,9 +66,9 @@ TEST_CASE("NumExpr interp() tests") {
 //    CHECK((new NumExpr(-11))->has_variable() == false);
 //}
 
-TEST_CASE("NumExpr subst() tests") {
-    CHECK((NEW(NumExpr)(1))->subst("x", NEW(VarExpr)("y"))->equals(NEW(NumExpr)(1)));
-}
+//TEST_CASE("NumExpr subst() tests") {
+//    CHECK((NEW(NumExpr)(1))->subst("x", NEW(VarExpr)("y"))->equals(NEW(NumExpr)(1)));
+//}
 
 TEST_CASE("NumExpr print()/to_string() tests") {
     CHECK((NEW(NumExpr)(1))->to_string() == "1");

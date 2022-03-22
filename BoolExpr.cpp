@@ -5,6 +5,7 @@
 #include "BoolExpr.h"
 #include "BoolVal.h"
 #include "NumExpr.h"
+#include "Env.h"
 #include "catch.h"
 #include <sstream>
 
@@ -22,7 +23,7 @@ bool BoolExpr::equals(PTR(Expr)other) {
     }
 }
 
-PTR(Val)BoolExpr::interp() {
+PTR(Val)BoolExpr::interp(PTR(Env) env) {
     return NEW(BoolVal)(this->rep_);
 }
 
@@ -30,9 +31,9 @@ PTR(Val)BoolExpr::interp() {
 //    return false;
 //}
 
-PTR(Expr)BoolExpr::subst(std::string variableName, PTR(Expr)replacement) {
-    return THIS;
-}
+//PTR(Expr)BoolExpr::subst(std::string variableName, PTR(Expr)replacement) {
+//    return THIS;
+//}
 
 void BoolExpr::print(std::ostream &out) {
     if(this->rep_) {
@@ -58,17 +59,17 @@ TEST_CASE("BoolExpr equals() tests") {
 }
 
 TEST_CASE("BoolExpr interp() tests") {
-    CHECK((NEW(BoolExpr)(true))->interp()->equals(NEW(BoolVal)(true)));
-    CHECK((NEW(BoolExpr)(false))->interp()->equals(NEW(BoolVal)(false)));
+    CHECK((NEW(BoolExpr)(true))->interp(Env::empty)->equals(NEW(BoolVal)(true)));
+    CHECK((NEW(BoolExpr)(false))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
 }
 
 //TEST_CASE("BoolExpr has_variable() tests") {
 //    CHECK((new BoolExpr(false))->has_variable() == false);
 //}
 
-TEST_CASE("BoolExpr subst() tests") {
-    CHECK((NEW(BoolExpr)(true))->subst("x", NEW(NumExpr)(5))->equals(NEW(BoolExpr)(true)));
-}
+//TEST_CASE("BoolExpr subst() tests") {
+//    CHECK((NEW(BoolExpr)(true))->subst("x", NEW(NumExpr)(5))->equals(NEW(BoolExpr)(true)));
+//}
 
 TEST_CASE("BoolExpr print()/to_string() tests") {
     CHECK((NEW(BoolExpr)(true))->to_string() == "_true");
