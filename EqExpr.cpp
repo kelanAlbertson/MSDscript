@@ -79,7 +79,7 @@ TEST_CASE("EqExpr interp() tests") {
     CHECK((NEW(EqExpr)(NEW(NumExpr)(-99), NEW(NumExpr)(0)))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
     CHECK((NEW(EqExpr)(NEW(BoolExpr)(true), NEW(BoolExpr)(true)))->interp(Env::empty)->equals(NEW(BoolVal)(true)));
     CHECK((NEW(EqExpr)(NEW(BoolExpr)(true), NEW(NumExpr)(1)))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
-    CHECK_THROWS_WITH((NEW(EqExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(2)))->interp(Env::empty)->equals(NEW(BoolVal)(false)), "VarExpr cannot be interpreted");
+    CHECK_THROWS_WITH((NEW(EqExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(2)))->interp(Env::empty)->equals(NEW(BoolVal)(false)), "free variable: x");
 }
 
 //TEST_CASE("EqExpr has_variable() tests") {

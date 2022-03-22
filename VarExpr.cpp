@@ -26,7 +26,7 @@ bool VarExpr::equals(PTR(Expr)other) {
 }
 
 PTR(Val) VarExpr::interp(PTR(Env) env) {
-    throw std::runtime_error("VarExpr cannot be interpreted");
+    return env->lookup(this->name_);
 }
 
 //bool VarExpr::has_variable() {
@@ -61,7 +61,7 @@ TEST_CASE("VarExpr equals() tests") {
     CHECK((NEW(VarExpr)("one"))->equals(NEW(NumExpr)(1)) == false);
 }
 TEST_CASE("VarExpr interp() tests") {
-    CHECK_THROWS_WITH((NEW(VarExpr)("x"))->interp(Env::empty), "VarExpr cannot be interpreted");
+    CHECK_THROWS_WITH((NEW(VarExpr)("x"))->interp(Env::empty), "free variable: x");
 }
 
 //TEST_CASE("VarExpr has_variable() tests") {

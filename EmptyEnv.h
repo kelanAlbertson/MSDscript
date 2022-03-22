@@ -8,6 +8,8 @@
 
 class EmptyEnv : public Env {
 public:
+    // returns whether the other Env is an EmptyEnv like this EmptyEnv
+    virtual bool equals(PTR(Env) other);
     // lookup a variable within this environment to see if there is a value to replace it with
     virtual PTR(Val) lookup(std::string find_name);
 };

@@ -105,6 +105,7 @@ TEST_CASE("LetExpr equals() tests") {
 TEST_CASE("LetExpr interp() tests") {
     CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(5), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
             ->interp(Env::empty)->equals(NEW(NumVal)(6)));
+    NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(5), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)))->interp(Env::empty)->equals(NEW(NumVal)(6));
     CHECK((NEW(LetExpr)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(NumExpr)(5), NEW(NumExpr)(2)), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1))))
             ->interp(Env::empty)->equals(NEW(NumVal)(8)));
     CHECK((NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(5), NEW(LetExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(5), NEW(VarExpr)("x"))), NEW(NumExpr)(1)))

@@ -36,7 +36,7 @@ MultExpr.o: MultExpr.cpp MultExpr.h AddExpr.h NumExpr.h VarExpr.h catch.h NumVal
 VarExpr.o: VarExpr.cpp VarExpr.h AddExpr.h NumExpr.h MultExpr.h catch.h Env.h
 	$(CXX) $(CXXFLAGS) -O2 -c VarExpr.cpp
 
-LetExpr.o: LetExpr.cpp LetExpr.h AddExpr.h NumExpr.h MultExpr.h VarExpr.h catch.h NumVal.h Env.h
+LetExpr.o: LetExpr.cpp LetExpr.h AddExpr.h NumExpr.h MultExpr.h VarExpr.h catch.h NumVal.h Env.h ExtendedEnv.h
 	$(CXX) $(CXXFLAGS) -O2 -c LetExpr.cpp
 
 BoolExpr.o: BoolExpr.cpp BoolExpr.h BoolVal.h NumExpr.h catch.h Env.h
@@ -63,16 +63,16 @@ NumVal.o: NumVal.cpp NumVal.h BoolVal.h NumExpr.h catch.h
 BoolVal.o: BoolVal.cpp BoolVal.h BoolExpr.h NumVal.h catch.h
 	$(CXX) $(CXXFLAGS) -O2 -c BoolVal.cpp
 
-FunVal.o: FunVal.cpp FunVal.h NumVal.h BoolVal.h catch.h VarExpr.h AddExpr.h NumExpr.h FunExpr.h BoolExpr.h
+FunVal.o: FunVal.cpp FunVal.h NumVal.h BoolVal.h catch.h VarExpr.h AddExpr.h NumExpr.h FunExpr.h BoolExpr.h ExtendedEnv.h
 	$(CXX) $(CXXFLAGS) -O2 -c FunVal.cpp
 
 Env.o: Env.cpp Env.h EmptyEnv.h catch.h
 	$(CXX) $(CXXFLAGS) -O2 -c Env.cpp
 
-EmptyEnv.o: EmptyEnv.cpp EmptyEnv.h catch.h
+EmptyEnv.o: EmptyEnv.cpp EmptyEnv.h ExtendedEnv.h NumVal.h catch.h
 	$(CXX) $(CXXFLAGS) -O2 -c EmptyEnv.cpp
 
-ExtendedEnv.o: ExtendedEnv.cpp ExtendedEnv.h Val.h catch.h
+ExtendedEnv.o: ExtendedEnv.cpp ExtendedEnv.h EmptyEnv.h Val.h NumVal.h catch.h
 	$(CXX) $(CXXFLAGS) -O2 -c ExtendedEnv.cpp
 
 parse.o: parse.cpp parse.h Expr.h AddExpr.h BoolExpr.h CallExpr.h EqExpr.h FunExpr.h IfExpr.h LetExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h NumVal.h

@@ -25,7 +25,7 @@ bool FunVal::equals(PTR(Val)other) {
         return false;
     }
     else {
-        return (this->arg_->equals(fv->arg_) && this->body_->equals(fv->body_));
+        return (this->arg_->equals(fv->arg_) && this->body_->equals(fv->body_) && this->env_->equals(fv->env_));
     }
 }
 
@@ -70,10 +70,10 @@ TEST_CASE("FunVal equals() tests") {
 }
 
 TEST_CASE("FunVal to_string() tests") {
-    CHECK((NEW(FunVal)(NEW(VarExpr)("x"), NEW(NumExpr)(1), Env::empty))->to_string() == "(_fun (x) 1)");
+    CHECK((NEW(FunVal)(NEW(VarExpr)("x"), NEW(NumExpr)(1), Env::empty))->to_string() == "[function]"); // was "(_fun (x) 1)"
     CHECK((NEW(FunVal)(NEW(VarExpr)("x"), NEW(AddExpr)(NEW(VarExpr)("x"), NEW(NumExpr)(1)), Env::empty))
-                  ->to_string() == "(_fun (x) (x+1))");
-    CHECK((NEW(FunVal)(NEW(VarExpr)("x"), NEW(VarExpr)("y"), Env::empty))->to_string() == "(_fun (x) y)");
+                  ->to_string() == "[function]"); // was "(_fun (x) (x+1))"
+    CHECK((NEW(FunVal)(NEW(VarExpr)("x"), NEW(VarExpr)("y"), Env::empty))->to_string() == "[function]"); // was "(_fun (x) y)"
 }
 
 //TEST_CASE("FunVal to_expr() tests") {
