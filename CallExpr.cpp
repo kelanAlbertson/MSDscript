@@ -15,6 +15,7 @@
 #include "BoolExpr.h"
 #include "BoolVal.h"
 #include "Env.h"
+#include "ExtendedEnv.h"
 
 CallExpr::CallExpr(PTR(Expr) to_be_called, PTR(Expr) arg) {
     this->to_be_called_ = to_be_called;
@@ -77,12 +78,12 @@ TEST_CASE("CallExpr interp() tests") {
             ->interp(Env::empty)->equals(NEW(NumVal)(6)));
     CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"), NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x"))), NEW(NumExpr)(3)))
             ->interp(Env::empty)->equals(NEW(NumVal)(9)));
-//    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"),
-//                                    NEW(FunExpr)(NEW(VarExpr)("y"),
-//                                                NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))))), NEW(NumExpr)(2)))
-//                                    ->interp(Env::empty)
-//                                    ->equals(NEW(FunVal)(NEW(VarExpr)("y"),
-//                                                        NEW(AddExpr)(NEW(MultExpr)(NEW(NumExpr)(2), NEW(NumExpr)(2)), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))), NEW(ExtendedEnv)("x", NEW(NumVal)(2), Env::empty))));
+    CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"),
+                                    NEW(FunExpr)(NEW(VarExpr)("y"),
+                                                NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))))), NEW(NumExpr)(2)))
+                                    ->interp(Env::empty)
+                                    ->equals(NEW(FunVal)(NEW(VarExpr)("y"),
+                                                        NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y"))), NEW(ExtendedEnv)("x", NEW(NumVal)(2), Env::empty))));
     CHECK((NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("x"),
                                     NEW(CallExpr)(NEW(FunExpr)(NEW(VarExpr)("y"),
                                                              NEW(AddExpr)(NEW(MultExpr)(NEW(VarExpr)("x"), NEW(VarExpr)("x")), NEW(MultExpr)(NEW(VarExpr)("y"), NEW(VarExpr)("y")))),
