@@ -51,7 +51,7 @@ IfExpr.o: IfExpr.cpp IfExpr.h AddExpr.h BoolExpr.h EqExpr.h LetExpr.h MultExpr.h
 FunExpr.o: FunExpr.cpp FunExpr.h AddExpr.h CallExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h FunVal.h Env.h
 	$(CXX) $(CXXFLAGS) -O2 -c FunExpr.cpp
 
-CallExpr.o: CallExpr.cpp CallExpr.h AddExpr.h BoolExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h Val.h BoolVal.h NumVal.h FunVal.h Env.h
+CallExpr.o: CallExpr.cpp CallExpr.h AddExpr.h BoolExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h Val.h BoolVal.h NumVal.h FunVal.h Env.h ExtendedEnv.h
 	$(CXX) $(CXXFLAGS) -O2 -c CallExpr.cpp
 
 Val.o: Val.cpp Val.h
