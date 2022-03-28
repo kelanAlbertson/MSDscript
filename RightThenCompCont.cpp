@@ -5,6 +5,7 @@
 #include "RightThenCompCont.h"
 #include "Val.h"
 #include "Step.h"
+#include "CompCont.h"
 
 RightThenCompCont::RightThenCompCont(PTR(Expr) rhs, PTR(Env) env, PTR(Cont) rest) {
     this->rhs_ = rhs;

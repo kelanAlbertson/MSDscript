@@ -3,3 +3,6 @@
 //
 
 #include "Cont.h"
+#include "DoneCont.h"
+
+PTR(Cont) Cont::done = NEW(DoneCont)();

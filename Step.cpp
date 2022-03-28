@@ -4,8 +4,16 @@
 
 #include "Step.h"
 #include "Env.h"
+#include "Cont.h"
+#include "Expr.h"
 
-int Step::interp_by_steps(PTR(Expr) e) {
+Step::mode_t Step::mode_;
+PTR(Expr) Step::expr_;
+PTR(Env) Step::env_;
+PTR(Val) Step::val_;
+PTR(Cont) Step::cont_;
+
+PTR(Val) Step::interp_by_steps(PTR(Expr) e) {
     Step::mode_ = Step::interp_mode;
     Step::expr_ = e;
     Step::env_ = Env::empty;

@@ -17,6 +17,7 @@
 #include "Env.h"
 #include "ExtendedEnv.h"
 #include "Step.h"
+#include "ArgThenCallCont.h"
 
 CallExpr::CallExpr(PTR(Expr) to_be_called, PTR(Expr) arg) {
     this->to_be_called_ = to_be_called;

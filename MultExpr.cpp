@@ -10,6 +10,7 @@
 #include "Env.h"
 #include "catch.h"
 #include "Step.h"
+#include "RightThenMultCont.h"
 #include <sstream>
 
 MultExpr::MultExpr(PTR(Expr) lhs, PTR(Expr) rhs) {

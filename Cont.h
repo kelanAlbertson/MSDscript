@@ -7,5 +7,6 @@
 
 CLASS(Cont) {
 public:
+    static PTR(Cont) done;
     virtual void step_continue() = 0;
 };
