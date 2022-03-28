@@ -23,5 +23,5 @@ public:
     static PTR(Val) val_;       // for continue mode
     static PTR(Cont) cont_;     // all modes
 
-    PTR(Val) interp_by_steps(PTR(Expr) e);
+    static PTR(Val) interp_by_steps(PTR(Expr) e);
 };

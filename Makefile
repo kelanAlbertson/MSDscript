@@ -1,6 +1,5 @@
-INCS = cmdline.h
 
-OBJS = main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o BoolExpr.o EqExpr.o IfExpr.o FunExpr.o CallExpr.o Val.o NumVal.o BoolVal.o FunVal.o Env.o EmptyEnv.o ExtendedEnv.o parse.o
+OBJS = main.o cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o BoolExpr.o EqExpr.o IfExpr.o FunExpr.o CallExpr.o Val.o NumVal.o BoolVal.o FunVal.o Env.o EmptyEnv.o ExtendedEnv.o parse.o Step.o Cont.o RightThenAddCont.o AddCont.o RightThenMultCont.o MultCont.o RightThenCompCont.o CompCont.o ArgThenCallCont.o CallCont.o IfBranchCont.o LetBodyCont.o DoneCont.o
 TESTOBJS = randomTests.o exec.o
 
 CXXFLAGS = --std=c++14 -O2
@@ -77,6 +76,45 @@ ExtendedEnv.o: ExtendedEnv.cpp ExtendedEnv.h EmptyEnv.h Val.h NumVal.h catch.h
 
 parse.o: parse.cpp parse.h Expr.h AddExpr.h BoolExpr.h CallExpr.h EqExpr.h FunExpr.h IfExpr.h LetExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h NumVal.h
 	$(CXX) $(CXXFLAGS) -O2 -c parse.cpp
+
+Step.o: Step.cpp Step.h Env.h Cont.h Expr.h
+	$(CXX) $(CXXFLAGS) -O2 -c Step.cpp
+
+Cont.o: Cont.cpp Cont.h DoneCont.h
+	$(CXX) $(CXXFLAGS) -O2 -c Cont.cpp
+
+RightThenAddCont.o: RightThenAddCont.cpp RightThenAddCont.h Val.h Step.h AddCont.cpp
+	$(CXX) $(CXXFLAGS) -O2 -c RightThenAddCont.cpp
+
+AddCont.o: AddCont.cpp AddExpr.h Step.h Val.h
+	$(CXX) $(CXXFLAGS) -O2 -c AddCont.cpp
+
+RightThenMultCont.o: RightThenMultCont.cpp RightThenMultCont.h Val.h Step.h MultCont.h
+	$(CXX) $(CXXFLAGS) -O2 -c RightThenMultCont.cpp
+
+MultCont.o: MultCont.cpp MultCont.h Step.h Val.h
+	$(CXX) $(CXXFLAGS) -O2 -c MultCont.cpp
+
+RightThenCompCont.o: RightThenCompCont.cpp RightThenCompCont.h Val.h Step.h CompCont.h
+	$(CXX) $(CXXFLAGS) -O2 -c RightThenCompCont.cpp
+
+CompCont.o: CompCont.cpp CompCont.h Step.h Val.h BoolVal.h
+	$(CXX) $(CXXFLAGS) -O2 -c CompCont.cpp
+
+ArgThenCallCont.o: ArgThenCallCont.cpp ArgThenCallCont.h Step.h CallCont.h
+	$(CXX) $(CXXFLAGS) -O2 -c ArgThenCallCont.cpp
+
+CallCont.o: CallCont.cpp CallCont.h Val.h Step.h
+	$(CXX) $(CXXFLAGS) -O2 -c CallCont.cpp
+
+IfBranchCont.o: IfBranchCont.cpp IfBranchCont.h Val.h Step.h
+	$(CXX) $(CXXFLAGS) -O2 -c IfBranchCont.cpp
+
+LetBodyCont.o: LetBodyCont.cpp LetBodyCont.h Step.h ExtendedEnv.h
+	$(CXX) $(CXXFLAGS) -O2 -c LetBodyCont.cpp
+
+DoneCont.o: DoneCont.cpp DoneCont.h
+	$(CXX) $(CXXFLAGS) -O2 -c DoneCont.cpp
 
 exec.o: exec.cpp exec.h
 	$(CXX) $(CXXFLAGS) -O2 -c exec.cpp
