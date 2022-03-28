@@ -7,6 +7,7 @@
 #include "NumExpr.h"
 #include "Env.h"
 #include "catch.h"
+#include "Step.h"
 #include <sstream>
 
 BoolExpr::BoolExpr(int rep) {
@@ -25,6 +26,12 @@ bool BoolExpr::equals(PTR(Expr)other) {
 
 PTR(Val)BoolExpr::interp(PTR(Env) env) {
     return NEW(BoolVal)(this->rep_);
+}
+
+void BoolExpr::step_interp() {
+    Step::mode_ = Step::continue_mode;
+    Step::val_ = NEW(BoolVal)(rep_);
+    Step::cont_ = Step::cont_;
 }
 
 //bool BoolExpr::has_variable() {

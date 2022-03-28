@@ -54,6 +54,10 @@ PTR(Val) NumVal::call(PTR(Val) arg) {
     throw std::runtime_error("Cannot call() a NumVal");
 }
 
+void NumVal::call_step(PTR(Val) arg_val, PTR(Cont) rest) {
+    throw std::runtime_error("Cannot call_step() a NumVal");
+}
+
 /**
  *************************   TESTS   **************************
  **/

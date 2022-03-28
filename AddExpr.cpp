@@ -8,6 +8,8 @@
 #include "NumVal.h"
 #include "VarExpr.h"
 #include "Env.h"
+#include "Step.h"
+#include "RightThenAddCont.h"
 #include "catch.h"
 #include <sstream>
 
@@ -27,7 +29,16 @@ bool AddExpr::equals(PTR(Expr) other) {
 }
 
 PTR(Val) AddExpr::interp(PTR(Env) env) {
-    return (this->lhs_->interp(env)->add_to(this->rhs_->interp(env)));
+    PTR(Val) lhs_val = this->lhs_->interp(env);
+    PTR(Val) rhs_val = this->rhs_->interp(env);
+    return lhs_val->add_to(rhs_val);
+}
+
+void AddExpr::step_interp() {
+    Step::mode_ = Step::interp_mode;
+    Step::expr_ = lhs_;
+    Step::env_ = Step::env_;
+    Step::cont_ = NEW(RightThenAddCont) (rhs_, Step::env_, Step::cont_);
 }
 
 //bool AddExpr::has_variable() {

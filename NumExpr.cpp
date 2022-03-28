@@ -7,6 +7,7 @@
 #include "catch.h"
 #include "NumVal.h"
 #include "Env.h"
+#include "Step.h"
 #include <sstream>
 
 NumExpr::NumExpr(int rep) {
@@ -25,6 +26,12 @@ bool NumExpr::equals(PTR(Expr) other) {
 
 PTR(Val) NumExpr::interp(PTR(Env) env) {
     return NEW(NumVal)(this->rep_);
+}
+
+void NumExpr::step_interp() {
+    Step::mode_ = Step::continue_mode;
+    Step::val_ = NEW(NumVal)(rep_);
+    Step::cont_ = Step::cont_;
 }
 
 //bool NumExpr::has_variable() {

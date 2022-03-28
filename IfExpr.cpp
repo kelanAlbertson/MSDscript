@@ -15,6 +15,8 @@
 #include "NumVal.h"
 #include "LetExpr.h"
 #include "Env.h"
+#include "Step.h"
+#include "IfBranchCont.h"
 #include <sstream>
 #include <string>
 
@@ -36,13 +38,20 @@ bool IfExpr::equals(PTR(Expr) other) {
     }
 }
 
-PTR(Val)IfExpr::interp(PTR(Env) env) {
+PTR(Val) IfExpr::interp(PTR(Env) env) {
     if (this->condition_->interp(env)->is_true()) {
         return this->then_statement_->interp(env);
     }
     else {
         return this->else_statement_->interp(env);
     }
+}
+
+void IfExpr::step_interp() {
+    Step::mode_ = Step::interp_mode;
+    Step::expr_ = condition_;
+    Step::env_ = Step::env_;
+    Step::cont_ = NEW(IfBranchCont)(then_statement_, else_statement_, Step::env_, Step::cont_);
 }
 
 //bool IfExpr::has_variable() {

@@ -16,6 +16,8 @@ public:
     virtual bool equals(PTR(Expr) other) = 0;
     //returns an integer interpretation of the Expr (if possible)
     virtual PTR(Val) interp(PTR(Env) env) = 0;
+    //interprets the Expr but using our continuations
+    virtual void step_interp() = 0;
     //returns whether this Expr is or contains a variable
     //no longer necessary so commenting out
 //    virtual bool has_variable() = 0;

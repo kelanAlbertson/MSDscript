@@ -9,6 +9,7 @@
 #include "Env.h"
 #include "catch.h"
 #include "stdexcept"
+#include "Step.h"
 #include <sstream>
 
 VarExpr::VarExpr(std::string name) {
@@ -27,6 +28,12 @@ bool VarExpr::equals(PTR(Expr)other) {
 
 PTR(Val) VarExpr::interp(PTR(Env) env) {
     return env->lookup(this->name_);
+}
+
+void VarExpr::step_interp() {
+    Step::mode_ = Step::continue_mode;
+    Step::val_ = Step::env_->lookup(this->name_);
+    Step::cont_ = Step::cont_;
 }
 
 //bool VarExpr::has_variable() {
