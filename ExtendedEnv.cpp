@@ -39,11 +39,11 @@ PTR(Val) ExtendedEnv::lookup(std::string find_name) {
  **/
 
 TEST_CASE("ExtendedEnv equals() tests") {
-    CHECK((NEW(ExtendedEnv)("x", NEW(NumVal)(1), NEW(EmptyEnv)()))->equals(NEW(ExtendedEnv)("x", NEW(NumVal)(1), NEW(EmptyEnv)())) == true);
-    CHECK((NEW(ExtendedEnv)("x", NEW(NumVal)(1), NEW(ExtendedEnv)("x", NEW(NumVal)(99), NEW(EmptyEnv)())))->equals(NEW(ExtendedEnv)("x", NEW(NumVal)(1), NEW(EmptyEnv)())) == false);
+    CHECK((NEW(ExtendedEnv)("x", NEW(NumVal)(1), Env::empty))->equals(NEW(ExtendedEnv)("x", NEW(NumVal)(1), Env::empty)) == true);
+    CHECK((NEW(ExtendedEnv)("x", NEW(NumVal)(1), NEW(ExtendedEnv)("x", NEW(NumVal)(99), Env::empty)))->equals(NEW(ExtendedEnv)("x", NEW(NumVal)(1), Env::empty)) == false);
 }
 
 TEST_CASE("ExtendedEnv lookup() tests") {
-    CHECK_THROWS_WITH((NEW(ExtendedEnv)("x", NEW(NumVal)(1), NEW(ExtendedEnv)("y", NEW(NumVal)(99), NEW(EmptyEnv)())))->lookup("b"), "free variable: b");
-    CHECK((NEW(ExtendedEnv)("x", NEW(NumVal)(1), NEW(ExtendedEnv)("y", NEW(NumVal)(99), NEW(EmptyEnv)())))->lookup("y")->equals(NEW(NumVal)(99)));
+    CHECK_THROWS_WITH((NEW(ExtendedEnv)("x", NEW(NumVal)(1), NEW(ExtendedEnv)("y", NEW(NumVal)(99), Env::empty)))->lookup("b"), "free variable: b");
+    CHECK((NEW(ExtendedEnv)("x", NEW(NumVal)(1), NEW(ExtendedEnv)("y", NEW(NumVal)(99), Env::empty)))->lookup("y")->equals(NEW(NumVal)(99)));
 }

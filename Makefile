@@ -77,7 +77,7 @@ ExtendedEnv.o: ExtendedEnv.cpp ExtendedEnv.h EmptyEnv.h Val.h NumVal.h catch.h
 parse.o: parse.cpp parse.h Expr.h AddExpr.h BoolExpr.h CallExpr.h EqExpr.h FunExpr.h IfExpr.h LetExpr.h MultExpr.h NumExpr.h VarExpr.h catch.h NumVal.h
 	$(CXX) $(CXXFLAGS) -O2 -c parse.cpp
 
-Step.o: Step.cpp Step.h Env.h Cont.h Expr.h
+Step.o: Step.cpp Step.h Env.h Cont.h Expr.h catch.h
 	$(CXX) $(CXXFLAGS) -O2 -c Step.cpp
 
 Cont.o: Cont.cpp Cont.h DoneCont.h

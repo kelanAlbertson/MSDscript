@@ -17,5 +17,6 @@ void LetBodyCont::step_continue() {
     Step::mode_ = Step::interp_mode;
     Step::expr_ = body_;
     Step::env_ = NEW(ExtendedEnv)(var_, Step::val_, env_);
+    Step::cont_ = rest_;
 }
 
