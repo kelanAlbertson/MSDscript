@@ -7,6 +7,9 @@ CXXFLAGS = --std=c++14 -O2
 msdscript: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o msdscript $(OBJS)
 
+libmsdscript.a: $(OBJS)
+	ar -ruv libmsdscript.a $(OBJS)
+
 test_msdscript: randomTests.o exec.o
 	$(CXX) $(CXXFLAGS) -O2 -o test_msdscript randomTests.o exec.o
 
@@ -123,4 +126,4 @@ randomTests.o: randomTests.cpp exec.h
 	$(CXX) $(CXXFLAGS) -O2 -c randomTests.cpp
 
 clean:
-	rm msdscript $(OBJS)
+	rm msdscript $(OBJS) libmsdscript.a
