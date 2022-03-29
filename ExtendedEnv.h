@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <string>
 #include "Env.h"
 
 class ExtendedEnv : public Env {
