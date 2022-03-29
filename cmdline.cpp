@@ -13,6 +13,7 @@
 #include "Val.h"
 #include "Env.h"
 #include "parse.h"
+#include "Step.h"
 
 int use_arguments (int argc, char* argv[]) {
     bool  alreadyTested = false;
@@ -42,6 +43,12 @@ int use_arguments (int argc, char* argv[]) {
             }
             else if (arg == "--interp") {
                 PTR(Val) interpreted = parse(std::cin)->interp(Env::empty);
+                std::cout << interpreted->to_string() << "\n";
+                exit(0);
+            }
+            else if (arg == "--step") {
+                PTR(Expr) parsed = parse(std::cin);
+                PTR(Val) interpreted = Step::interp_by_steps(parsed);
                 std::cout << interpreted->to_string() << "\n";
                 exit(0);
             }

@@ -16,6 +16,8 @@
 #include "BoolVal.h"
 #include "Env.h"
 #include "ExtendedEnv.h"
+#include "Step.h"
+#include "ArgThenCallCont.h"
 
 CallExpr::CallExpr(PTR(Expr) to_be_called, PTR(Expr) arg) {
     this->to_be_called_ = to_be_called;
@@ -34,6 +36,12 @@ bool CallExpr::equals(PTR(Expr) other) {
 
 PTR(Val)CallExpr::interp(PTR(Env) env) {
     return to_be_called_->interp(env)->call(arg_->interp(env));
+}
+
+void CallExpr::step_interp() {
+    Step::mode_ = Step::interp_mode;
+    Step::expr_ = to_be_called_;
+    Step::cont_ = NEW(ArgThenCallCont)(arg_, Step::env_, Step::cont_);
 }
 
 //bool CallExpr::has_variable() {

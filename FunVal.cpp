@@ -12,6 +12,7 @@
 #include "NumVal.h"
 #include "BoolExpr.h"
 #include "ExtendedEnv.h"
+#include "Step.h"
 
 FunVal::FunVal(PTR(VarExpr) arg, PTR(Expr) body, PTR(Env) env) {
     this->arg_ = arg;
@@ -52,6 +53,13 @@ bool FunVal::is_true() {
 
 PTR(Val) FunVal::call(PTR(Val) arg) {
     return this->body_->interp(NEW(ExtendedEnv)(this->arg_->name_, arg, this->env_));
+}
+
+void FunVal::call_step(PTR(Val) arg_val, PTR(Cont) rest) {
+    Step::mode_ = Step::interp_mode;
+    Step::expr_ = body_;
+    Step::env_ = NEW(ExtendedEnv)(arg_->name_, arg_val, env_);
+    Step::cont_ = rest;
 }
 
 /**

@@ -10,6 +10,8 @@
 #include "VarExpr.h"
 #include "catch.h"
 #include "ExtendedEnv.h"
+#include "Step.h"
+#include "LetBodyCont.h"
 #include <sstream>
 #include <iostream>
 
@@ -34,6 +36,13 @@ PTR(Val) LetExpr::interp(PTR(Env) env) {
     PTR(Val) rhs_val = this->rhs_->interp(env);
     PTR(Env) new_env = NEW(ExtendedEnv)(lhs_->name_, rhs_val, env);
     return this->body_->interp(new_env);
+}
+
+void LetExpr::step_interp() {
+    Step::mode_ = Step::interp_mode;
+    Step::expr_ = rhs_;
+    Step::env_ = Step::env_;
+    Step::cont_ = NEW(LetBodyCont)(lhs_->name_, body_, Step::env_, Step::cont_);
 }
 
 //bool LetExpr::has_variable() {

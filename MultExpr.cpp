@@ -9,6 +9,8 @@
 #include "VarExpr.h"
 #include "Env.h"
 #include "catch.h"
+#include "Step.h"
+#include "RightThenMultCont.h"
 #include <sstream>
 
 MultExpr::MultExpr(PTR(Expr) lhs, PTR(Expr) rhs) {
@@ -28,6 +30,13 @@ bool MultExpr::equals(PTR(Expr) other) {
 
 PTR(Val) MultExpr::interp(PTR(Env) env) {
     return (this->lhs_->interp(env)->multiply_by(this->rhs_->interp(env)));
+}
+
+void MultExpr::step_interp() {
+    Step::mode_ = Step::interp_mode;
+    Step::expr_ = lhs_;
+    Step::env_ = Step::env_;
+    Step::cont_ = NEW(RightThenMultCont) (rhs_, Step::env_, Step::cont_);
 }
 
 //bool MultExpr::has_variable() {

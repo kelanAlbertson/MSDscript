@@ -11,6 +11,7 @@
 #include "CallExpr.h"
 #include "MultExpr.h"
 #include "Env.h"
+#include "Step.h"
 
 FunExpr::FunExpr(PTR(VarExpr) arg, PTR(Expr) body) {
     this->arg_ = arg;
@@ -29,6 +30,12 @@ bool FunExpr::equals(PTR(Expr) other) {
 
 PTR(Val)FunExpr::interp(PTR(Env) env) {
     return NEW(FunVal)(this->arg_, this->body_, env);
+}
+
+void FunExpr::step_interp() {
+    Step::mode_ = Step::continue_mode;
+    Step::val_ = NEW(FunVal)(arg_, body_, Step::env_);
+    Step::cont_ = Step::cont_;
 }
 
 //bool FunExpr::has_variable() {

@@ -50,6 +50,10 @@ PTR(Val) BoolVal::call(PTR(Val) arg) {
     throw std::runtime_error("Cannot call() a BoolVal");
 }
 
+void BoolVal::call_step(PTR(Val) arg_val, PTR(Cont) rest) {
+    throw std::runtime_error("Cannot step_call() a BoolVal");
+}
+
 /**
  *************************   TESTS   **************************
  **/

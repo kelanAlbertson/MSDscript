@@ -17,6 +17,8 @@ public:
     virtual bool equals (PTR(Expr) other);
     //returns an integer interpretation of the AddExpr
     virtual PTR(Val) interp(PTR(Env) env);
+    //interprets this AddExpr using continuations
+    virtual void step_interp();
     //returns whether this AddExpr contains a variable
 //    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this AddExpr with a replacement Expr

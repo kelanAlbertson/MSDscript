@@ -11,6 +11,8 @@
 #include "AddExpr.h"
 #include "MultExpr.h"
 #include "Env.h"
+#include "Step.h"
+#include "RightThenCompCont.h"
 #include <sstream>
 
 EqExpr::EqExpr(PTR(Expr)lhs, PTR(Expr)rhs) {
@@ -30,6 +32,13 @@ bool EqExpr::equals(PTR(Expr) other) {
 
 PTR(Val) EqExpr::interp(PTR(Env) env) {
     return NEW(BoolVal)(this->lhs_->interp(env)->equals(this->rhs_->interp(env)));
+}
+
+void EqExpr::step_interp() {
+    Step::mode_ = Step::interp_mode;
+    Step::expr_ = lhs_;
+    Step::env_ = Step::env_;
+    Step::cont_ = NEW(RightThenCompCont) (rhs_, Step::env_, Step::cont_);
 }
 
 //bool EqExpr::has_variable() {

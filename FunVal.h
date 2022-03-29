@@ -5,8 +5,10 @@
 #pragma once
 
 #include "Val.h"
+
 class VarExpr;
 class Env;
+class Cont;
 
 class FunVal : public Val {
 public:
@@ -29,4 +31,6 @@ public:
     virtual bool is_true();
     // calls a FunVal with the provided arg (raises an error for other Val types)
     virtual PTR(Val) call(PTR(Val) arg);
+    // calls a FunVal with the provided arg but using the continuations
+    virtual void call_step(PTR(Val) arg_val, PTR(Cont) rest);
 };

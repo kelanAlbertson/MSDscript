@@ -17,6 +17,8 @@ public:
     virtual bool equals(PTR(Expr) other);
     //returns a Val representing the evaluation of this FunExpr
     virtual PTR(Val) interp(PTR(Env) env);
+    //interprets this FunExpr using continuations
+    virtual void step_interp();
     //returns whether this FunExpr contains a variable
 //    virtual bool has_variable();
     //replaces every instance of a VarExpr matching the provided name in this FunExpr with a replacement Expr
