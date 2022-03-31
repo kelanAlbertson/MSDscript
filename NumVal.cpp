@@ -35,7 +35,7 @@ PTR(Val)NumVal::add_to(PTR(Val)other) {
     if (nv == nullptr) {
         throw std::runtime_error("Cannot use add_to() with a non-number");
     }
-    return NEW(NumVal)(rep_ + nv->rep_);
+    return NEW(NumVal)((unsigned)rep_ + (unsigned)nv->rep_);
 }
 
 PTR(Val)NumVal::multiply_by(PTR(Val)other) {
@@ -43,7 +43,7 @@ PTR(Val)NumVal::multiply_by(PTR(Val)other) {
     if (nv == nullptr) {
         throw std::runtime_error("Cannot use multiply_by() with a non-number");
     }
-    return NEW(NumVal)(rep_* nv->rep_);
+    return NEW(NumVal)((unsigned)rep_ * (unsigned)nv->rep_);
 }
 
 bool NumVal::is_true() {

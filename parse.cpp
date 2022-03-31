@@ -162,7 +162,12 @@ static PTR(NumExpr) parse_num(std::istream &in) {
         int c = in.peek();
         if (isdigit(c)) {
             consume(in, c);
-            n = 10*n + (c -'0');
+            if (n > (INT_MAX - (c - '0'))/10) {
+                throw std::runtime_error("parse_num caused int overflow");
+            }
+            else {
+                n = 10*n + (c - '0');
+            }
         }
         else {
             break;
