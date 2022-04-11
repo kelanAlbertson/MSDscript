@@ -1,7 +1,7 @@
 
 OBJS = cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o BoolExpr.o EqExpr.o IfExpr.o FunExpr.o CallExpr.o Val.o NumVal.o BoolVal.o FunVal.o Env.o EmptyEnv.o ExtendedEnv.o parse.o Step.o Cont.o RightThenAddCont.o AddCont.o RightThenMultCont.o MultCont.o RightThenCompCont.o CompCont.o ArgThenCallCont.o CallCont.o IfBranchCont.o LetBodyCont.o DoneCont.o
 TESTOBJS = randomTests.o exec.o
-MAINOBJS = main.o OBJS
+MAINOBJS = main.o $(OBJS)
 
 CXXFLAGS = --std=c++14 -O2 -fsanitize=undefined -fno-sanitize-recover=undefined
 
