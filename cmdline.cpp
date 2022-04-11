@@ -17,14 +17,18 @@
 
 int use_arguments (int argc, char* argv[]) {
     bool  alreadyTested = false;
-    if (argc > 1) {
+    if (argc == 1) {
+        std::cout << "Too few arguments! Use '--help' for help\n";
+    }
+    else if (argc > 1) {
         for (int i = 1; i < argc; ++i) {
             std::string arg = argv[i];
             if (arg == "--help") {
                 std::cout << "Possible arguments:" << std::endl;
                 std::cout << "  '--help' displays all possible arguments" << std::endl;
                 std::cout << "  '--test' runs tests" << std::endl;
-                std::cout << "  '--interp' accepts a single expression and prints the interp value of it" << std::endl;
+                std::cout << "  '--interp' accepts a single expression and prints the interpreted value of it using the stack's continuations" << std::endl;
+                std::cout << "  '--step' accepts a single expression and prints the interpreted value of it using our continuations" << std::endl;
                 std::cout << "  '--print' accepts a single expression and prints it with basic formatting" << std::endl;
                 std::cout << "  '--pretty-print' accepts a single expression and prints it with better formatting" << std::endl;
                 exit(0);
