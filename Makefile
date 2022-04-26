@@ -3,7 +3,8 @@ OBJS = cmdline.o Expr.o NumExpr.o AddExpr.o MultExpr.o VarExpr.o LetExpr.o BoolE
 TESTOBJS = randomTests.o exec.o
 MAINOBJS = main.o $(OBJS)
 
-CXXFLAGS = --std=c++14 -O2 -fsanitize=undefined -fno-sanitize-recover=undefined
+CXXFLAGS = --std=c++14 -O2
+CXXSANITIZEFLAGS = $(CXXFLAGS) -fsanitize=undefined -fno-sanitize-recover=undefined
 
 msdscript: $(MAINOBJS)
 	$(CXX) $(CXXFLAGS) -o msdscript $(MAINOBJS)
